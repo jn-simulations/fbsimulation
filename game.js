@@ -337,17 +337,19 @@ function calculateROA() {
 }
 
 function calculateFinancialHealth() {
-    // Financial Health Score (0-100)
+    // Financial Health Score (0-100) for cardboard/packaging industry
     // Factors: profitability, cash position, debt burden
     let score = 50; // Start at neutral
 
     // Profitability component (+/- 30 points)
+    // Cardboard has 4-8% margins typically
     if (gameState.profit > 0) {
         const profitMargin = (gameState.profit / gameState.revenue) * 100;
-        if (profitMargin >= 15) score += 30;
-        else if (profitMargin >= 10) score += 20;
-        else if (profitMargin >= 5) score += 10;
-        else score += 5;
+        if (profitMargin >= 8) score += 30;  // Excellent for cardboard
+        else if (profitMargin >= 6) score += 20;  // Good for cardboard
+        else if (profitMargin >= 4) score += 10;  // Acceptable for cardboard
+        else if (profitMargin >= 2) score += 5;
+        else score -= 10; // Very thin margins, problematic
     } else {
         score -= 30; // Losing money is bad
     }
@@ -359,15 +361,31 @@ function calculateFinancialHealth() {
     else if (monthsOfCash >= 1) score += 5;
     else if (monthsOfCash < 0.5 && gameState.revenue > 0) score -= 20;
 
-    // Debt burden component (+/- 25 points)
+    // Debt burden component (+/- 45 points) - CRITICAL for cardboard industry
+    // Cardboard is capital-intensive with thin margins, very sensitive to debt
     if (gameState.debt === 0) {
         score += 25; // No debt is great
     } else {
         const debtToAssets = gameState.assets > 0 ? (gameState.debt / gameState.assets) : 1;
-        if (debtToAssets >= 0.7) score -= 25; // High debt
-        else if (debtToAssets >= 0.5) score -= 15; // Moderate debt
-        else if (debtToAssets >= 0.3) score -= 5; // Low debt
-        else score += 10; // Minimal debt
+        const debtToRevenue = gameState.revenue > 0 ? (gameState.debt / gameState.revenue) : 10;
+
+        // Multiple debt ratio checks (cardboard industry specific)
+        let debtPenalty = 0;
+
+        // Debt-to-Assets ratio (most important for asset-heavy cardboard)
+        if (debtToAssets >= 0.70) debtPenalty += 30; // Threatens survival (>70%)
+        else if (debtToAssets >= 0.65) debtPenalty += 25; // Danger zone (65-70%)
+        else if (debtToAssets >= 0.60) debtPenalty += 20; // High risk (60-65%)
+        else if (debtToAssets >= 0.45) debtPenalty += 10; // Acceptable (45-60%)
+        else if (debtToAssets >= 0.30) debtPenalty += 5; // Low debt (30-45%)
+        else debtPenalty -= 10; // Very conservative (<30%)
+
+        // Debt-to-Revenue ratio (secondary check)
+        if (debtToRevenue >= 2.0) debtPenalty += 15; // Extreme danger (>2x revenue)
+        else if (debtToRevenue >= 1.5) debtPenalty += 10; // Danger zone (1.5-2x revenue)
+        else if (debtToRevenue >= 1.0) debtPenalty += 5; // Stretched (1-1.5x revenue)
+
+        score -= debtPenalty;
     }
 
     // Clamp between 0 and 100
