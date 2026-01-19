@@ -5,7 +5,7 @@ let gameState;
 
 function init() {
     console.log("Initializing game");
-
+    
     // Initialize game state
     gameState = {
         year: 1994,
@@ -17,10 +17,10 @@ function init() {
         debt: 0,
         previousRevenue: 0,
         previousProfit: 0,
-
+        
         // Decision tracking
         decisions: [],
-
+        
         // Business state flags
         hasOutsideCEO: false,
         hasProfessionalBoard: false,
@@ -29,41 +29,41 @@ function init() {
         robertDeceased: false,
         sarahCEO: false,
         michaelLeft: false,
-
+        
         // Risk factors
         hasQualityIssues: false,
         hasDebt: false
     };
-
+    
     // Initialize family members
     initializeFamily();
     updateFamilyDisplay();
     updateUI();
-
+    
     console.log("Game initialized");
 }
 
 function startGame() {
     console.log("Starting game");
-
+    
     // Hide intro
     document.getElementById('intro').classList.add('hidden');
-
+    
     // Show game screen
     document.getElementById('gameScreen').classList.remove('hidden');
-
+    
     // Load first event
     loadEvent();
 }
 
 function loadEvent() {
     console.log("Loading event", gameState.eventIndex);
-
+    
     const event = EVENTS[gameState.eventIndex];
-
+    
     // Process description to add state-dependent context
     let description = event.description;
-
+    
     // Add state-dependent context for specific events
     if (gameState.eventIndex === 10) {
         // COVID event - add context about financial state
@@ -113,26 +113,26 @@ function loadEvent() {
         } else if (gameState.revenue < 10000000) {
             description = description.replace("$45M", "$30M");
         }
-
+        
         const prevOffer = gameState.decisions.find(d => d.event === 13);
         if (prevOffer && prevOffer.choice === 1) {
             description += "\n\nThe family declined an offer back in 2026. Some wonder if they should have sold then.";
         }
     }
-
+    
     // Update event display
     document.getElementById('eventDate').textContent = event.date;
     document.getElementById('eventTitle').textContent = event.title;
     document.getElementById('eventDescription').textContent = description;
-
+    
     // Clear previous options and impact
     const optionsContainer = document.getElementById('optionsContainer');
     optionsContainer.innerHTML = '';
     document.getElementById('impactDisplay').classList.add('hidden');
-
+    
     // Show options container
     optionsContainer.classList.remove('hidden');
-
+    
     // Create option buttons
     event.options.forEach((option, index) => {
         const button = document.createElement('button');
@@ -147,26 +147,26 @@ function loadEvent() {
 
 function makeDecision(choiceIndex, option) {
     console.log("Making decision", choiceIndex);
-
+    
     // Store decision
     gameState.decisions.push({
         event: gameState.eventIndex,
         choice: choiceIndex,
         year: gameState.year
     });
-
+    
     // Apply effects
     applyEffects(option.effects);
-
+    
     // Show impact
     const impactDisplay = document.getElementById('impactDisplay');
     impactDisplay.innerHTML = option.impact;
     impactDisplay.classList.remove('hidden');
-
+    
     // Update UI
     updateUI();
     updateFamilyDisplay();
-
+    
     // Add continue button
     const continueBtn = document.createElement('button');
     continueBtn.className = 'btn';
@@ -176,7 +176,7 @@ function makeDecision(choiceIndex, option) {
         advanceGame();
     });
     impactDisplay.appendChild(continueBtn);
-
+    
     // Hide options
     document.getElementById('optionsContainer').classList.add('hidden');
 }
@@ -184,7 +184,7 @@ function makeDecision(choiceIndex, option) {
 function applyEffects(effects) {
     gameState.previousRevenue = gameState.revenue;
     gameState.previousProfit = gameState.profit;
-
+    
     // Apply numeric effects
     const numericFields = ['revenue', 'profit', 'cash', 'valuation', 'debt'];
     numericFields.forEach(field => {
@@ -193,7 +193,7 @@ function applyEffects(effects) {
             gameState[field] = Math.max(0, gameState[field]); // Can't go negative
         }
     });
-
+    
     // Apply family effects
     Object.keys(familyMembers).forEach(key => {
         const member = familyMembers[key];
@@ -202,14 +202,14 @@ function applyEffects(effects) {
             member.happiness += happinessChange;
             member.happiness = Math.max(0, Math.min(100, member.happiness));
         }
-
+        
         const ownershipChange = effects[key + 'Ownership'];
         if (ownershipChange !== undefined) {
             member.ownership += ownershipChange;
             member.ownership = Math.max(0, member.ownership);
         }
     });
-
+    
     // Apply special effects
     if (effects.robertRetired) gameState.robertRetired = true;
     if (effects.sarahCEO) {
@@ -236,15 +236,15 @@ function advanceGame() {
     const yearsToAdvance = 2;
     gameState.year += yearsToAdvance;
     gameState.eventIndex += 1;
-
+    
     // Age family members
     Object.keys(familyMembers).forEach(key => {
         familyMembers[key].age += yearsToAdvance;
     });
-
+    
     // Check for life events
     checkLifeEvents();
-
+    
     // Natural business growth
     if (gameState.revenue > 0) {
         const growthRate = 0.05; // 5% annual growth
@@ -252,7 +252,7 @@ function advanceGame() {
         gameState.profit = gameState.revenue * 0.1; // 10% margin
         gameState.valuation = gameState.revenue * 0.4;
     }
-
+    
     // Check if game continues
     if (gameState.eventIndex < EVENTS.length) {
         loadEvent();
@@ -268,7 +268,7 @@ function updateUI() {
     document.getElementById('profit').textContent = '$' + formatNumber(gameState.profit);
     document.getElementById('cash').textContent = '$' + formatNumber(gameState.cash);
     document.getElementById('valuation').textContent = '$' + formatNumber(gameState.valuation);
-
+    
     // Show changes
     const revenueChange = gameState.revenue - gameState.previousRevenue;
     const revenueChangeEl = document.getElementById('revenueChange');
@@ -279,7 +279,7 @@ function updateUI() {
     } else {
         revenueChangeEl.textContent = '';
     }
-
+    
     const profitChange = gameState.profit - gameState.previousProfit;
     const profitChangeEl = document.getElementById('profitChange');
     if (profitChange !== 0) {
@@ -305,7 +305,7 @@ function formatNumber(num) {
 window.addEventListener('DOMContentLoaded', () => {
     console.log("DOM loaded, initializing game");
     init();
-
+    
     const startBtn = document.getElementById('startButton');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
