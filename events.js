@@ -351,15 +351,15 @@ const EVENTS = [
                     title: "The Pandemic",
                     description: function() {
                         var baseDesc = "COVID-19 has shut down the economy. Anderson Manufacturing's orders have dropped 60% in two months.\n\n";
-                        
+
                         if (gameState.cash > 1000000) {
                             baseDesc += "Fortunately, the company has strong cash reserves of $" + formatNumber(gameState.cash) + ", which provides some cushion. But even that won't last long at this burn rate.\n\n";
                         } else if (gameState.hasDebt && gameState.debt > 500000) {
                             baseDesc += "The situation is dire. The company is carrying $" + formatNumber(gameState.debt) + " in debt, and cash reserves are thin. Debt payments are due monthly.\n\n";
                         }
-                        
+
                         baseDesc += "Robert is 61. Sarah is 34. Michael is 31. The company employs 45 people, many with families who depend on these paychecks.\n\n";
-                        
+
                         // Check if they protected employees in 2009 crisis
                         var crisisEvent = gameState.decisions.find(function(d) { return d.event === 5; });
                         if (crisisEvent && crisisEvent.choice === 2) {
@@ -367,10 +367,10 @@ const EVENTS = [
                         } else if (crisisEvent && crisisEvent.choice === 1) {
                             baseDesc += "In 2009, the company laid off employees to survive. Some of those people are back working here now, nervous about history repeating.\n\n";
                         }
-                        
+
                         baseDesc += "The PPP loan program offers some relief, but it's not enough. Robert faces brutal choices:\n\n1. Massive layoffs to preserve cash\n2. Family members take no salary to protect jobs\n3. Take on significant debt, gambling on recovery\n\nThis crisis will define the company's character and the family's values.";
                         return baseDesc;
-                    }(),
+                    },
                     options: [
                         {
                             text: "Lay off 20 employees immediately to preserve cash",
@@ -449,7 +449,7 @@ const EVENTS = [
                     title: "Michael's Crossroads",
                     description: function() {
                         var baseDesc = "Michael has received an offer from a competitor: $200K salary plus substantial equity and a VP title. It's a clear path to eventual CEO.\n\n";
-                        
+
                         // Check if compensation conflict was resolved in his favor
                         var compensationEvent = gameState.decisions.find(function(d) { return d.event === 8; });
                         if (compensationEvent && compensationEvent.choice === 0) {
@@ -459,10 +459,10 @@ const EVENTS = [
                         } else {
                             baseDesc += "He comes to Robert: \"Dad, I love this company, but I need to know there's a future for me here.\"\n\n";
                         }
-                        
+
                         baseDesc += "Sarah is CEO. You're Executive Chairman. Where do I fit long-term?\"\n\nLosing Michael would hurt the company significantly—he brings in 40% of new business. But keeping him might require creating a role that's somewhat artificial.";
                         return baseDesc;
-                    }(),
+                    },
                     options: [
                         {
                             text: "Create President role for Michael, reporting to CEO Sarah",
@@ -500,13 +500,13 @@ const EVENTS = [
                     description: function() {
                         var offerAmount = gameState.revenue > 10000000 ? 35 : 28;
                         var baseDesc = "A private equity firm has made an unsolicited offer: $" + offerAmount + "M for Anderson Manufacturing.\n\n";
-                        
+
                         if (gameState.hasDebt && gameState.debt > 1000000) {
                             baseDesc += "Given the company's $" + formatNumber(gameState.debt) + " in debt, this offer is particularly attractive. It would clear all obligations and leave the family wealthy.\n\n";
                         }
-                        
+
                         baseDesc += "This values the company at far more than its current worth. The offer would give:\n";
-                        
+
                         if (gameState.michaelLeft) {
                             baseDesc += "- Robert: $" + (offerAmount * 0.7).toFixed(1) + "M for his 70%\n";
                             baseDesc += "- Sarah: $" + (offerAmount * 0.2).toFixed(1) + "M for her 20%\n";
@@ -522,12 +522,12 @@ const EVENTS = [
                             baseDesc += "- Michael: $" + (offerAmount * michaelPct / 100).toFixed(1) + "M for his " + michaelPct + "%\n";
                             baseDesc += "- Jennifer: $" + (offerAmount * jenniferPct / 100).toFixed(1) + "M for her " + jenniferPct + "%\n\n";
                         }
-                        
+
                         baseDesc += "The family could keep 30% ownership and stay in management, but the PE firm would control decisions.\n\nThis is life-changing money, especially for Jennifer. But it would end " + (gameState.year - 1994) + " years of independence.\n\n";
                         baseDesc += "Robert built this. Sarah now runs it. Does the family sell?";
-                        
+
                         return baseDesc;
-                    }(),
+                    },
                     options: [
                         {
                             text: "Accept the $28M acquisition offer",
@@ -561,7 +561,7 @@ const EVENTS = [
                     title: "The Quality Crisis",
                     description: function() {
                         var baseDesc = "A major client has discovered defects in Anderson Manufacturing's products. The problem affects $2.5M worth of delivered goods.\n\nThe client is threatening to terminate their contract and sue for damages. Industry reputation is at stake.\n\n";
-                        
+
                         // Check if they accepted the major growth contract in Event 7
                         var growthEvent = gameState.decisions.find(function(d) { return d.event === 7; });
                         if (growthEvent && growthEvent.choice === 0) {
@@ -571,10 +571,10 @@ const EVENTS = [
                         } else {
                             baseDesc += "Sarah's investigation reveals the root cause: to meet aggressive growth targets, quality control was loosened. Some of this happened under pressure to perform.\n\n";
                         }
-                        
+
                         baseDesc += "Options:\n1. Fight the claims and minimize liability\n2. Accept full responsibility, recall everything, and rebuild quality systems (expensive)\n3. Blame the problem on a specific employee to contain the crisis\n\nHow the family handles this will define their integrity.";
                         return baseDesc;
-                    }(),
+                    },
                     options: [
                         {
                             text: "Accept full responsibility and bear the cost ($1.8M)",
@@ -729,7 +729,7 @@ const EVENTS = [
                     title: "The Crossroads",
                     description: function() {
                         var baseDesc = "Anderson Manufacturing is now 46 years old. Revenue is $" + formatNumber(gameState.revenue) + " annually. ";
-                        
+
                         if (gameState.revenue > 15000000 && gameState.valuation > 25000000) {
                             baseDesc += "The company is thriving—Robert would be proud.\n\n";
                         } else if (gameState.revenue < 8000000) {
@@ -737,25 +737,25 @@ const EVENTS = [
                         } else {
                             baseDesc += "The company is stable and profitable.\n\n";
                         }
-                        
+
                         baseDesc += "But Sarah sees the writing on the wall: manufacturing is changing rapidly. Automation, AI, global competition—the industry won't look the same in 10 years.\n\n";
-                        
+
                         // Reference if they took on debt before
                         if (gameState.hasDebt && gameState.debt > 2000000) {
                             baseDesc += "The company still carries $" + formatNumber(gameState.debt) + " in debt from earlier decisions. Taking on more is risky.\n\n";
                         } else if (gameState.cash > 5000000) {
                             baseDesc += "The company has strong cash reserves of $" + formatNumber(gameState.cash) + ", which provides flexibility for major investments.\n\n";
                         }
-                        
+
                         baseDesc += "She's identified three paths:\n\n1. Invest $5M in automation and AI (modernize or die)\n2. Acquire a smaller competitor for $4M (grow through consolidation)\n3. Stay the course (conservative approach, gradually decline)\n\n";
-                        
+
                         if (gameState.hasGen3) {
                             baseDesc += "Emily and David push for aggressive growth. They're the future of this company.\n\n";
                         }
-                        
+
                         baseDesc += "Older employees worry about their jobs being automated.\n\nThis decision will shape Anderson Manufacturing for its final decade.";
                         return baseDesc;
-                    }(),
+                    },
                     options: [
                         {
                             text: "Invest $5M in automation and AI",
@@ -801,21 +801,21 @@ const EVENTS = [
                     title: "Fifty Years",
                     description: function() {
                         var baseDesc = "It's been 50 years since Robert Anderson started with $50,000 and a dream.\n\n";
-                        
+
                         if (!gameState.robertDeceased) {
                             baseDesc += "Robert is 85 now, still attending board meetings when his health allows. ";
                         } else {
                             baseDesc += "Robert passed away years ago, but his legacy lives on. ";
                         }
-                        
+
                         baseDesc += "Sarah is 58 now. ";
-                        
+
                         if (gameState.hasGen3) {
                             baseDesc += "Emily (30) and David (28) are rising leaders in the company. ";
                         }
-                        
+
                         baseDesc += "The company employs over 100 people.\n\n";
-                        
+
                         // Offer amount varies based on company performance
                         var offerAmount = 45;
                         if (gameState.revenue > 20000000) {
@@ -823,9 +823,9 @@ const EVENTS = [
                         } else if (gameState.revenue < 10000000) {
                             offerAmount = 30;
                         }
-                        
+
                         baseDesc += "A private equity firm has made another offer: $" + offerAmount + "M.\n\n";
-                        
+
                         // Reference if they declined a previous offer
                         var prevOffer = gameState.decisions.find(function(d) { return d.event === 13; });
                         if (prevOffer && prevOffer.choice === 1) {
@@ -836,23 +836,23 @@ const EVENTS = [
                                 baseDesc += "barely better. They wonder if they should have sold then.\n\n";
                             }
                         }
-                        
+
                         if (gameState.michaelLeft) {
                             baseDesc += "Michael left the business years ago. He's built a successful career elsewhere, but family gatherings remain somewhat awkward.\n\n";
                         }
-                        
+
                         baseDesc += "Alternatively, Sarah could plan for the next transition";
-                        
+
                         if (gameState.hasGen3) {
                             baseDesc += "—Emily as eventual CEO, David as President. The third generation could lead Anderson Manufacturing through its next 50 years.\n\n";
                         } else {
                             baseDesc += ". Though without clear successors, the future is uncertain.\n\n";
                         }
-                        
+
                         baseDesc += "Or the family could take the money, having built something remarkable and changed their family's trajectory forever.\n\nThis is the final decision in a 50-year journey.";
-                        
+
                         return baseDesc;
-                    }(),
+                    },
                     options: [
                         {
                             text: "Accept the $45M offer—complete the journey",
