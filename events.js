@@ -13,7 +13,7 @@ const EVENTS = [
                             text: "Bootstrap slowly - keep the day job, grow cautiously",
                             effects: {
                                 revenue: 150000,
-                                profit: 30000,
+                                profit: 9000,  // 6% margin on cardboard
                                 cash: 30000,
                                 assets: 60000,
                                 robertHappiness: -5
@@ -24,7 +24,7 @@ const EVENTS = [
                             text: "Take the $100K loan and go all-in immediately",
                             effects: {
                                 revenue: 400000,
-                                profit: 60000,
+                                profit: 24000,  // 6% margin on cardboard
                                 cash: -30000,
                                 debt: 100000,
                                 assets: 160000,
@@ -46,7 +46,7 @@ const EVENTS = [
                             text: "Bring Patricia in as CFO with 50/50 ownership",
                             effects: {
                                 revenue: 300000,
-                                profit: 50000,
+                                profit: 18000,  // 6% margin on cardboard
                                 cash: -50000,
                                 assets: 100000,
                                 robertHappiness: 10,
@@ -278,7 +278,7 @@ const EVENTS = [
                             text: "Accept the contract and make the investment",
                             effects: {
                                 revenue: 3000000,
-                                profit: 450000,
+                                profit: 180000,  // 6% margin on cardboard
                                 cash: -1200000,
                                 assets: 1200000,
                                 debt: 500000,
@@ -799,7 +799,7 @@ const EVENTS = [
                                 cash: -5000000,
                                 debt: 3000000,
                                 revenue: 5000000,
-                                profit: 1200000,
+                                profit: 300000,  // 6% margin on cardboard
                                 assets: 5000000,
                                 sarahHappiness: 10,
                                 hasDebt: true,
@@ -813,7 +813,7 @@ const EVENTS = [
                                 cash: -4000000,
                                 debt: 2500000,
                                 revenue: 4500000,
-                                profit: 800000,
+                                profit: 270000,  // 6% margin on cardboard
                                 assets: 3500000,
                                 sarahHappiness: 5,
                                 hasDebt: true,
