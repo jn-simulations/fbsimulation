@@ -165,7 +165,8 @@ function makeDecision(choiceIndex, option) {
     
     // Show impact
     const impactDisplay = document.getElementById('impactDisplay');
-    impactDisplay.innerHTML = option.impact;
+    const impactText = typeof option.impact === 'function' ? option.impact() : option.impact;
+    impactDisplay.innerHTML = impactText;
     impactDisplay.classList.remove('hidden');
     
     // Update UI
@@ -242,6 +243,21 @@ function applyEffects(effects) {
     if (effects.robertDeceased) {
         gameState.robertDeceased = true;
         familyMembers.robert.isDead = true;
+    }
+
+    // Handle Robert's ownership transfer upon death
+    if (effects.robertOwnershipTransfer) {
+        const robertOwnership = familyMembers.robert.ownership;
+        familyMembers.robert.ownership = 0;
+
+        if (gameState.michaelLeft) {
+            // Sarah gets all of Robert's ownership
+            familyMembers.sarah.ownership += robertOwnership;
+        } else {
+            // Sarah gets 60%, Michael gets 40%
+            familyMembers.sarah.ownership += robertOwnership * 0.6;
+            familyMembers.michael.ownership += robertOwnership * 0.4;
+        }
     }
     if (effects.hasQualityIssues) gameState.hasQualityIssues = true;
     if (effects.hasDebt) gameState.hasDebt = true;
