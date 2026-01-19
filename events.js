@@ -155,7 +155,8 @@ const EVENTS = [
                                 revenue: 400000,
                                 sarahHappiness: 5,
                                 michaelHappiness: 5,
-                                robertHappiness: 10
+                                robertHappiness: 10,
+                                managementQuality: 5
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager at $65K, Michael in sales at $55K—both market rates for their experience.</p><p><span class='impact-positive'>Revenue increases</span> as both contribute to the business. <span class='impact-negative'>Profit decreases</span> due to additional payroll.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they sometimes wonder if family connections should provide more benefits.</p><p><span class='impact-highlight'>Robert</span> is proud of the professional approach.</p>`
                         },
@@ -166,7 +167,8 @@ const EVENTS = [
                                 revenue: 300000,
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
-                                robertHappiness: -5
+                                robertHappiness: -5,
+                                managementQuality: -5
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO at $90K, Michael as Sales Director at $80K—well above market for their experience.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and trusted. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, <span class='impact-negative'>profit decreases substantially</span> from the high salaries. Non-family employees notice the special treatment and some grumble about nepotism.</p><p><span class='impact-highlight'>Robert</span> worries whether he's done the right thing.</p>`
                         }
@@ -187,7 +189,8 @@ const EVENTS = [
                                 robertHappiness: -10,
                                 sarahHappiness: -5,
                                 michaelHappiness: -5,
-                                employees: 0
+                                employees: 0,
+                                managementQuality: 3
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert announces a company-wide 20% salary cut. Everyone shares the pain—family and non-family employees alike.</p><p><span class='impact-positive'>Cash flow stabilizes</span> and <span class='impact-positive'>no one loses their job</span>. The team appreciates that everyone is sacrificing together.</p><p>The Anderson family's income drops sharply. <span class='impact-highlight'>Robert, Sarah, and Michael</span> all feel the financial strain, though they understand it's necessary.</p>`
                         },
@@ -200,7 +203,8 @@ const EVENTS = [
                                 robertHappiness: -20,
                                 sarahHappiness: -10,
                                 michaelHappiness: -8,
-                                employees: -8
+                                employees: -8,
+                                managementQuality: -8
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert makes the painful decision to lay off 8 employees. <span class='impact-positive'>Cash flow improves</span>, but <span class='impact-negative'>revenue decreases</span> with the smaller team.</p><p>The laid-off employees feel betrayed, especially when they see the Anderson family kept their positions. Company culture suffers.</p><p><span class='impact-highlight'>Robert</span> is devastated by the decision. <span class='impact-negative'>His happiness plummets</span>—he questions whether he should have protected his employees before his family.</p>`
                         },
@@ -213,7 +217,8 @@ const EVENTS = [
                                 sarahHappiness: 10,
                                 michaelHappiness: 5,
                                 jenniferHappiness: -15,
-                                employees: 0
+                                employees: 0,
+                                managementQuality: 6
                             },
                             impact: `<h4>Decision Impact</h4><p>The Anderson family agrees to deep salary cuts and forgoes all dividends to protect employee jobs.</p><p>The employees are deeply grateful. Non-family staff work even harder, knowing the family sacrificed for them. <span class='impact-positive'>Company loyalty and culture strengthens.</span></p><p><span class='impact-highlight'>Jennifer</span> is upset—she was counting on dividend income for college expenses. <span class='impact-negative'>Her happiness decreases significantly.</span></p><p><span class='impact-highlight'>Robert and Sarah</span> feel they've done the right thing.</p>`
                         }
@@ -233,7 +238,8 @@ const EVENTS = [
                                 michaelHappiness: -15,
                                 robertHappiness: 5,
                                 revenue: 300000,
-                                profit: 50000
+                                profit: 50000,
+                                managementQuality: 8
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert announces that Sarah will become CEO when he steps down, likely within five years.</p><p><span class='impact-highlight'>Sarah</span> is energized and relieved. <span class='impact-positive'>Her happiness increases dramatically</span> and she works even harder. <span class='impact-positive'>Business performance improves under her clear leadership path.</span></p><p><span class='impact-highlight'>Michael</span> is disappointed and hurt. <span class='impact-negative'>His happiness drops significantly</span>—he feels his contributions are undervalued.</p><p><span class='impact-highlight'>Robert</span> appreciates the clarity, though he worries about Michael's reaction.</p>`
                         },
@@ -243,7 +249,8 @@ const EVENTS = [
                                 sarahHappiness: -12,
                                 michaelHappiness: 8,
                                 robertHappiness: -8,
-                                profit: -30000
+                                profit: -30000,
+                                managementQuality: -4
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert decides not to commit to anyone yet, saying both Sarah and Michael will be evaluated over the next several years.</p><p><span class='impact-highlight'>Sarah</span> is frustrated and hurt. After years of hard work and clear qualification, <span class='impact-negative'>her happiness decreases</span>. She wonders if she should look for CEO opportunities elsewhere.</p><p><span class='impact-highlight'>Michael</span> feels he still has a shot and his <span class='impact-positive'>happiness improves</span>.</p><p>The ambiguity creates tension. <span class='impact-negative'>Business performance suffers slightly</span> from the uncertainty and sibling competition.</p>`
                         }
@@ -386,7 +393,8 @@ const EVENTS = [
                                 robertHappiness: -25,
                                 sarahHappiness: -20,
                                 michaelHappiness: -18,
-                                employees: -20
+                                employees: -20,
+                                managementQuality: -6
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert makes the agonizing decision to lay off nearly half the workforce. <span class='impact-positive'>Cash reserves are protected</span>, ensuring company survival.</p><p><span class='impact-negative'>Revenue drops significantly</span> with the smaller team.</p><p>The entire Anderson family is traumatized by the decision. <span class='impact-highlight'>Robert, Sarah, and Michael</span> all experience <span class='impact-negative'>sharp decreases in happiness</span>.</p><p>The laid-off employees feel betrayed. Company culture may never fully recover.</p>`
                         },
@@ -399,7 +407,8 @@ const EVENTS = [
                                 sarahHappiness: 15,
                                 michaelHappiness: 10,
                                 jenniferHappiness: -25,
-                                employees: 0
+                                employees: 0,
+                                managementQuality: 8
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert, Sarah, and Michael agree to forgo all salary for six months to save every job. <span class='impact-positive'>All 45 employees keep their positions.</span></p><p>The employees are deeply moved. Loyalty and dedication skyrocket. When the economy recovers, the team works harder than ever.</p><p><span class='impact-highlight'>Robert, Sarah, and Michael</span> feel they've lived their values, despite the personal financial hardship.</p><p><span class='impact-highlight'>Jennifer</span> receives no dividends and is <span class='impact-negative'>very unhappy</span>—she's struggling financially and feels the business is always prioritized over her needs.</p>`
                         },
@@ -411,7 +420,8 @@ const EVENTS = [
                                 profit: -300000,
                                 robertHappiness: -15,
                                 hasDebt: true,
-                                employees: 0
+                                employees: 0,
+                                managementQuality: 2
                             },
                             impact: `<h4>Decision Impact</h4><p>The company takes on $800K in debt to maintain operations and staff through the crisis.</p><p><span class='impact-positive'>All employees keep their jobs</span> and the company maintains its capabilities.</p><p>However, <span class='impact-negative'>the company now carries substantial debt</span> in a highly uncertain economic environment.</p><p><span class='impact-highlight'>Robert</span> is stressed and worried. If recovery takes longer than expected, this debt could sink the company.</p>`
                         }
@@ -433,7 +443,8 @@ const EVENTS = [
                                 revenue: 800000,
                                 profit: 150000,
                                 robertRetired: true,
-                                sarahCEO: true
+                                sarahCEO: true,
+                                managementQuality: 12
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah becomes CEO. She's energized and ready. <span class='impact-positive'>Revenue and profit increase</span> as she implements changes she's been planning for years.</p><p><span class='impact-highlight'>Sarah's happiness increases dramatically</span>—she's finally leading the company.</p><p><span class='impact-highlight'>Michael</span> feels definitively passed over. <span class='impact-negative'>His happiness drops significantly.</span></p><p><span class='impact-highlight'>Robert</span> struggles with letting go, even though he knows it's right. He stays involved as Executive Chairman, sometimes second-guessing Sarah's decisions.</p>`
                         },
@@ -444,7 +455,8 @@ const EVENTS = [
                                 sarahHappiness: -15,
                                 michaelHappiness: 5,
                                 profit: -150000,
-                                revenue: -400000
+                                revenue: -400000,
+                                managementQuality: -7
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert stays on as CEO, promising to work less and delegate more.</p><p>In practice, he can't let go. He still involves himself in day-to-day decisions. <span class='impact-negative'>The company suffers from indecisive leadership</span> as responsibility is unclear.</p><p><span class='impact-highlight'>Sarah</span> is deeply frustrated. <span class='impact-negative'>Her happiness decreases substantially</span>—even a health scare wasn't enough to trigger real succession.</p><p>She begins quietly exploring CEO opportunities at other companies.</p>`
                         }
@@ -592,7 +604,8 @@ const EVENTS = [
                                 revenue: 1000000,
                                 assets: 500000,
                                 sarahHappiness: 10,
-                                robertHappiness: 15
+                                robertHappiness: 15,
+                                managementQuality: 7
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah announces full responsibility. <span class='impact-negative'>The company takes a $1.8M hit</span> for recalls and rebuilding quality systems.</p><p>The client is impressed by the integrity. <span class='impact-positive'>They not only maintain the contract but increase it.</span></p><p><span class='impact-highlight'>Sarah and Robert</span> feel they've upheld the company's values, despite the painful cost.</p><p>Employee morale and culture strengthen. The team sees leadership that prioritizes doing the right thing over short-term profits.</p>`
                         },
@@ -604,7 +617,8 @@ const EVENTS = [
                                 revenue: -800000,
                                 sarahHappiness: -15,
                                 robertHappiness: -20,
-                                hasQualityIssues: true
+                                hasQualityIssues: true,
+                                managementQuality: -10
                             },
                             impact: `<h4>Decision Impact</h4><p>The company settles quietly for $600K and moves on quickly.</p><p>The client accepts the settlement but doesn't renew the contract. <span class='impact-negative'>Revenue decreases as they take their business elsewhere.</span></p><p><span class='impact-highlight'>Sarah and Robert</span> both feel they've compromised their values. <span class='impact-negative'>Their happiness decreases</span> as they've chosen financial protection over doing the right thing.</p><p>Some employees lose respect for leadership. The culture begins to shift.</p>`
                         }
@@ -774,7 +788,8 @@ const EVENTS = [
                                 profit: 1200000,
                                 assets: 5000000,
                                 sarahHappiness: 10,
-                                hasDebt: true
+                                hasDebt: true,
+                                managementQuality: 15
                             },
                             impact: `<h4>Decision Impact</h4><p>Anderson Manufacturing takes on $3M debt and invests heavily in cutting-edge technology.</p><p>The transition is painful. Some long-time employees are displaced. But <span class='impact-positive'>revenue and profit surge</span> as efficiency multiplies.</p><p><span class='impact-positive'>Company valuation increases dramatically.</span> Anderson Manufacturing is now positioned for the future.</p><p>Emily and David, the third generation, are instrumental in the transformation. The company is ready for its next 50 years.</p>`
                         },
@@ -787,7 +802,8 @@ const EVENTS = [
                                 profit: 800000,
                                 assets: 3500000,
                                 sarahHappiness: 5,
-                                hasDebt: true
+                                hasDebt: true,
+                                managementQuality: 5
                             },
                             impact: `<h4>Decision Impact</h4><p>The company acquires a competitor, doubling in size overnight.</p><p><span class='impact-positive'>Revenue and profit increase substantially</span>, but integrating two company cultures proves challenging.</p><p>The acquisition brings new clients but also new problems. Growth through acquisition is messier than Sarah expected.</p><p>Still, Anderson Manufacturing is now a major regional player. <span class='impact-positive'>Valuation increases significantly.</span></p>`
                         },
@@ -796,7 +812,8 @@ const EVENTS = [
                             effects: {
                                 revenue: 500000,
                                 profit: 100000,
-                                sarahHappiness: -10
+                                sarahHappiness: -10,
+                                managementQuality: -3
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah chooses the conservative path, avoiding risk and debt.</p><p>The company continues to grow modestly. <span class='impact-positive'>Employees appreciate the stability</span> and lack of disruption.</p><p>But <span class='impact-highlight'>Sarah</span> worries they're being left behind. Competitors are modernizing. Anderson Manufacturing feels increasingly dated.</p><p>Emily and David are frustrated by the cautious approach. They wonder if the family business will survive their generation.</p>`
                         }

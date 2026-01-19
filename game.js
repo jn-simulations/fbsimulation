@@ -19,6 +19,9 @@ function init() {
         previousRevenue: 0,
         previousProfit: 0,
 
+        // Management quality (0-100, affects profit margins, growth, efficiency)
+        managementQuality: 50, // Start at average
+
         // Decision tracking
         decisions: [],
 
@@ -200,6 +203,12 @@ function applyEffects(effects) {
             }
         }
     });
+
+    // Apply management quality changes (clamped 0-100)
+    if (effects.managementQuality !== undefined) {
+        gameState.managementQuality += effects.managementQuality;
+        gameState.managementQuality = Math.max(0, Math.min(100, gameState.managementQuality));
+    }
     
     // Apply family effects
     Object.keys(familyMembers).forEach(key => {
@@ -252,18 +261,35 @@ function advanceGame() {
     // Check for life events
     checkLifeEvents();
     
-    // Natural business growth
+    // Natural business growth (influenced by management quality)
     if (gameState.revenue > 0) {
-        const growthRate = 0.05; // 5% annual growth
+        // Growth rate based on management quality (3-7% annual)
+        // Poor management (0-30): 3%, Average (50): 5%, Excellent (100): 7%
+        const baseGrowth = 0.03;
+        const managementBonus = (gameState.managementQuality / 100) * 0.04;
+        const growthRate = baseGrowth + managementBonus;
+
         gameState.revenue *= Math.pow(1 + growthRate, yearsToAdvance);
-        gameState.profit = gameState.revenue * 0.1; // 10% margin
+
+        // Profit margin based on management quality (8-15%)
+        // Poor management (0-30): 8%, Average (50): 10%, Excellent (100): 15%
+        const baseMargin = 0.08;
+        const marginBonus = (gameState.managementQuality / 100) * 0.07;
+        const profitMargin = baseMargin + marginBonus;
+
+        gameState.profit = gameState.revenue * profitMargin;
 
         // Assets grow with revenue (equipment, inventory, facilities)
-        // Assets = cash + fixed assets (roughly 60% of annual revenue for manufacturing)
-        gameState.assets = gameState.cash + (gameState.revenue * 0.6);
+        // Asset efficiency improves with management quality
+        // Poor management needs 0.7x revenue in assets, excellent needs 0.5x
+        const assetRatio = 0.7 - (gameState.managementQuality / 100) * 0.2;
+        gameState.assets = gameState.cash + (gameState.revenue * assetRatio);
 
-        // Employees grow with revenue (roughly 1 employee per $100K revenue in manufacturing)
-        gameState.employees = Math.max(1, Math.round(gameState.revenue / 100000));
+        // Employees grow with revenue
+        // Better management = higher productivity (revenue per employee)
+        // Poor: $80K/employee, Average: $100K/employee, Excellent: $130K/employee
+        const revenuePerEmployee = 80000 + (gameState.managementQuality / 100) * 50000;
+        gameState.employees = Math.max(1, Math.round(gameState.revenue / revenuePerEmployee));
     }
     
     // Check if game continues
