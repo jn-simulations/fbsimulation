@@ -119,31 +119,28 @@ const EVENTS = [
                 {
                     date: "2004",
                     title: "Looking to the Future",
-                    description: `Robert is 45 years old. The business is doing well with healthy margins and steady growth. He's been thinking about the future.\n\nSarah is 18 and just started college, studying business. She's shown interest in joining the company someday. Michael (15) is more interested in sports than business, but that could change. Jennifer (12) is still young.\n\nRobert has never given his children formal ownership. Some advisors tell him to start creating a clear succession plan and giving the children stake in the business to build their long-term commitment. Others say he should wait—the kids are too young, and it's too early to commit to specific succession plans.\n\nRobert's wife suggests he at least start thinking about which children might want to be involved and begin setting expectations.`,
+                    description: `Robert is 45 years old. The business is doing well with healthy margins and steady growth. He's been thinking about the future.\n\nSarah is 18 and just started college, studying business. She's shown interest in joining the company someday. Michael (15) is more interested in sports than business, but that could change. Jennifer (12) is still young.\n\nRobert's lawyer suggests creating a formal succession plan now, even though the children are young. Some advisors recommend setting up trusts or documenting intentions for the future. Others say he should wait until the children are actually working in the business.\n\nPatricia thinks they should at least start conversations with Sarah about the business's future.`,
                     options: [
                         {
-                            text: "Begin transferring 30% ownership to children (10% each) and create formal succession plan",
+                            text: "Create formal family business constitution and document succession intentions",
                             effects: {
-                                robertOwnership: -30,
-                                sarahOwnership: 10,
-                                michaelOwnership: 10,
-                                jenniferOwnership: 10,
                                 sarahHappiness: 10,
                                 michaelHappiness: 5,
                                 robertHappiness: 5,
+                                managementQuality: 5,
                                 employees: 3
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert transfers 10% ownership to each of his three children and begins documenting succession plans.</p><p><span class='impact-highlight'>Sarah</span> is excited and feels trusted. <span class='impact-highlight'>Michael</span> is pleased but unsure what it means yet. <span class='impact-highlight'>Jennifer</span> is too young to fully understand.</p><p>The early planning creates clarity about the future, though Robert sometimes second-guesses whether it's too soon. The business continues to grow steadily.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert works with his lawyer to create a family business constitution that outlines governance principles, future ownership transfer plans, and expectations for family members who want to join the business.</p><p><span class='impact-highlight'>Sarah</span> is excited to see her father taking succession seriously. She feels more confident about her future role.</p><p><span class='impact-positive'>The formal planning improves management quality</span> and creates clarity for the future, though no ownership changes hands yet—the children are too young.</p><p>The document will guide future decisions about ownership transfers when the children are older.</p>`
                         },
                         {
-                            text: "Wait—the children are too young to make ownership decisions now",
+                            text: "Keep it informal—cross that bridge when they're older and in the business",
                             effects: {
                                 cash: 50000,
                                 robertHappiness: -5,
                                 sarahHappiness: -5,
                                 employees: 2
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert decides to wait on ownership transfers and formal succession planning.</p><p>The business continues to grow without complication from family ownership issues. <span class='impact-positive'>Robert maintains full control and operational flexibility.</span></p><p>However, <span class='impact-highlight'>Sarah</span> notices her friends' parents are bringing them into family businesses and wonders if her father sees a future for her in the company.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert decides it's too early for formal planning. The children are too young, and he doesn't know which ones will actually want to join the business.</p><p>The business continues to grow without complication from succession planning. <span class='impact-positive'>Robert maintains full flexibility</span> for future decisions.</p><p>However, <span class='impact-highlight'>Sarah</span> notices her friends' parents are bringing them into family businesses and wonders if her father sees a future for her in the company. The lack of clarity creates some uncertainty.</p>`
                         }
                     ]
                 },
@@ -174,14 +171,15 @@ const EVENTS = [
                                 revenue: 300000,
                                 sarahOwnership: 10,
                                 michaelOwnership: 10,
-                                robertOwnership: -20,
+                                robertOwnership: -10,  // Split between both parents if Patricia is partner
+                                patriciaOwnership: -10,  // If Patricia is 50/50 partner, she gives up 10% too
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
                                 robertHappiness: -5,
                                 managementQuality: -5,
                                 employees: 2
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO, Michael as Sales Director—with above-market salaries and immediate 10% ownership stakes each.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and committed. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, <span class='impact-negative'>profit decreases</span> from the inflated compensation. Non-family employees notice the preferential treatment and morale suffers.</p><p><span class='impact-negative'>Management quality decreases</span> as employees question whether advancement is based on merit or family connections.</p><p><span class='impact-highlight'>Robert</span> worries he's set a bad precedent—entitlement over earning.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO, Michael as Sales Director—with above-market salaries and immediate 10% ownership stakes each. The ownership comes from both parents' stakes.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and committed. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, <span class='impact-negative'>profit decreases</span> from the inflated compensation. Non-family employees notice the preferential treatment and morale suffers.</p><p><span class='impact-negative'>Management quality decreases</span> as employees question whether advancement is based on merit or family connections.</p><p><span class='impact-highlight'>Robert</span> worries he's set a bad precedent—entitlement over earning.</p>`
                         }
                     ]
                 },
@@ -195,21 +193,21 @@ const EVENTS = [
                         {
                             text: "Cut all salaries by 20%, share the pain equally",
                             effects: {
-                                profit: 100000,
-                                cash: 150000,
+                                profit: -120000,  // Still losing money in severe recession
+                                cash: 80000,
                                 robertHappiness: -10,
                                 sarahHappiness: -5,
                                 michaelHappiness: -5,
                                 employees: 0,
                                 managementQuality: 3
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert announces a company-wide 20% salary cut. Everyone shares the pain—family and non-family employees alike.</p><p><span class='impact-positive'>Cash flow stabilizes</span> and <span class='impact-positive'>no one loses their job</span>. The team appreciates that everyone is sacrificing together.</p><p>The Anderson family's income drops sharply. <span class='impact-highlight'>Robert, Sarah, and Michael</span> all feel the financial strain, though they understand it's necessary.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert announces a company-wide 20% salary cut. Everyone shares the pain—family and non-family employees alike.</p><p><span class='impact-negative'>The company still loses money</span> as orders have dropped 40%, but salary cuts help preserve some cash. <span class='impact-positive'>No one loses their job</span>.</p><p>The Anderson family's income drops sharply. <span class='impact-highlight'>Robert, Sarah, and Michael</span> all feel the financial strain and worry whether the cuts are enough.</p>`
                         },
                         {
                             text: "Lay off 8 non-family employees",
                             effects: {
-                                profit: 80000,
-                                cash: 120000,
+                                profit: -40000,  // Still losing money but less than salary cut option
+                                cash: 150000,
                                 revenue: -400000,
                                 robertHappiness: -20,
                                 sarahHappiness: -10,
@@ -217,13 +215,13 @@ const EVENTS = [
                                 employees: -8,
                                 managementQuality: -8
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert makes the painful decision to lay off 8 employees. <span class='impact-positive'>Cash flow improves</span>, but <span class='impact-negative'>revenue decreases</span> with the smaller team.</p><p>The laid-off employees feel betrayed, especially when they see the Anderson family kept their positions. Company culture suffers.</p><p><span class='impact-highlight'>Robert</span> is devastated by the decision. <span class='impact-negative'>His happiness plummets</span>—he questions whether he should have protected his employees before his family.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert makes the painful decision to lay off 8 employees. <span class='impact-positive'>Cash position improves</span> from reduced payroll, but <span class='impact-negative'>the company still loses money</span> and <span class='impact-negative'>revenue decreases</span> with the smaller team.</p><p>The laid-off employees feel betrayed, especially when they see the Anderson family kept their positions. Company culture suffers.</p><p><span class='impact-highlight'>Robert</span> is devastated by the decision. <span class='impact-negative'>His happiness plummets</span>—he questions whether he should have protected his employees before his family.</p>`
                         },
                         {
                             text: "Family takes 40% salary cuts and no dividends; protect non-family jobs",
                             effects: {
-                                profit: 50000,
-                                cash: 80000,
+                                profit: -50000,  // Still losing money but family absorbs more pain
+                                cash: 120000,
                                 robertHappiness: 5,
                                 sarahHappiness: 10,
                                 michaelHappiness: 5,
