@@ -26,6 +26,7 @@ function init() {
         decisions: [],
 
         // Business state flags
+        patriciaCFO: false,
         hasOutsideCOO: false,
         hasProfessionalBoard: false,
         hasGen3: false,
@@ -228,6 +229,12 @@ function applyEffects(effects) {
     });
     
     // Apply special effects
+    if (effects.patriciaCFO) {
+        gameState.patriciaCFO = true;
+        familyMembers.patricia.role = "CFO";
+        familyMembers.patricia.inBusiness = true;
+        familyMembers.patricia.isActive = true;
+    }
     if (effects.robertRetired) gameState.robertRetired = true;
     if (effects.sarahCEO) {
         gameState.sarahCEO = true;
@@ -287,10 +294,11 @@ function advanceGame() {
 
         gameState.revenue *= Math.pow(1 + growthRate, yearsToAdvance);
 
-        // Profit margin based on management quality (8-15%)
-        // Poor management (0-30): 8%, Average (50): 10%, Excellent (100): 15%
-        const baseMargin = 0.08;
-        const marginBonus = (gameState.managementQuality / 100) * 0.07;
+        // Profit margin based on management quality (4-8%)
+        // Cardboard/packaging industry has thin margins
+        // Poor management (0): 4%, Average (50): 6%, Excellent (100): 8%
+        const baseMargin = 0.04;
+        const marginBonus = (gameState.managementQuality / 100) * 0.04;
         const profitMargin = baseMargin + marginBonus;
 
         gameState.profit = gameState.revenue * profitMargin;

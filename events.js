@@ -7,7 +7,7 @@ const EVENTS = [
                 {
                     date: "1994",
                     title: "The Leap of Faith",
-                    description: `Robert Anderson stands at a crossroads. He's 35 years old with a stable engineering job that pays $65,000 a year. But he's invented a specialized manufacturing component that he believes could revolutionize the industry.\n\nHis wife is supportive but nervous. They have three young children, a mortgage, and car payments. Their savings account has $50,000—enough to survive for maybe six months without income.\n\nTwo options lie before him: Bootstrap the business slowly, working nights and weekends while keeping his day job, or quit now, take a $100,000 loan, and go all-in.\n\nThe conservative path is safer. The aggressive path could make or break everything.`,
+                    description: `Robert Anderson stands at a crossroads. He's 35 years old with a stable engineering job that pays $65,000 a year. But he's developed an innovative corrugated cardboard design that could serve the booming e-commerce packaging market.\n\nHis wife Patricia is supportive but nervous. They have three young children, a mortgage, and car payments. Their savings account has $50,000—enough to survive for maybe six months without income.\n\nTwo options lie before him: Bootstrap the business slowly, working nights and weekends while keeping his day job, or quit now, take a $100,000 loan, and go all-in.\n\nThe conservative path is safer. The aggressive path could make or break everything.`,
                     options: [
                         {
                             text: "Bootstrap slowly - keep the day job, grow cautiously",
@@ -51,9 +51,12 @@ const EVENTS = [
                                 assets: 100000,
                                 robertHappiness: 10,
                                 robertOwnership: -50,
+                                patriciaOwnership: 50,
+                                patriciaHappiness: 20,
+                                patriciaCFO: true,
                                 managementQuality: 10
                             },
-                            impact: `<h4>Decision Impact</h4><p>Patricia joins Anderson Manufacturing as CFO with equal ownership. <span class='impact-positive'>The business becomes more professionally managed</span> with clear financial systems and HR policies.</p><p><span class='impact-positive'>Management quality improves significantly.</span> Patricia's organizational skills complement Robert's technical vision.</p><p><span class='impact-highlight'>Robert</span> is happy to have his wife as a true partner—but now every business disagreement happens at the dinner table too.</p><p>The children see their parents working together. This will shape their understanding of what the family business means.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Patricia joins Anderson Packaging as CFO with equal ownership. <span class='impact-positive'>The business becomes more professionally managed</span> with clear financial systems and HR policies.</p><p><span class='impact-positive'>Management quality improves significantly.</span> Patricia's organizational skills complement Robert's technical vision.</p><p><span class='impact-highlight'>Robert</span> is happy to have his wife as a true partner—but now every business disagreement happens at the dinner table too.</p><p>The children see their parents working together as equal partners. This will shape their understanding of what the family business means.</p>`
                         },
                         {
                             text: "Keep business and family separate—hire professional staff",
@@ -74,7 +77,7 @@ const EVENTS = [
                 {
                     date: "2000",
                     title: "The Dot-Com Crash",
-                    description: `The dot-com bubble has burst. Several of Anderson Manufacturing's clients are tech companies or tech suppliers—and they're cutting orders dramatically.\n\nRevenue is down 30% from last year. Robert has 15 employees, and he's struggling to make payroll. He has three options:\n\n1. Lay off 5 employees to cut costs and survive\n2. Take on more debt to maintain the team through the downturn\n3. Pivot to serving more stable industries, though this means abandoning relationships Robert has spent years building\n\nEach choice has consequences. Layoffs will devastate families who depend on these jobs. Debt is risky in an uncertain economy. Pivoting means starting over in some ways.`,
+                    description: `The dot-com bubble has burst. Several of Anderson Packaging's clients are tech companies or tech suppliers—and they're cutting orders dramatically.\n\nRevenue is down 30% from last year. Robert has 15 employees, and he's struggling to make payroll. He has three options:\n\n1. Lay off 5 employees to cut costs and survive\n2. Take on more debt to maintain the team through the downturn\n3. Pivot to serving more stable industries, though this means abandoning relationships Robert has spent years building\n\nEach choice has consequences. Layoffs will devastate families who depend on these jobs. Debt is risky in an uncertain economy. Pivoting means starting over in some ways.`,
                     options: [
                         {
                             text: "Lay off 5 employees to cut costs",
@@ -99,7 +102,7 @@ const EVENTS = [
                             impact: `<h4>Decision Impact</h4><p>Robert refuses to lay anyone off and borrows $150K to weather the storm. <span class='impact-negative'>Revenue and profit decrease</span>, and <span class='impact-negative'>debt increases</span>.</p><p>The team is grateful and loyal. <span class='impact-highlight'>Robert</span> feels he's done the right thing, though the financial pressure is intense.</p><p>The company survives with its team intact, but now carries significant debt going into an uncertain economy.</p>`
                         },
                         {
-                            text: "Pivot to serving manufacturing and construction industries",
+                            text: "Pivot to serving food packaging and industrial clients",
                             effects: {
                                 revenue: 100000,
                                 profit: 20000,
@@ -107,7 +110,7 @@ const EVENTS = [
                                 assets: 100000,
                                 robertHappiness: -5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert pivots to more stable industries. <span class='impact-positive'>Revenue stabilizes</span> as new clients from construction and traditional manufacturing sign on.</p><p>However, building these new relationships takes time and money. <span class='impact-negative'>Cash reserves decrease</span> from sales and marketing efforts.</p><p><span class='impact-highlight'>Robert</span> is moderately stressed but believes this diversification will pay off long-term.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert pivots to more stable markets. <span class='impact-positive'>Revenue stabilizes</span> as new clients from food packaging and industrial applications sign on.</p><p>However, building these new relationships takes time and money. <span class='impact-negative'>Cash reserves decrease</span> from sales and marketing efforts.</p><p><span class='impact-highlight'>Robert</span> is moderately stressed but believes this diversification will pay off long-term.</p>`
                         }
                     ]
                 },
@@ -149,7 +152,7 @@ const EVENTS = [
                 {
                     date: "2007",
                     title: "The Next Generation Enters",
-                    description: `Sarah graduated with her MBA and wants to join Anderson Manufacturing. She's smart, ambitious, and has real business skills.\n\nMichael also finished college. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nRobert needs to decide how to bring them into the business. Should they start at entry-level and earn their way up? Should they get elevated positions based on family status? How Robert handles this will set precedents for years to come.\n\nMore importantly: should family members working in the business receive ownership stakes immediately, or should ownership be earned over time? This decision will shape expectations about entitlement versus meritocracy.`,
+                    description: `Sarah graduated with her MBA and wants to join Anderson Packaging. She's smart, ambitious, and has real business skills.\n\nMichael also finished college. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nRobert needs to decide how to bring them into the business. Should they start at entry-level and earn their way up? Should they get elevated positions based on family status? How Robert handles this will set precedents for years to come.\n\nMore importantly: should family members working in the business receive ownership stakes immediately, or should ownership be earned over time? This decision will shape expectations about entitlement versus meritocracy.`,
                     options: [
                         {
                             text: "Hire both at market-rate salaries in entry roles, no immediate ownership",
@@ -187,7 +190,7 @@ const EVENTS = [
                 {
                     date: "2009",
                     title: "The Great Recession",
-                    description: `The 2008 financial crisis has devastated the economy. Anderson Manufacturing's orders are down 40%. Cash flow is critical.\n\nRobert is facing the hardest decision since founding the company. He needs to cut costs immediately. Options:\n\n1. Cut everyone's salary by 20%, including his own, to avoid layoffs\n2. Lay off 8 employees (including some who've been with him for years)\n3. Ask the family shareholders to forgo dividends and take salary cuts, protecting non-family employees\n\nSarah and Michael are both in the business now. Jennifer is in college and depends on dividend income to help with expenses.\n\nEvery option hurts someone.`,
+                    description: `The 2008 financial crisis has devastated the economy. Anderson Packaging's orders are down 40%. Cash flow is critical.\n\nRobert is facing the hardest decision since founding the company. He needs to cut costs immediately. Options:\n\n1. Cut everyone's salary by 20%, including his own, to avoid layoffs\n2. Lay off 8 employees (including some who've been with him for years)\n3. Ask the family shareholders to forgo dividends and take salary cuts, protecting non-family employees\n\nSarah and Michael are both in the business now. Jennifer is in college and depends on dividend income to help with expenses.\n\nEvery option hurts someone.`,
                     options: [
                         {
                             text: "Cut all salaries by 20%, share the pain equally",
@@ -269,7 +272,7 @@ const EVENTS = [
                 {
                     date: "2014",
                     title: "The Major Contract",
-                    description: `A Fortune 100 company has offered Anderson Manufacturing a massive contract: $3M annually for five years.\n\nThe catch: fulfilling it requires a $1.2M investment in new equipment and hiring 20 additional workers.\n\nSarah has prepared a detailed analysis showing 22% ROI over five years. The numbers look solid. Michael is excited about the growth.\n\nBut Jennifer is concerned. The investment will reduce dividend payments for at least three years. She was counting on that income—teaching doesn't pay much, and she's planning to buy a house.\n\nRobert must balance growth ambitions with family member's financial needs.`,
+                    description: `A Fortune 100 company has offered Anderson Packaging a massive contract: $3M annually for five years.\n\nThe catch: fulfilling it requires a $1.2M investment in new equipment and hiring 20 additional workers.\n\nSarah has prepared a detailed analysis showing 22% ROI over five years. The numbers look solid. Michael is excited about the growth.\n\nBut Jennifer is concerned. The investment will reduce dividend payments for at least three years. She was counting on that income—teaching doesn't pay much, and she's planning to buy a house.\n\nRobert must balance growth ambitions with family member's financial needs.`,
                     options: [
                         {
                             text: "Accept the contract and make the investment",
@@ -332,7 +335,7 @@ const EVENTS = [
                 {
                     date: "2018",
                     title: "The Outside COO Candidate",
-                    description: `A headhunter has approached Robert about Amanda Chen, a highly experienced COO from a $75M manufacturing company. She's interested in joining Anderson Manufacturing.\n\nAmanda has expertise that neither Sarah nor Michael possess. She could accelerate growth dramatically. But hiring her as COO would demote Sarah, who has been COO for seven years.\n\nAmanda wants a significant salary plus 5% equity. The family would need to dilute their ownership.\n\nThis is a defining moment: professionalize with outside talent, or commit to family leadership? Does the family business prioritize family or business?`,
+                    description: `A headhunter has approached Robert about Amanda Chen, a highly experienced COO from a $75M packaging company. She's interested in joining Anderson Packaging.\n\nAmanda has expertise that neither Sarah nor Michael possess. She could accelerate growth dramatically. But hiring her as COO would demote Sarah, who has been COO for seven years.\n\nAmanda wants a significant salary plus 5% equity. The family would need to dilute their ownership.\n\nThis is a defining moment: professionalize with outside talent, or commit to family leadership? Does the family business prioritize family or business?`,
                     options: [
                         {
                             text: "Hire Amanda as COO, moving Sarah to VP of Operations",
@@ -371,7 +374,7 @@ const EVENTS = [
                     date: "2020",
                     title: "The Pandemic",
                     description: function() {
-                        var baseDesc = "COVID-19 has shut down the economy. Anderson Manufacturing's orders have dropped 60% in two months.\n\n";
+                        var baseDesc = "COVID-19 has shut down the economy. Anderson Packaging's orders have dropped 60% in two months.\n\n";
 
                         if (gameState.cash > 1000000) {
                             baseDesc += "Fortunately, the company has strong cash reserves of $" + formatNumber(gameState.cash) + ", which provides some cushion. But even that won't last long at this burn rate.\n\n";
@@ -517,7 +520,7 @@ const EVENTS = [
                                 robertOwnership: 73,
                                 sarahOwnership: 17
                             },
-                            impact: `<h4>Decision Impact</h4><p>Michael leaves Anderson Manufacturing for the competitor. <span class='impact-negative'>Revenue and profit drop sharply</span> without his sales leadership.</p><p><span class='impact-highlight'>Michael</span> is heartbroken. <span class='impact-negative'>His happiness plummets</span>—he wanted to stay but felt there was no path forward.</p><p>He sells his 10% ownership back to the family. The entire Anderson family is devastated by his departure.</p><p>Sunday dinners become awkward. The family business has fractured the family.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Michael leaves Anderson Packaging for the competitor. <span class='impact-negative'>Revenue and profit drop sharply</span> without his sales leadership.</p><p><span class='impact-highlight'>Michael</span> is heartbroken. <span class='impact-negative'>His happiness plummets</span>—he wanted to stay but felt there was no path forward.</p><p>He sells his 10% ownership back to the family. The entire Anderson family is devastated by his departure.</p><p>Sunday dinners become awkward. The family business has fractured the family.</p>`
                         }
                     ]
                 },
@@ -528,7 +531,7 @@ const EVENTS = [
                     title: "The Temptation",
                     description: function() {
                         var offerAmount = gameState.revenue > 10000000 ? 35 : 28;
-                        var baseDesc = "A private equity firm has made an unsolicited offer: $" + offerAmount + "M for Anderson Manufacturing.\n\n";
+                        var baseDesc = "A private equity firm has made an unsolicited offer: $" + offerAmount + "M for Anderson Packaging.\n\n";
 
                         if (gameState.hasDebt && gameState.debt > 1000000) {
                             baseDesc += "Given the company's $" + formatNumber(gameState.debt) + " in debt, this offer is particularly attractive. It would clear all obligations and leave the family wealthy.\n\n";
@@ -573,7 +576,7 @@ const EVENTS = [
                             impact: `<h4>Decision Impact</h4><p>The family accepts the offer. Everyone becomes wealthy overnight.</p><p><span class='impact-highlight'>Jennifer</span> is thrilled—<span class='impact-positive'>she receives nearly $3M</span> and can finally live comfortably.</p><p><span class='impact-highlight'>Robert and Sarah</span> are conflicted. They have the money, but <span class='impact-negative'>they've given up the family legacy</span>. Their happiness decreases despite the wealth.</p><p>The PE firm immediately implements aggressive changes. The company Sarah built starts to feel foreign.</p>`
                         },
                         {
-                            text: "Decline—keep Anderson Manufacturing family-owned",
+                            text: "Decline—keep Anderson Packaging family-owned",
                             effects: {
                                 robertHappiness: 15,
                                 sarahHappiness: 15,
@@ -589,7 +592,7 @@ const EVENTS = [
                     date: "2028",
                     title: "The Quality Crisis",
                     description: function() {
-                        var baseDesc = "A major client has discovered defects in Anderson Manufacturing's products. The problem affects $2.5M worth of delivered goods.\n\nThe client is threatening to terminate their contract and sue for damages. Industry reputation is at stake.\n\n";
+                        var baseDesc = "A major client has discovered defects in Anderson Packaging's products. The problem affects $2.5M worth of delivered goods.\n\nThe client is threatening to terminate their contract and sue for damages. Industry reputation is at stake.\n\n";
 
                         // Check if they accepted the major growth contract in Event 7
                         var growthEvent = gameState.decisions.find(function(d) { return d.event === 7; });
@@ -647,7 +650,7 @@ const EVENTS = [
                                 robertHappiness: 15,
                                 jenniferHappiness: -10
                             },
-                            impact: `<h4>Decision Impact</h4><p>The family creates a formal policy: all third-generation members must work elsewhere for at least three years and demonstrate relevant skills before joining Anderson Manufacturing.</p><p><span class='impact-highlight'>Sarah and Robert</span> believe this professionalizes the business and ensures competence over family privilege.</p><p><span class='impact-highlight'>Jennifer</span> worries this policy disadvantages her son Lucas, who is younger and less obviously business-oriented than Emily and David.</p><p>The policy sets important precedents for the future, though it may create resentment.</p>`
+                            impact: `<h4>Decision Impact</h4><p>The family creates a formal policy: all third-generation members must work elsewhere for at least three years and demonstrate relevant skills before joining Anderson Packaging.</p><p><span class='impact-highlight'>Sarah and Robert</span> believe this professionalizes the business and ensures competence over family privilege.</p><p><span class='impact-highlight'>Jennifer</span> worries this policy disadvantages her son Lucas, who is younger and less obviously business-oriented than Emily and David.</p><p>The policy sets important precedents for the future, though it may create resentment.</p>`
                         },
                         {
                             text: "Keep it informal—evaluate each grandchild individually when the time comes",
@@ -732,7 +735,7 @@ const EVENTS = [
                 {
                     date: "2036",
                     title: "The Third Generation Arrives",
-                    description: `Emily (22) has graduated with an engineering degree from MIT. She wants to join Anderson Manufacturing.\n\nDavid (20) is finishing business school. He's charismatic and entrepreneurial, already talking about expanding into new markets.\n\nBut this is delicate. If the family implemented the "work elsewhere first" policy, Emily and David need to follow it. If they didn't, Sarah needs to decide whether to hire her daughter and nephew without external experience.\n\nThe third generation brings energy and ideas—but also the risk of repeating the conflicts that challenged the second generation.`,
+                    description: `Emily (22) has graduated with an engineering degree from MIT. She wants to join Anderson Packaging.\n\nDavid (20) is finishing business school. He's charismatic and entrepreneurial, already talking about expanding into new markets.\n\nBut this is delicate. If the family implemented the "work elsewhere first" policy, Emily and David need to follow it. If they didn't, Sarah needs to decide whether to hire her daughter and nephew without external experience.\n\nThe third generation brings energy and ideas—but also the risk of repeating the conflicts that challenged the second generation.`,
                     options: [
                         {
                             text: "Hire both immediately in entry-level roles",
@@ -751,7 +754,7 @@ const EVENTS = [
                                 sarahHappiness: 10,
                                 michaelHappiness: 5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah implements the professional standard: Emily and David must work elsewhere first.</p><p>Emily is disappointed but accepts it. She joins a major manufacturing firm. David takes a sales role at a tech startup.</p><p>The policy ensures they'll bring outside experience and perspective. It also signals that Anderson Manufacturing values competence over family privilege.</p><p>However, three years is a long time. Will they still want to join the family business after building careers elsewhere?</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah implements the professional standard: Emily and David must work elsewhere first.</p><p>Emily is disappointed but accepts it. She joins a major packaging firm. David takes a sales role at a tech startup.</p><p>The policy ensures they'll bring outside experience and perspective. It also signals that Anderson Packaging values competence over family privilege.</p><p>However, three years is a long time. Will they still want to join the family business after building careers elsewhere?</p>`
                         }
                     ]
                 },
@@ -761,7 +764,7 @@ const EVENTS = [
                     date: "2040",
                     title: "The Crossroads",
                     description: function() {
-                        var baseDesc = "Anderson Manufacturing is now 46 years old. Revenue is $" + formatNumber(gameState.revenue) + " annually. ";
+                        var baseDesc = "Anderson Packaging is now 46 years old. Revenue is $" + formatNumber(gameState.revenue) + " annually. ";
 
                         if (gameState.revenue > 15000000 && gameState.assets > 20000000) {
                             baseDesc += "The company is thriving—Robert would be proud.\n\n";
@@ -771,7 +774,7 @@ const EVENTS = [
                             baseDesc += "The company is stable and profitable.\n\n";
                         }
 
-                        baseDesc += "But Sarah sees the writing on the wall: manufacturing is changing rapidly. Automation, AI, global competition—the industry won't look the same in 10 years.\n\n";
+                        baseDesc += "But Sarah sees the writing on the wall: the packaging industry is changing rapidly. Automation, sustainable materials, e-commerce demands, global competition—the industry won't look the same in 10 years.\n\n";
 
                         // Reference if they took on debt before
                         if (gameState.hasDebt && gameState.debt > 2000000) {
@@ -786,7 +789,7 @@ const EVENTS = [
                             baseDesc += "Emily and David push for aggressive growth. They're the future of this company.\n\n";
                         }
 
-                        baseDesc += "Older employees worry about their jobs being automated.\n\nThis decision will shape Anderson Manufacturing for its final decade.";
+                        baseDesc += "Older employees worry about their jobs being automated.\n\nThis decision will shape Anderson Packaging for its final decade.";
                         return baseDesc;
                     },
                     options: [
@@ -802,7 +805,7 @@ const EVENTS = [
                                 hasDebt: true,
                                 managementQuality: 15
                             },
-                            impact: `<h4>Decision Impact</h4><p>Anderson Manufacturing takes on $3M debt and invests heavily in cutting-edge technology.</p><p>The transition is painful. Some long-time employees are displaced. But <span class='impact-positive'>revenue and profit surge</span> as efficiency multiplies.</p><p><span class='impact-positive'>Company valuation increases dramatically.</span> Anderson Manufacturing is now positioned for the future.</p><p>Emily and David, the third generation, are instrumental in the transformation. The company is ready for its next 50 years.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Anderson Packaging takes on $3M debt and invests heavily in cutting-edge technology.</p><p>The transition is painful. Some long-time employees are displaced. But <span class='impact-positive'>revenue and profit surge</span> as efficiency multiplies.</p><p><span class='impact-positive'>Company valuation increases dramatically.</span> Anderson Packaging is now positioned for the future.</p><p>Emily and David, the third generation, are instrumental in the transformation. The company is ready for its next 50 years.</p>`
                         },
                         {
                             text: "Acquire competitor for $4M",
@@ -816,7 +819,7 @@ const EVENTS = [
                                 hasDebt: true,
                                 managementQuality: 5
                             },
-                            impact: `<h4>Decision Impact</h4><p>The company acquires a competitor, doubling in size overnight.</p><p><span class='impact-positive'>Revenue and profit increase substantially</span>, but integrating two company cultures proves challenging.</p><p>The acquisition brings new clients but also new problems. Growth through acquisition is messier than Sarah expected.</p><p>Still, Anderson Manufacturing is now a major regional player. <span class='impact-positive'>Valuation increases significantly.</span></p>`
+                            impact: `<h4>Decision Impact</h4><p>The company acquires a competitor, doubling in size overnight.</p><p><span class='impact-positive'>Revenue and profit increase substantially</span>, but integrating two company cultures proves challenging.</p><p>The acquisition brings new clients but also new problems. Growth through acquisition is messier than Sarah expected.</p><p>Still, Anderson Packaging is now a major regional player. <span class='impact-positive'>Valuation increases significantly.</span></p>`
                         },
                         {
                             text: "Stay the course—gradual, organic growth",
@@ -826,7 +829,7 @@ const EVENTS = [
                                 sarahHappiness: -10,
                                 managementQuality: -3
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah chooses the conservative path, avoiding risk and debt.</p><p>The company continues to grow modestly. <span class='impact-positive'>Employees appreciate the stability</span> and lack of disruption.</p><p>But <span class='impact-highlight'>Sarah</span> worries they're being left behind. Competitors are modernizing. Anderson Manufacturing feels increasingly dated.</p><p>Emily and David are frustrated by the cautious approach. They wonder if the family business will survive their generation.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah chooses the conservative path, avoiding risk and debt.</p><p>The company continues to grow modestly. <span class='impact-positive'>Employees appreciate the stability</span> and lack of disruption.</p><p>But <span class='impact-highlight'>Sarah</span> worries they're being left behind. Competitors are modernizing. Anderson Packaging feels increasingly dated.</p><p>Emily and David are frustrated by the cautious approach. They wonder if the family business will survive their generation.</p>`
                         }
                     ]
                 },
@@ -880,7 +883,7 @@ const EVENTS = [
                         baseDesc += "Alternatively, Sarah could plan for the next transition";
 
                         if (gameState.hasGen3) {
-                            baseDesc += "—Emily as eventual CEO, David as President. The third generation could lead Anderson Manufacturing through its next 50 years.\n\n";
+                            baseDesc += "—Emily as eventual CEO, David as President. The third generation could lead Anderson Packaging through its next 50 years.\n\n";
                         } else {
                             baseDesc += ". Though without clear successors, the future is uncertain.\n\n";
                         }
@@ -896,7 +899,7 @@ const EVENTS = [
                                 cash: 45000000,
                                 sarahHappiness: -10
                             },
-                            impact: `<h4>Decision Impact</h4><p>The Anderson family accepts the $45M offer.</p><p>After 50 years, Anderson Manufacturing is sold. The family becomes wealthy beyond Robert's wildest 1994 dreams.</p><p><span class='impact-highlight'>Sarah</span> has mixed emotions. Pride in what they built. Sadness that it's over.</p><p>Emily and David are disappointed—they wanted to lead the third generation. But they also understand the remarkable achievement.</p><p>Robert Anderson's $50,000 investment in 1994 has become $45M in 2044. The family business has changed the Anderson family forever.</p>`
+                            impact: `<h4>Decision Impact</h4><p>The Anderson family accepts the $45M offer.</p><p>After 50 years, Anderson Packaging is sold. The family becomes wealthy beyond Robert's wildest 1994 dreams.</p><p><span class='impact-highlight'>Sarah</span> has mixed emotions. Pride in what they built. Sadness that it's over.</p><p>Emily and David are disappointed—they wanted to lead the third generation. But they also understand the remarkable achievement.</p><p>Robert Anderson's $50,000 investment in 1994 has become $45M in 2044. The family business has changed the Anderson family forever.</p>`
                         },
                         {
                             text: "Transition to third generation—Emily as CEO",
@@ -905,7 +908,7 @@ const EVENTS = [
                                 revenue: 2000000,
                                 profit: 400000
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah announces that Emily will become CEO within two years. David will be President.</p><p>The third generation takes the helm. <span class='impact-positive'>Revenue and profit grow</span> under fresh leadership with new ideas.</p><p><span class='impact-highlight'>Sarah</span> is proud and happy—the family legacy continues.</p><p>Anderson Manufacturing enters its second half-century under third-generation leadership.</p><p>Robert's dream lives on. The family business he started in 1994 will see 2050 and beyond.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah announces that Emily will become CEO within two years. David will be President.</p><p>The third generation takes the helm. <span class='impact-positive'>Revenue and profit grow</span> under fresh leadership with new ideas.</p><p><span class='impact-highlight'>Sarah</span> is proud and happy—the family legacy continues.</p><p>Anderson Packaging enters its second half-century under third-generation leadership.</p><p>Robert's dream lives on. The family business he started in 1994 will see 2050 and beyond.</p>`
                         }
                     ]
                 }

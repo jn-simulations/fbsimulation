@@ -15,6 +15,16 @@ function initializeFamily() {
             inBusiness: true,
             isDead: false
         },
+        patricia: {
+            name: "Patricia Anderson",
+            age: 34,
+            role: "Spouse",
+            ownership: 0,
+            happiness: 70,
+            isActive: false,
+            inBusiness: false,
+            isDead: false
+        },
         sarah: {
             name: "Sarah Anderson",
             age: 8,
