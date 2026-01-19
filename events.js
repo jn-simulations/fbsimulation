@@ -15,7 +15,7 @@ const EVENTS = [
                                 revenue: 150000,
                                 profit: 30000,
                                 cash: 30000,
-                                valuation: 60000,
+                                assets: 60000,
                                 robertHappiness: -5
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert keeps his day job and works on the business nights and weekends. Progress is slow but steady.</p><p><span class='impact-positive'>The family maintains financial stability</span>, though Robert is exhausted from working 70-hour weeks.</p><p>After two years, the business brings in modest revenue, and Robert has kept his family secure. But <span class='impact-highlight'>Robert's happiness decreases</span> from the relentless grind.</p>`
@@ -27,7 +27,7 @@ const EVENTS = [
                                 profit: 60000,
                                 cash: -30000,
                                 debt: 100000,
-                                valuation: 160000,
+                                assets: 160000,
                                 robertHappiness: 10,
                                 hasDebt: true
                             },
@@ -48,7 +48,7 @@ const EVENTS = [
                                 revenue: 1200000,
                                 profit: 180000,
                                 cash: -200000,
-                                valuation: 480000,
+                                assets: 480000,
                                 robertHappiness: 15
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert accepts the contract and makes the necessary investments. <span class='impact-positive'>Revenue jumps to over $1.6M</span> annually.</p><p>The new facility and expanded team deliver excellent work. <span class='impact-positive'>The Fortune 500 client is impressed and extends the contract.</span></p><p><span class='impact-highlight'>Robert</span> is thrilled—the business is truly taking off. However, <span class='impact-negative'>cash reserves are depleted</span> from the expansion costs.</p>`
@@ -59,7 +59,7 @@ const EVENTS = [
                                 revenue: 200000,
                                 profit: 40000,
                                 cash: 50000,
-                                valuation: 80000,
+                                assets: 80000,
                                 robertHappiness: -10
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert declines the major contract, choosing stability over growth risk.</p><p>The business continues to grow slowly. <span class='impact-positive'>Cash reserves remain healthy</span>, but revenue growth is modest.</p><p><span class='impact-highlight'>Robert</span> wonders if he's made a mistake. <span class='impact-negative'>His happiness decreases</span>—he can't shake the feeling that he's missed a huge opportunity.</p>`
@@ -101,7 +101,7 @@ const EVENTS = [
                                 revenue: 100000,
                                 profit: 20000,
                                 cash: -50000,
-                                valuation: 100000,
+                                assets: 100000,
                                 robertHappiness: -5
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert pivots to more stable industries. <span class='impact-positive'>Revenue stabilizes</span> as new clients from construction and traditional manufacturing sign on.</p><p>However, building these new relationships takes time and money. <span class='impact-negative'>Cash reserves decrease</span> from sales and marketing efforts.</p><p><span class='impact-highlight'>Robert</span> is moderately stressed but believes this diversification will pay off long-term.</p>`
@@ -113,7 +113,7 @@ const EVENTS = [
                 {
                     date: "2004",
                     title: "Looking to the Future",
-                    description: `Robert is 45 years old. The business is doing well, bringing in $3M annually with healthy margins. He's been thinking about the future.\n\nSarah is 18 and just started college, studying business. She's shown interest in joining the company someday. Michael (15) is more interested in sports than business, but that could change. Jennifer (12) is still young.\n\nRobert has never given his children formal ownership. Some advisors tell him to start transferring shares now for tax purposes and to begin grooming successors. Others say he should wait—the kids are too young, and it's too early to commit to succession plans.\n\nRobert's wife suggests he at least create a basic estate plan and start documenting the business.`,
+                    description: `Robert is 45 years old. The business is doing well, bringing in $3M annually with healthy margins. He's been thinking about the future.\n\nSarah is 18 and just started college, studying business. She's shown interest in joining the company someday. Michael (15) is more interested in sports than business, but that could change. Jennifer (12) is still young.\n\nRobert has never given his children formal ownership. Some advisors tell him to start creating a clear succession plan and giving the children stake in the business to build their long-term commitment. Others say he should wait—the kids are too young, and it's too early to commit to specific succession plans.\n\nRobert's wife suggests he at least start thinking about which children might want to be involved and begin setting expectations.`,
                     options: [
                         {
                             text: "Begin transferring 30% ownership to children (10% each) and create formal succession plan",
@@ -124,16 +124,18 @@ const EVENTS = [
                                 jenniferOwnership: 10,
                                 sarahHappiness: 10,
                                 michaelHappiness: 5,
-                                robertHappiness: 5
+                                robertHappiness: 5,
+                                employees: 3
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert transfers 10% ownership to each of his three children and begins documenting succession plans.</p><p><span class='impact-highlight'>Sarah</span> is excited and feels trusted. <span class='impact-highlight'>Michael</span> is pleased but unsure what it means yet. <span class='impact-highlight'>Jennifer</span> is too young to fully understand.</p><p>The early planning creates clarity and tax advantages, though Robert sometimes second-guesses whether it's too soon.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert transfers 10% ownership to each of his three children and begins documenting succession plans.</p><p><span class='impact-highlight'>Sarah</span> is excited and feels trusted. <span class='impact-highlight'>Michael</span> is pleased but unsure what it means yet. <span class='impact-highlight'>Jennifer</span> is too young to fully understand.</p><p>The early planning creates clarity about the future, though Robert sometimes second-guesses whether it's too soon. The business continues to grow steadily.</p>`
                         },
                         {
                             text: "Wait—the children are too young to make ownership decisions now",
                             effects: {
                                 cash: 50000,
                                 robertHappiness: -5,
-                                sarahHappiness: -5
+                                sarahHappiness: -5,
+                                employees: 2
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert decides to wait on ownership transfers and formal succession planning.</p><p>The business continues to grow without complication from family ownership issues. <span class='impact-positive'>Robert maintains full control and operational flexibility.</span></p><p>However, <span class='impact-highlight'>Sarah</span> notices her friends' parents are bringing them into family businesses and wonders if her father sees a future for her in the company.</p>`
                         }
@@ -184,7 +186,8 @@ const EVENTS = [
                                 cash: 150000,
                                 robertHappiness: -10,
                                 sarahHappiness: -5,
-                                michaelHappiness: -5
+                                michaelHappiness: -5,
+                                employees: 0
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert announces a company-wide 20% salary cut. Everyone shares the pain—family and non-family employees alike.</p><p><span class='impact-positive'>Cash flow stabilizes</span> and <span class='impact-positive'>no one loses their job</span>. The team appreciates that everyone is sacrificing together.</p><p>The Anderson family's income drops sharply. <span class='impact-highlight'>Robert, Sarah, and Michael</span> all feel the financial strain, though they understand it's necessary.</p>`
                         },
@@ -196,7 +199,8 @@ const EVENTS = [
                                 revenue: -400000,
                                 robertHappiness: -20,
                                 sarahHappiness: -10,
-                                michaelHappiness: -8
+                                michaelHappiness: -8,
+                                employees: -8
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert makes the painful decision to lay off 8 employees. <span class='impact-positive'>Cash flow improves</span>, but <span class='impact-negative'>revenue decreases</span> with the smaller team.</p><p>The laid-off employees feel betrayed, especially when they see the Anderson family kept their positions. Company culture suffers.</p><p><span class='impact-highlight'>Robert</span> is devastated by the decision. <span class='impact-negative'>His happiness plummets</span>—he questions whether he should have protected his employees before his family.</p>`
                         },
@@ -208,7 +212,8 @@ const EVENTS = [
                                 robertHappiness: 5,
                                 sarahHappiness: 10,
                                 michaelHappiness: 5,
-                                jenniferHappiness: -15
+                                jenniferHappiness: -15,
+                                employees: 0
                             },
                             impact: `<h4>Decision Impact</h4><p>The Anderson family agrees to deep salary cuts and forgoes all dividends to protect employee jobs.</p><p>The employees are deeply grateful. Non-family staff work even harder, knowing the family sacrificed for them. <span class='impact-positive'>Company loyalty and culture strengthens.</span></p><p><span class='impact-highlight'>Jennifer</span> is upset—she was counting on dividend income for college expenses. <span class='impact-negative'>Her happiness decreases significantly.</span></p><p><span class='impact-highlight'>Robert and Sarah</span> feel they've done the right thing.</p>`
                         }
@@ -257,7 +262,7 @@ const EVENTS = [
                                 revenue: 3000000,
                                 profit: 450000,
                                 cash: -1200000,
-                                valuation: 1200000,
+                                assets: 1200000,
                                 debt: 500000,
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
@@ -319,7 +324,7 @@ const EVENTS = [
                             effects: {
                                 revenue: 1500000,
                                 profit: 250000,
-                                valuation: 1000000,
+                                assets: 1000000,
                                 robertOwnership: -2,
                                 sarahOwnership: -2,
                                 michaelOwnership: -1,
@@ -380,7 +385,8 @@ const EVENTS = [
                                 revenue: -2000000,
                                 robertHappiness: -25,
                                 sarahHappiness: -20,
-                                michaelHappiness: -18
+                                michaelHappiness: -18,
+                                employees: -20
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert makes the agonizing decision to lay off nearly half the workforce. <span class='impact-positive'>Cash reserves are protected</span>, ensuring company survival.</p><p><span class='impact-negative'>Revenue drops significantly</span> with the smaller team.</p><p>The entire Anderson family is traumatized by the decision. <span class='impact-highlight'>Robert, Sarah, and Michael</span> all experience <span class='impact-negative'>sharp decreases in happiness</span>.</p><p>The laid-off employees feel betrayed. Company culture may never fully recover.</p>`
                         },
@@ -392,7 +398,8 @@ const EVENTS = [
                                 robertHappiness: 10,
                                 sarahHappiness: 15,
                                 michaelHappiness: 10,
-                                jenniferHappiness: -25
+                                jenniferHappiness: -25,
+                                employees: 0
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert, Sarah, and Michael agree to forgo all salary for six months to save every job. <span class='impact-positive'>All 45 employees keep their positions.</span></p><p>The employees are deeply moved. Loyalty and dedication skyrocket. When the economy recovers, the team works harder than ever.</p><p><span class='impact-highlight'>Robert, Sarah, and Michael</span> feel they've lived their values, despite the personal financial hardship.</p><p><span class='impact-highlight'>Jennifer</span> receives no dividends and is <span class='impact-negative'>very unhappy</span>—she's struggling financially and feels the business is always prioritized over her needs.</p>`
                         },
@@ -403,7 +410,8 @@ const EVENTS = [
                                 cash: 600000,
                                 profit: -300000,
                                 robertHappiness: -15,
-                                hasDebt: true
+                                hasDebt: true,
+                                employees: 0
                             },
                             impact: `<h4>Decision Impact</h4><p>The company takes on $800K in debt to maintain operations and staff through the crisis.</p><p><span class='impact-positive'>All employees keep their jobs</span> and the company maintains its capabilities.</p><p>However, <span class='impact-negative'>the company now carries substantial debt</span> in a highly uncertain economic environment.</p><p><span class='impact-highlight'>Robert</span> is stressed and worried. If recovery takes longer than expected, this debt could sink the company.</p>`
                         }
@@ -582,7 +590,7 @@ const EVENTS = [
                                 profit: -1800000,
                                 cash: -1800000,
                                 revenue: 1000000,
-                                valuation: 500000,
+                                assets: 500000,
                                 sarahHappiness: 10,
                                 robertHappiness: 15
                             },
@@ -688,7 +696,7 @@ const EVENTS = [
                                 robertDeceased: true,
                                 revenue: 1200000,
                                 profit: 250000,
-                                valuation: 800000
+                                assets: 800000
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah decides to honor Robert's core values—integrity, employee welfare, quality—while modernizing strategy for the next generation.</p><p><span class='impact-positive'>Revenue, profit, and valuation all increase</span> as Sarah implements changes she's been planning.</p><p>The company evolves while maintaining its soul. Employees embrace the changes.</p><p>Sarah receives ` + (gameState.michaelLeft ? "85%" : "70%") + " ownership. " + (gameState.michaelLeft ? "She is now the overwhelming majority owner." : "Michael receives 30%.") + " The business enters its third decade under new leadership.</p>"
                         }
@@ -730,7 +738,7 @@ const EVENTS = [
                     description: function() {
                         var baseDesc = "Anderson Manufacturing is now 46 years old. Revenue is $" + formatNumber(gameState.revenue) + " annually. ";
 
-                        if (gameState.revenue > 15000000 && gameState.valuation > 25000000) {
+                        if (gameState.revenue > 15000000 && gameState.assets > 20000000) {
                             baseDesc += "The company is thriving—Robert would be proud.\n\n";
                         } else if (gameState.revenue < 8000000) {
                             baseDesc += "The company has survived but never reached its full potential.\n\n";
@@ -764,7 +772,7 @@ const EVENTS = [
                                 debt: 3000000,
                                 revenue: 5000000,
                                 profit: 1200000,
-                                valuation: 5000000,
+                                assets: 5000000,
                                 sarahHappiness: 10,
                                 hasDebt: true
                             },
@@ -777,7 +785,7 @@ const EVENTS = [
                                 debt: 2500000,
                                 revenue: 4500000,
                                 profit: 800000,
-                                valuation: 3500000,
+                                assets: 3500000,
                                 sarahHappiness: 5,
                                 hasDebt: true
                             },

@@ -251,10 +251,10 @@ function getBusinessPerformanceScore() {
     else if (gameState.debt < 3000000) score += 5;
     else score -= 5;
 
-    // Growth and sustainability (0-15 points)
-    if (gameState.valuation >= 30000000) score += 15;
-    else if (gameState.valuation >= 20000000) score += 10;
-    else if (gameState.valuation >= 10000000) score += 5;
+    // Growth and sustainability based on assets (0-15 points)
+    if (gameState.assets >= 25000000) score += 15;
+    else if (gameState.assets >= 15000000) score += 10;
+    else if (gameState.assets >= 8000000) score += 5;
 
     return Math.max(0, Math.min(100, score));
 }

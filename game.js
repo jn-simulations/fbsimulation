@@ -13,14 +13,15 @@ function init() {
         revenue: 0,
         profit: 0,
         cash: 50000,
-        valuation: 0,
+        assets: 50000, // Total assets (cash + equipment + inventory + property)
         debt: 0,
+        employees: 1, // Starting with just Robert
         previousRevenue: 0,
         previousProfit: 0,
-        
+
         // Decision tracking
         decisions: [],
-        
+
         // Business state flags
         hasOutsideCEO: false,
         hasProfessionalBoard: false,
@@ -29,7 +30,7 @@ function init() {
         robertDeceased: false,
         sarahCEO: false,
         michaelLeft: false,
-        
+
         // Risk factors
         hasQualityIssues: false,
         hasDebt: false
@@ -185,13 +186,18 @@ function makeDecision(choiceIndex, option) {
 function applyEffects(effects) {
     gameState.previousRevenue = gameState.revenue;
     gameState.previousProfit = gameState.profit;
-    
+
     // Apply numeric effects
-    const numericFields = ['revenue', 'profit', 'cash', 'valuation', 'debt'];
+    const numericFields = ['revenue', 'profit', 'cash', 'assets', 'debt', 'employees'];
     numericFields.forEach(field => {
         if (effects[field] !== undefined) {
             gameState[field] += effects[field];
-            gameState[field] = Math.max(0, gameState[field]); // Can't go negative
+            // Employees can't go below 0, others can't go negative except debt handled separately
+            if (field === 'employees') {
+                gameState[field] = Math.max(0, Math.round(gameState[field]));
+            } else if (field !== 'debt') {
+                gameState[field] = Math.max(0, gameState[field]);
+            }
         }
     });
     
@@ -251,7 +257,13 @@ function advanceGame() {
         const growthRate = 0.05; // 5% annual growth
         gameState.revenue *= Math.pow(1 + growthRate, yearsToAdvance);
         gameState.profit = gameState.revenue * 0.1; // 10% margin
-        gameState.valuation = gameState.revenue * 0.4;
+
+        // Assets grow with revenue (equipment, inventory, facilities)
+        // Assets = cash + fixed assets (roughly 60% of annual revenue for manufacturing)
+        gameState.assets = gameState.cash + (gameState.revenue * 0.6);
+
+        // Employees grow with revenue (roughly 1 employee per $100K revenue in manufacturing)
+        gameState.employees = Math.max(1, Math.round(gameState.revenue / 100000));
     }
     
     // Check if game continues
@@ -262,13 +274,78 @@ function advanceGame() {
     }
 }
 
+function calculateROA() {
+    // Return on Assets = (Profit / Total Assets) * 100
+    if (gameState.assets > 0) {
+        return ((gameState.profit / gameState.assets) * 100).toFixed(1);
+    }
+    return '0.0';
+}
+
+function calculateFinancialHealth() {
+    // Financial Health Score (0-100)
+    // Factors: profitability, cash position, debt burden
+    let score = 50; // Start at neutral
+
+    // Profitability component (+/- 30 points)
+    if (gameState.profit > 0) {
+        const profitMargin = (gameState.profit / gameState.revenue) * 100;
+        if (profitMargin >= 15) score += 30;
+        else if (profitMargin >= 10) score += 20;
+        else if (profitMargin >= 5) score += 10;
+        else score += 5;
+    } else {
+        score -= 30; // Losing money is bad
+    }
+
+    // Cash position component (+/- 25 points)
+    const monthsOfCash = gameState.revenue > 0 ? (gameState.cash / (gameState.revenue / 12)) : 0;
+    if (monthsOfCash >= 6) score += 25;
+    else if (monthsOfCash >= 3) score += 15;
+    else if (monthsOfCash >= 1) score += 5;
+    else if (monthsOfCash < 0.5 && gameState.revenue > 0) score -= 20;
+
+    // Debt burden component (+/- 25 points)
+    if (gameState.debt === 0) {
+        score += 25; // No debt is great
+    } else {
+        const debtToAssets = gameState.assets > 0 ? (gameState.debt / gameState.assets) : 1;
+        if (debtToAssets >= 0.7) score -= 25; // High debt
+        else if (debtToAssets >= 0.5) score -= 15; // Moderate debt
+        else if (debtToAssets >= 0.3) score -= 5; // Low debt
+        else score += 10; // Minimal debt
+    }
+
+    // Clamp between 0 and 100
+    return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function getHealthLabel(score) {
+    if (score >= 80) return 'Excellent';
+    if (score >= 60) return 'Good';
+    if (score >= 40) return 'Fair';
+    if (score >= 20) return 'Poor';
+    return 'Critical';
+}
+
 function updateUI() {
     // Update business metrics
     document.getElementById('currentYear').textContent = gameState.year;
     document.getElementById('revenue').textContent = '$' + formatNumber(gameState.revenue);
     document.getElementById('profit').textContent = '$' + formatNumber(gameState.profit);
     document.getElementById('cash').textContent = '$' + formatNumber(gameState.cash);
-    document.getElementById('valuation').textContent = '$' + formatNumber(gameState.valuation);
+
+    // Update ROA
+    const roa = calculateROA();
+    document.getElementById('roa').textContent = roa + '%';
+
+    // Update employees
+    document.getElementById('employees').textContent = gameState.employees;
+
+    // Update financial health
+    const healthScore = calculateFinancialHealth();
+    const healthLabel = getHealthLabel(healthScore);
+    document.getElementById('financialHealth').textContent = healthScore + ' - ' + healthLabel;
     
     // Show changes
     const revenueChange = gameState.revenue - gameState.previousRevenue;

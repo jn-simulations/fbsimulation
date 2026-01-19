@@ -65,16 +65,24 @@ function showEnding() {
                         <div class="stat-value">$${formatNumber(gameState.profit)}</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">Company Valuation</div>
-                        <div class="stat-value">$${formatNumber(gameState.valuation)}</div>
-                    </div>
-                    <div class="stat-item">
                         <div class="stat-label">Cash Position</div>
                         <div class="stat-value">$${formatNumber(gameState.cash)}</div>
                     </div>
                     <div class="stat-item">
+                        <div class="stat-label">ROA (Return on Assets)</div>
+                        <div class="stat-value">${calculateROA()}%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Employees</div>
+                        <div class="stat-value">${gameState.employees}</div>
+                    </div>
+                    <div class="stat-item">
                         <div class="stat-label">Outstanding Debt</div>
                         <div class="stat-value">$${formatNumber(gameState.debt)}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Financial Health</div>
+                        <div class="stat-value">${calculateFinancialHealth()} - ${getHealthLabel(calculateFinancialHealth())}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Family Avg. Happiness</div>
