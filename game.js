@@ -58,11 +58,12 @@ function startGame() {
 
 function loadEvent() {
     console.log("Loading event", gameState.eventIndex);
-    
+
     const event = EVENTS[gameState.eventIndex];
-    
+
     // Process description to add state-dependent context
-    let description = event.description;
+    // Check if description is a function and call it if needed
+    let description = typeof event.description === 'function' ? event.description() : event.description;
     
     // Add state-dependent context for specific events
     if (gameState.eventIndex === 10) {
