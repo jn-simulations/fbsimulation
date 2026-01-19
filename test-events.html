@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Events Load</title>
+</head>
+<body>
+    <h1>Events.js Test</h1>
+    <div id="status">Loading...</div>
+    <div id="details"></div>
+
+    <script src="events.js"></script>
+    <script>
+        const statusDiv = document.getElementById('status');
+        const detailsDiv = document.getElementById('details');
+
+        if (typeof EVENTS === 'undefined') {
+            statusDiv.innerHTML = '❌ ERROR: EVENTS not defined';
+            statusDiv.style.color = 'red';
+        } else if (!Array.isArray(EVENTS)) {
+            statusDiv.innerHTML = '❌ ERROR: EVENTS is not an array';
+            statusDiv.style.color = 'red';
+        } else if (EVENTS.length === 0) {
+            statusDiv.innerHTML = '❌ ERROR: EVENTS array is empty';
+            statusDiv.style.color = 'red';
+        } else {
+            statusDiv.innerHTML = '✅ SUCCESS: Events loaded correctly!';
+            statusDiv.style.color = 'green';
+            detailsDiv.innerHTML = `
+                <p>Number of events: ${EVENTS.length}</p>
+                <p>First event: ${EVENTS[0].title} (${EVENTS[0].date})</p>
+                <p>Last event: ${EVENTS[EVENTS.length-1].title} (${EVENTS[EVENTS.length-1].date})</p>
+            `;
+        }
+
+        console.log('EVENTS loaded:', EVENTS);
+    </script>
+</body>
+</html>
