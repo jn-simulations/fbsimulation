@@ -62,7 +62,7 @@ const EVENTS = [
                             text: "Keep business and family separate—hire professional staff",
                             effects: {
                                 revenue: 250000,
-                                profit: 45000,
+                                profit: 15000,  // 6% margin on cardboard
                                 cash: 30000,
                                 assets: 80000,
                                 robertHappiness: -5,
@@ -105,7 +105,7 @@ const EVENTS = [
                             text: "Pivot to serving food packaging and industrial clients",
                             effects: {
                                 revenue: 100000,
-                                profit: 20000,
+                                profit: 6000,  // 6% margin on cardboard
                                 cash: -50000,
                                 assets: 100000,
                                 robertHappiness: -5
@@ -157,7 +157,7 @@ const EVENTS = [
                         {
                             text: "Hire both at market-rate salaries in entry roles, no immediate ownership",
                             effects: {
-                                profit: 30000,
+                                profit: 24000,  // 6% margin on cardboard
                                 revenue: 400000,
                                 sarahHappiness: 5,
                                 michaelHappiness: 5,
@@ -313,7 +313,7 @@ const EVENTS = [
                             text: "Increase Michael's salary to $160K to recognize his sales success",
                             effects: {
                                 profit: -40000,
-                                revenue: 500000,
+                                revenue: 500000,  // Michael brings in new sales
                                 michaelHappiness: 18,
                                 sarahHappiness: -10
                             },
@@ -341,7 +341,7 @@ const EVENTS = [
                             text: "Hire Amanda as COO, moving Sarah to VP of Operations",
                             effects: {
                                 revenue: 1500000,
-                                profit: 250000,
+                                profit: 90000,  // 6% margin on cardboard
                                 assets: 1000000,
                                 robertOwnership: -2,
                                 sarahOwnership: -2,
@@ -721,7 +721,7 @@ const EVENTS = [
                                 sarahHappiness: 15,
                                 robertHappiness: 0,
                                 revenue: 1200000,
-                                profit: 250000,
+                                profit: 72000,  // 6% margin on cardboard
                                 assets: 800000
                             },
                             impact: function() {
@@ -825,7 +825,7 @@ const EVENTS = [
                             text: "Stay the course—gradual, organic growth",
                             effects: {
                                 revenue: 500000,
-                                profit: 100000,
+                                profit: 30000,  // 6% margin on cardboard
                                 sarahHappiness: -10,
                                 managementQuality: -3
                             },
@@ -906,7 +906,7 @@ const EVENTS = [
                             effects: {
                                 sarahHappiness: 20,
                                 revenue: 2000000,
-                                profit: 400000
+                                profit: 120000  // 6% margin on cardboard
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah announces that Emily will become CEO within two years. David will be President.</p><p>The third generation takes the helm. <span class='impact-positive'>Revenue and profit grow</span> under fresh leadership with new ideas.</p><p><span class='impact-highlight'>Sarah</span> is proud and happy—the family legacy continues.</p><p>Anderson Packaging enters its second half-century under third-generation leadership.</p><p>Robert's dream lives on. The family business he started in 1994 will see 2050 and beyond.</p>`
                         }
