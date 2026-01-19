@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy & Leadership - Family Business Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Legacy & Leadership</h1>
+            <p class="subtitle">A 50-Year Family Business Simulation</p>
+        </header>
+
+        <!-- Intro Screen -->
+        <div id="intro" class="intro-screen">
+            <h2>Welcome to the Anderson Family Business</h2>
+            <p>It's 1994. Robert Anderson, 35 years old, is about to make the biggest decision of his life: quit his stable job and start his own manufacturing company.</p>
+            <p>His wife supports him, though she's nervous. They have three young children: Sarah (8), Michael (5), and Jennifer (2). The mortgage payment is due every month, and starting a business means uncertain income.</p>
+            <p>Over the next 50 years, you'll guide the Anderson family through multiple generations, critical business decisions, and family dynamics. Your choices will determine whether the company thrives or fails, and whether the family stays united or falls apart.</p>
+            <p><strong>Remember:</strong> In family business, fair is not always equal, and equal is not always fair.</p>
+
+            <button class="btn" id="startButton">Begin the Journey</button>
+        </div>
+
+        <!-- Main Game Screen -->
+        <div id="gameScreen" class="hidden">
+            <div class="game-layout">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Business Metrics -->
+                    <div class="panel">
+                        <h2>Business Metrics</h2>
+                        <div class="metric-group">
+                            <div class="metric-label">Current Year</div>
+                            <div class="metric-value" id="currentYear">1994</div>
+                        </div>
+                        <div class="metric-group">
+                            <div class="metric-label">Annual Revenue</div>
+                            <div class="metric-value" id="revenue">$0</div>
+                            <span class="metric-change" id="revenueChange"></span>
+                        </div>
+                        <div class="metric-group">
+                            <div class="metric-label">Annual Profit</div>
+                            <div class="metric-value" id="profit">$0</div>
+                            <span class="metric-change" id="profitChange"></span>
+                        </div>
+                        <div class="metric-group">
+                            <div class="metric-label">Cash Reserves</div>
+                            <div class="metric-value" id="cash">$50K</div>
+                        </div>
+                        <div class="metric-group">
+                            <div class="metric-label">Company Valuation</div>
+                            <div class="metric-value" id="valuation">$0</div>
+                        </div>
+                    </div>
+
+                    <!-- Family Status -->
+                    <div class="panel">
+                        <h2>Family Status</h2>
+                        <div id="familyContainer">
+                            <!-- Family members will be added dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="main-content">
+                    <!-- Event Card -->
+                    <div class="event-card" id="eventCard">
+                        <div class="event-header">
+                            <div class="event-date" id="eventDate">1994</div>
+                            <h3 class="event-title" id="eventTitle">Event Title</h3>
+                        </div>
+                        <div class="event-description" id="eventDescription">Event description will appear here.</div>
+                        <div class="options" id="optionsContainer">
+                            <!-- Options will be populated here -->
+                        </div>
+                        <div id="impactDisplay" class="impact-display hidden">
+                            <!-- Impact will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript files in order -->
+    <script src="events.js"></script>
+    <script src="family.js"></script>
+    <script src="endings.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
