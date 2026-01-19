@@ -208,7 +208,7 @@ function makeDecision(choiceIndex, option) {
 function applyEffects(effects) {
     gameState.previousRevenue = gameState.revenue;
     gameState.previousProfit = gameState.profit;
-    
+
     // Apply numeric effects
     const numericFields = ['revenue', 'profit', 'cash', 'valuation', 'debt'];
     numericFields.forEach(field => {
@@ -217,16 +217,22 @@ function applyEffects(effects) {
             gameState[field] = Math.max(0, gameState[field]); // Can't go negative
         }
     });
-    
+
     // Apply family effects
     Object.keys(familyMembers).forEach(key => {
         const member = familyMembers[key];
+
+        // Skip applying effects to Michael if he left the business
+        if (key === 'michael' && gameState.michaelLeft) {
+            return;
+        }
+
         const happinessChange = effects[key + 'Happiness'];
         if (happinessChange !== undefined) {
             member.happiness += happinessChange;
             member.happiness = Math.max(0, Math.min(100, member.happiness));
         }
-        
+
         const ownershipChange = effects[key + 'Ownership'];
         if (ownershipChange !== undefined) {
             member.ownership += ownershipChange;
@@ -250,6 +256,13 @@ function applyEffects(effects) {
     if (effects.robertDeceased) {
         gameState.robertDeceased = true;
         familyMembers.robert.isDead = true;
+
+        // Adjust ownership distribution based on whether Michael is still in business
+        // If Michael left, Sarah gets additional 15% ownership
+        if (gameState.michaelLeft && effects.sarahOwnership) {
+            familyMembers.sarah.ownership += 15; // Extra 15% that would have gone to Michael
+            familyMembers.michael.ownership = 0; // Michael gets nothing if he left
+        }
     }
     if (effects.hasQualityIssues) gameState.hasQualityIssues = true;
     if (effects.hasDebt) gameState.hasDebt = true;

@@ -539,7 +539,7 @@ const EVENTS = [
                                 robertHappiness: -15,
                                 sarahHappiness: -20,
                                 jenniferHappiness: 30,
-                                michaelHappiness: gameState.michaelLeft ? 0 : 10
+                                michaelHappiness: 10
                             },
                             impact: `<h4>Decision Impact</h4><p>The family accepts the offer. Everyone becomes wealthy overnight.</p><p><span class='impact-highlight'>Jennifer</span> is thrilled—<span class='impact-positive'>she receives nearly $3M</span> and can finally live comfortably.</p><p><span class='impact-highlight'>Robert and Sarah</span> are conflicted. They have the money, but <span class='impact-negative'>they've given up the family legacy</span>. Their happiness decreases despite the wealth.</p><p>The PE firm immediately implements aggressive changes. The company Sarah built starts to feel foreign.</p>`
                         },
@@ -669,20 +669,20 @@ const EVENTS = [
                         {
                             text: "Maintain Robert's vision and conservative approach",
                             effects: {
-                                sarahOwnership: gameState.michaelLeft ? 85 : 70,
-                                michaelOwnership: gameState.michaelLeft ? 0 : 30,
+                                sarahOwnership: 70,
+                                michaelOwnership: 30,
                                 sarahHappiness: 5,
                                 robertHappiness: 0,
                                 robertDeceased: true,
                                 revenue: -300000
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah commits to maintaining Robert's conservative, values-driven approach to the business.</p><p>The company continues steadily, but <span class='impact-negative'>growth slows</span> as opportunities are passed up to stay true to the founder's vision.</p><p>Some employees appreciate the continuity. Others feel the company is stuck in the past.</p><p>Sarah receives ` + (gameState.michaelLeft ? "85%" : "70%") + " ownership. " + (gameState.michaelLeft ? "She is now the overwhelming majority owner." : "Michael receives 30%.") + "</p>"
+                            impact: `<h4>Decision Impact</h4><p>Sarah commits to maintaining Robert's conservative, values-driven approach to the business.</p><p>The company continues steadily, but <span class='impact-negative'>growth slows</span> as opportunities are passed up to stay true to the founder's vision.</p><p>Some employees appreciate the continuity. Others feel the company is stuck in the past.</p><p>Robert's ownership is transferred to his children according to his will.</p>`
                         },
                         {
                             text: "Honor his values but modernize the strategy",
                             effects: {
-                                sarahOwnership: gameState.michaelLeft ? 85 : 70,
-                                michaelOwnership: gameState.michaelLeft ? 0 : 30,
+                                sarahOwnership: 70,
+                                michaelOwnership: 30,
                                 sarahHappiness: 15,
                                 robertHappiness: 0,
                                 robertDeceased: true,
@@ -690,7 +690,7 @@ const EVENTS = [
                                 profit: 250000,
                                 valuation: 800000
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah decides to honor Robert's core values—integrity, employee welfare, quality—while modernizing strategy for the next generation.</p><p><span class='impact-positive'>Revenue, profit, and valuation all increase</span> as Sarah implements changes she's been planning.</p><p>The company evolves while maintaining its soul. Employees embrace the changes.</p><p>Sarah receives ` + (gameState.michaelLeft ? "85%" : "70%") + " ownership. " + (gameState.michaelLeft ? "She is now the overwhelming majority owner." : "Michael receives 30%.") + " The business enters its third decade under new leadership.</p>"
+                            impact: `<h4>Decision Impact</h4><p>Sarah decides to honor Robert's core values—integrity, employee welfare, quality—while modernizing strategy for the next generation.</p><p><span class='impact-positive'>Revenue, profit, and valuation all increase</span> as Sarah implements changes she's been planning.</p><p>The company evolves while maintaining its soul. Employees embrace the changes.</p><p>Robert's ownership is transferred to his children according to his will. The business enters its third decade under new leadership.</p>`
                         }
                     ]
                 },
@@ -707,7 +707,7 @@ const EVENTS = [
                                 profit: -150000,
                                 revenue: 600000,
                                 sarahHappiness: 15,
-                                michaelHappiness: gameState.michaelLeft ? 0 : 10,
+                                michaelHappiness: 10,
                                 hasGen3: true
                             },
                             impact: `<h4>Decision Impact</h4><p>Emily joins as a junior engineer, David in business development. Both at entry-level salaries.</p><p><span class='impact-positive'>Revenue increases</span> as the young generation brings fresh energy and ideas.</p><p><span class='impact-negative'>Profit decreases</span> from additional payroll.</p><p>The third generation is now in the business. Emily and David are eager to prove themselves, but also bring the natural confidence of family privilege.</p><p>Some long-time employees question whether they earned their positions or received them due to family connections.</p>`
@@ -716,7 +716,7 @@ const EVENTS = [
                             text: "Require them to work elsewhere for 3 years first",
                             effects: {
                                 sarahHappiness: 10,
-                                michaelHappiness: gameState.michaelLeft ? 0 : 5
+                                michaelHappiness: 5
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah implements the professional standard: Emily and David must work elsewhere first.</p><p>Emily is disappointed but accepts it. She joins a major manufacturing firm. David takes a sales role at a tech startup.</p><p>The policy ensures they'll bring outside experience and perspective. It also signals that Anderson Manufacturing values competence over family privilege.</p><p>However, three years is a long time. Will they still want to join the family business after building careers elsewhere?</p>`
                         }
