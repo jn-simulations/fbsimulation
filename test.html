@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Events Test</title>
+</head>
+<body>
+    <h1>Events Array Test</h1>
+    <div id="output"></div>
+
+    <script src="events.js"></script>
+    <script>
+        const output = document.getElementById('output');
+
+        // Check if EVENTS is defined
+        if (typeof EVENTS === 'undefined') {
+            output.innerHTML = '<p style="color: red;">ERROR: EVENTS is undefined!</p>';
+        } else {
+            output.innerHTML = `
+                <p style="color: green;">SUCCESS: EVENTS is defined</p>
+                <p>Number of events: ${EVENTS.length}</p>
+                <p>First event title: ${EVENTS[0].title}</p>
+                <p>First event date: ${EVENTS[0].date}</p>
+                <p>First event description type: ${typeof EVENTS[0].description}</p>
+                <p>First event description (first 100 chars): ${EVENTS[0].description.substring(0, 100)}...</p>
+            `;
+        }
+    </script>
+</body>
+</html>

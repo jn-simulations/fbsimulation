@@ -59,7 +59,30 @@ function startGame() {
 function loadEvent() {
     console.log("Loading event", gameState.eventIndex);
 
+    // Debug: Check if EVENTS is defined
+    if (typeof EVENTS === 'undefined') {
+        console.error("EVENTS array is undefined!");
+        document.getElementById('eventDescription').textContent = "ERROR: Events data not loaded. Please check that events.js is loaded correctly.";
+        return;
+    }
+
+    if (!EVENTS || EVENTS.length === 0) {
+        console.error("EVENTS array is empty!");
+        document.getElementById('eventDescription').textContent = "ERROR: No events found in events.js";
+        return;
+    }
+
+    console.log("EVENTS array length:", EVENTS.length);
+
     const event = EVENTS[gameState.eventIndex];
+
+    if (!event) {
+        console.error("Event not found at index", gameState.eventIndex);
+        document.getElementById('eventDescription').textContent = "ERROR: Event data missing for index " + gameState.eventIndex;
+        return;
+    }
+
+    console.log("Event loaded:", event.title);
 
     // Process description to add state-dependent context
     // Check if description is a function and call it if needed
