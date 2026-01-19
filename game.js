@@ -49,21 +49,55 @@ function init() {
 
 function startGame() {
     console.log("Starting game");
-    
-    // Hide intro
-    document.getElementById('intro').classList.add('hidden');
-    
-    // Show game screen
-    document.getElementById('gameScreen').classList.remove('hidden');
-    
-    // Load first event
-    loadEvent();
+    console.log("Game state:", gameState);
+
+    try {
+        // Hide intro
+        const intro = document.getElementById('intro');
+        if (intro) {
+            intro.classList.add('hidden');
+            console.log("Intro hidden");
+        } else {
+            console.error("Intro element not found");
+        }
+
+        // Show game screen
+        const gameScreen = document.getElementById('gameScreen');
+        if (gameScreen) {
+            gameScreen.classList.remove('hidden');
+            console.log("Game screen shown");
+        } else {
+            console.error("Game screen element not found");
+        }
+
+        // Load first event
+        console.log("About to load first event");
+        loadEvent();
+    } catch (error) {
+        console.error("Error in startGame:", error);
+    }
 }
 
 function loadEvent() {
     console.log("Loading event", gameState.eventIndex);
 
+    if (!EVENTS || EVENTS.length === 0) {
+        console.error("EVENTS array is not defined or empty!");
+        return;
+    }
+
+    if (gameState.eventIndex >= EVENTS.length) {
+        console.error("Event index out of bounds:", gameState.eventIndex);
+        showEnding();
+        return;
+    }
+
     const event = EVENTS[gameState.eventIndex];
+
+    if (!event) {
+        console.error("Event is undefined at index:", gameState.eventIndex);
+        return;
+    }
 
     // Process description to add state-dependent context
     // Check if description is a function and call it if needed
@@ -408,11 +442,18 @@ function formatNumber(num) {
 // Initialize when page loads
 window.addEventListener('DOMContentLoaded', () => {
     console.log("DOM loaded, initializing game");
+    console.log("EVENTS array length:", EVENTS ? EVENTS.length : "undefined");
+
     init();
-    
+
     const startBtn = document.getElementById('startButton');
     if (startBtn) {
-        startBtn.addEventListener('click', () => {
+        // Remove any existing listeners by cloning the button
+        const newStartBtn = startBtn.cloneNode(true);
+        startBtn.parentNode.replaceChild(newStartBtn, startBtn);
+
+        // Add fresh event listener
+        newStartBtn.addEventListener('click', () => {
             console.log("Start button clicked");
             startGame();
         });
