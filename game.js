@@ -26,7 +26,7 @@ function init() {
         decisions: [],
 
         // Business state flags
-        hasOutsideCEO: false,
+        hasOutsideCOO: false,
         hasProfessionalBoard: false,
         hasGen3: false,
         robertRetired: false,
@@ -237,7 +237,7 @@ function applyEffects(effects) {
         familyMembers.michael.inBusiness = false;
         familyMembers.michael.isActive = false;
     }
-    if (effects.hasOutsideCEO) gameState.hasOutsideCEO = true;
+    if (effects.hasOutsideCOO) gameState.hasOutsideCOO = true;
     if (effects.hasProfessionalBoard) gameState.hasProfessionalBoard = true;
     if (effects.robertDeceased) {
         gameState.robertDeceased = true;
@@ -252,15 +252,15 @@ function advanceGame() {
     const yearsToAdvance = 2;
     gameState.year += yearsToAdvance;
     gameState.eventIndex += 1;
-    
+
     // Age family members
     Object.keys(familyMembers).forEach(key => {
         familyMembers[key].age += yearsToAdvance;
     });
-    
+
     // Check for life events
     checkLifeEvents();
-    
+
     // Natural business growth (influenced by management quality)
     if (gameState.revenue > 0) {
         // Growth rate based on management quality (3-7% annual)
@@ -291,7 +291,11 @@ function advanceGame() {
         const revenuePerEmployee = 80000 + (gameState.managementQuality / 100) * 50000;
         gameState.employees = Math.max(1, Math.round(gameState.revenue / revenuePerEmployee));
     }
-    
+
+    // Update UI to show current state before loading next event
+    updateUI();
+    updateFamilyDisplay();
+
     // Check if game continues
     if (gameState.eventIndex < EVENTS.length) {
         loadEvent();
@@ -359,7 +363,6 @@ function updateUI() {
     document.getElementById('currentYear').textContent = gameState.year;
     document.getElementById('revenue').textContent = '$' + formatNumber(gameState.revenue);
     document.getElementById('profit').textContent = '$' + formatNumber(gameState.profit);
-    document.getElementById('cash').textContent = '$' + formatNumber(gameState.cash);
 
     // Update ROA
     const roa = calculateROA();

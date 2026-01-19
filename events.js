@@ -36,33 +36,36 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 1: 1996 - First Major Client
+                // Event 1: 1996 - Family Involvement
                 {
                     date: "1996",
-                    title: "The First Major Client",
-                    description: `The business has survived its early years. Now, a Fortune 500 company has approached Anderson Manufacturing with a contract that could transform everything: $1.2M over three years.\n\nThere's a catch. To fulfill the contract, Robert needs to hire six more people immediately and lease a larger facility. This means $200K in upfront costs and significantly higher monthly overhead.\n\nIf the client is satisfied, it could lead to even bigger contracts. But if Anderson Manufacturing can't deliver quality work on time, the reputational damage could be fatal.\n\nRobert's current facility could maybe handle the work—but just barely, and quality might suffer.`,
+                    title: "A Partner or Just a Spouse?",
+                    description: `The business is growing steadily. Robert's wife, Patricia, has been supportive from day one—managing the household, raising three children, and providing emotional support through the uncertain early years.\n\nNow Patricia wants to be more involved. She has a business degree and handled all the bookkeeping in the early days. She's proposing to join officially as CFO, handling finances, HR, and operations.\n\n"I've been doing half this work anyway," she explains. "Why shouldn't I get a title and salary?"\n\nRobert sees two paths:\n\n1. Bring Patricia in officially—give her the CFO title, market-rate salary, and equal ownership (50/50 partnership)\n2. Keep business and family separate—hire a professional bookkeeper, maintain Robert as sole owner\n\nBringing Patricia in could strengthen the business and their partnership. But mixing marriage and business ownership has destroyed many families. The kids are watching how their parents handle this.`,
                     options: [
                         {
-                            text: "Accept the contract and invest in scaling up",
+                            text: "Bring Patricia in as CFO with 50/50 ownership",
                             effects: {
-                                revenue: 1200000,
-                                profit: 180000,
-                                cash: -200000,
-                                assets: 480000,
-                                robertHappiness: 15
+                                revenue: 300000,
+                                profit: 50000,
+                                cash: -50000,
+                                assets: 100000,
+                                robertHappiness: 10,
+                                robertOwnership: -50,
+                                managementQuality: 10
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert accepts the contract and makes the necessary investments. <span class='impact-positive'>Revenue jumps to over $1.6M</span> annually.</p><p>The new facility and expanded team deliver excellent work. <span class='impact-positive'>The Fortune 500 client is impressed and extends the contract.</span></p><p><span class='impact-highlight'>Robert</span> is thrilled—the business is truly taking off. However, <span class='impact-negative'>cash reserves are depleted</span> from the expansion costs.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Patricia joins Anderson Manufacturing as CFO with equal ownership. <span class='impact-positive'>The business becomes more professionally managed</span> with clear financial systems and HR policies.</p><p><span class='impact-positive'>Management quality improves significantly.</span> Patricia's organizational skills complement Robert's technical vision.</p><p><span class='impact-highlight'>Robert</span> is happy to have his wife as a true partner—but now every business disagreement happens at the dinner table too.</p><p>The children see their parents working together. This will shape their understanding of what the family business means.</p>`
                         },
                         {
-                            text: "Decline—stay small and avoid the risk",
+                            text: "Keep business and family separate—hire professional staff",
                             effects: {
-                                revenue: 200000,
-                                profit: 40000,
-                                cash: 50000,
+                                revenue: 250000,
+                                profit: 45000,
+                                cash: 30000,
                                 assets: 80000,
-                                robertHappiness: -10
+                                robertHappiness: -5,
+                                managementQuality: 3
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert declines the major contract, choosing stability over growth risk.</p><p>The business continues to grow slowly. <span class='impact-positive'>Cash reserves remain healthy</span>, but revenue growth is modest.</p><p><span class='impact-highlight'>Robert</span> wonders if he's made a mistake. <span class='impact-negative'>His happiness decreases</span>—he can't shake the feeling that he's missed a huge opportunity.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert hires a professional bookkeeper and keeps Patricia separate from the business. Clear boundaries between work and family.</p><p><span class='impact-positive'>The business continues to grow steadily</span> with professional management developing.</p><p>Patricia is disappointed. She feels her contributions aren't valued. <span class='impact-negative'>Dinner conversations become tense</span> when Robert talks about "his" business.</p><p>The children notice the tension. They learn that the family business can create division even when it's successful.</p>`
                         }
                     ]
                 },
@@ -113,7 +116,7 @@ const EVENTS = [
                 {
                     date: "2004",
                     title: "Looking to the Future",
-                    description: `Robert is 45 years old. The business is doing well, bringing in $3M annually with healthy margins. He's been thinking about the future.\n\nSarah is 18 and just started college, studying business. She's shown interest in joining the company someday. Michael (15) is more interested in sports than business, but that could change. Jennifer (12) is still young.\n\nRobert has never given his children formal ownership. Some advisors tell him to start creating a clear succession plan and giving the children stake in the business to build their long-term commitment. Others say he should wait—the kids are too young, and it's too early to commit to specific succession plans.\n\nRobert's wife suggests he at least start thinking about which children might want to be involved and begin setting expectations.`,
+                    description: `Robert is 45 years old. The business is doing well with healthy margins and steady growth. He's been thinking about the future.\n\nSarah is 18 and just started college, studying business. She's shown interest in joining the company someday. Michael (15) is more interested in sports than business, but that could change. Jennifer (12) is still young.\n\nRobert has never given his children formal ownership. Some advisors tell him to start creating a clear succession plan and giving the children stake in the business to build their long-term commitment. Others say he should wait—the kids are too young, and it's too early to commit to specific succession plans.\n\nRobert's wife suggests he at least start thinking about which children might want to be involved and begin setting expectations.`,
                     options: [
                         {
                             text: "Begin transferring 30% ownership to children (10% each) and create formal succession plan",
@@ -146,31 +149,36 @@ const EVENTS = [
                 {
                     date: "2007",
                     title: "The Next Generation Enters",
-                    description: `Sarah graduated with her MBA and wants to join Anderson Manufacturing. She's smart, ambitious, and has real business skills.\n\nMichael also finished college. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nRobert needs to decide how to bring them into the business. Should they start at the bottom and earn their way up? Should they get special treatment as family? Should their compensation reflect market rates or family privilege?\n\nRobert knows that how he handles this will set precedents for years to come. He's also aware that Sarah and Michael might end up competing for leadership someday.`,
+                    description: `Sarah graduated with her MBA and wants to join Anderson Manufacturing. She's smart, ambitious, and has real business skills.\n\nMichael also finished college. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nRobert needs to decide how to bring them into the business. Should they start at entry-level and earn their way up? Should they get elevated positions based on family status? How Robert handles this will set precedents for years to come.\n\nMore importantly: should family members working in the business receive ownership stakes immediately, or should ownership be earned over time? This decision will shape expectations about entitlement versus meritocracy.`,
                     options: [
                         {
-                            text: "Hire both at market-rate salaries, make them earn their positions",
+                            text: "Hire both at market-rate salaries in entry roles, no immediate ownership",
                             effects: {
-                                profit: -180000,
+                                profit: 30000,
                                 revenue: 400000,
                                 sarahHappiness: 5,
                                 michaelHappiness: 5,
                                 robertHappiness: 10,
-                                managementQuality: 5
+                                managementQuality: 5,
+                                employees: 2
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager at $65K, Michael in sales at $55K—both market rates for their experience.</p><p><span class='impact-positive'>Revenue increases</span> as both contribute to the business. <span class='impact-negative'>Profit decreases</span> due to additional payroll.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they sometimes wonder if family connections should provide more benefits.</p><p><span class='impact-highlight'>Robert</span> is proud of the professional approach.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager, Michael in sales—both at market rates for their experience and without immediate ownership stakes.</p><p><span class='impact-positive'>Revenue increases as both contribute to the business.</span> They generate more value than they cost, so <span class='impact-positive'>profit increases modestly</span>.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they wonder when they'll receive ownership stakes.</p><p>Non-family employees respect that the family members are earning their positions. <span class='impact-positive'>Management quality improves.</span></p><p><span class='impact-highlight'>Robert</span> is proud of setting a meritocratic precedent.</p>`
                         },
                         {
-                            text: "Give them elevated positions and above-market compensation",
+                            text: "Give them elevated titles, above-market pay, and immediate 10% ownership stakes each",
                             effects: {
-                                profit: -250000,
+                                profit: -80000,
                                 revenue: 300000,
+                                sarahOwnership: 10,
+                                michaelOwnership: 10,
+                                robertOwnership: -20,
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
                                 robertHappiness: -5,
-                                managementQuality: -5
+                                managementQuality: -5,
+                                employees: 2
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO at $90K, Michael as Sales Director at $80K—well above market for their experience.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and trusted. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, <span class='impact-negative'>profit decreases substantially</span> from the high salaries. Non-family employees notice the special treatment and some grumble about nepotism.</p><p><span class='impact-highlight'>Robert</span> worries whether he's done the right thing.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO, Michael as Sales Director—with above-market salaries and immediate 10% ownership stakes each.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and committed. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, <span class='impact-negative'>profit decreases</span> from the inflated compensation. Non-family employees notice the preferential treatment and morale suffers.</p><p><span class='impact-negative'>Management quality decreases</span> as employees question whether advancement is based on merit or family connections.</p><p><span class='impact-highlight'>Robert</span> worries he's set a bad precedent—entitlement over earning.</p>`
                         }
                     ]
                 },
@@ -296,7 +304,7 @@ const EVENTS = [
                 {
                     date: "2016",
                     title: "The Compensation Debate",
-                    description: `Michael requests a meeting with Robert. He's done the math.\n\n"I brought in $4.2M in new business last year," Michael explains. "But Sarah makes $180K as COO while I make $120K. I understand her role has more responsibility, but my results speak for themselves."\n\nHe has a point. Michael's sales performance has been exceptional. But Sarah's role requires more expertise, works longer hours, and carries ultimate operational responsibility.\n\nFair isn't always equal. Equal isn't always fair.\n\nRobert needs to decide how to value different types of contributions.`,
+                    description: `Michael requests a meeting with Robert. He's done the math.\n\n"I've brought in significant new business—my sales results have been exceptional," Michael explains. "But Sarah makes considerably more as COO. I understand her role has more responsibility, but my results speak for themselves."\n\nHe has a point. Michael's sales performance has been exceptional. But Sarah's role requires more expertise, works longer hours, and carries ultimate operational responsibility.\n\nFair isn't always equal. Equal isn't always fair.\n\nRobert needs to decide how to value different types of contributions.`,
                     options: [
                         {
                             text: "Increase Michael's salary to $160K to recognize his sales success",
@@ -324,7 +332,7 @@ const EVENTS = [
                 {
                     date: "2018",
                     title: "The Outside COO Candidate",
-                    description: `A headhunter has approached Robert about Amanda Chen, a highly experienced COO from a $75M manufacturing company. She's interested in joining Anderson Manufacturing.\n\nAmanda has expertise that neither Sarah nor Michael possess. She could accelerate growth dramatically. But hiring her would demote Sarah, who has been COO for seven years.\n\nAmanda wants $220K salary plus 5% equity. The family would need to dilute their ownership.\n\nThis is a defining moment: professionalize with outside talent, or commit to family leadership?`,
+                    description: `A headhunter has approached Robert about Amanda Chen, a highly experienced COO from a $75M manufacturing company. She's interested in joining Anderson Manufacturing.\n\nAmanda has expertise that neither Sarah nor Michael possess. She could accelerate growth dramatically. But hiring her as COO would demote Sarah, who has been COO for seven years.\n\nAmanda wants a significant salary plus 5% equity. The family would need to dilute their ownership.\n\nThis is a defining moment: professionalize with outside talent, or commit to family leadership? Does the family business prioritize family or business?`,
                     options: [
                         {
                             text: "Hire Amanda as COO, moving Sarah to VP of Operations",
@@ -339,20 +347,21 @@ const EVENTS = [
                                 sarahHappiness: -30,
                                 michaelHappiness: -15,
                                 robertHappiness: 10,
-                                hasOutsideCEO: true
+                                hasOutsideCOO: true,
+                                managementQuality: 15
                             },
-                            impact: `<h4>Decision Impact</h4><p>Amanda joins as COO. <span class='impact-positive'>Revenue and profit grow significantly</span> under her professional management. <span class='impact-positive'>Company valuation increases substantially.</span></p><p><span class='impact-highlight'>Sarah</span> is devastated. <span class='impact-negative'>Her happiness plummets</span>—after seven years as COO, she's been demoted in favor of an outsider. She's questioning whether to leave.</p><p><span class='impact-highlight'>Michael</span> also sees his advancement blocked. All family ownership stakes decrease slightly due to Amanda's equity.</p><p><span class='impact-highlight'>Robert</span> believes he's made the right business decision, even if it's painful for the family.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Amanda joins as COO, with Sarah demoted to VP of Operations. <span class='impact-positive'>Revenue and profit grow significantly</span> under Amanda's professional management.</p><p><span class='impact-positive'>Company valuation and management quality increase substantially.</span></p><p><span class='impact-highlight'>Sarah</span> is devastated. <span class='impact-negative'>Her happiness plummets</span>—after seven years as COO, she's been demoted in favor of an outsider. She's questioning whether to leave the family business.</p><p><span class='impact-highlight'>Michael</span> also sees his advancement blocked. All family ownership stakes decrease slightly due to Amanda's equity.</p><p><span class='impact-highlight'>Robert</span> believes he's prioritized business over family—for better or worse.</p>`
                         },
                         {
                             text: "Stay family-led and invest in Sarah's development",
                             effects: {
                                 profit: -100000,
-                                cash: -50000,
                                 sarahHappiness: 20,
                                 michaelHappiness: 8,
-                                robertHappiness: -5
+                                robertHappiness: -5,
+                                managementQuality: 3
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert passes on Amanda and commits to Sarah's leadership. He invests $50K in executive coaching and development for her.</p><p><span class='impact-highlight'>Sarah</span> feels deeply valued and supported. <span class='impact-positive'>Her happiness increases dramatically.</span></p><p>However, <span class='impact-negative'>profit decreases</span> as the company misses opportunities that Amanda's expertise could have captured.</p><p><span class='impact-highlight'>Robert</span> sometimes wonders if family loyalty is limiting the business's potential.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert passes on Amanda and commits to Sarah's leadership. He invests in executive coaching and development for her.</p><p><span class='impact-highlight'>Sarah</span> feels deeply valued and supported. <span class='impact-positive'>Her happiness increases dramatically.</span></p><p>However, <span class='impact-negative'>profit growth slows</span> as the company misses opportunities that Amanda's expertise could have captured.</p><p><span class='impact-highlight'>Robert</span> has prioritized family over business. He sometimes wonders if family loyalty is limiting the company's potential.</p>`
                         }
                     ]
                 },
@@ -370,7 +379,7 @@ const EVENTS = [
                             baseDesc += "The situation is dire. The company is carrying $" + formatNumber(gameState.debt) + " in debt, and cash reserves are thin. Debt payments are due monthly.\n\n";
                         }
 
-                        baseDesc += "Robert is 61. Sarah is 34. Michael is 31. The company employs 45 people, many with families who depend on these paychecks.\n\n";
+                        baseDesc += "Robert is 61. Sarah is 34. Michael is 31. The company employs " + gameState.employees + " people, many with families who depend on these paychecks.\n\n";
 
                         // Check if they protected employees in 2009 crisis
                         var crisisEvent = gameState.decisions.find(function(d) { return d.event === 5; });
@@ -607,7 +616,7 @@ const EVENTS = [
                                 robertHappiness: 15,
                                 managementQuality: 7
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah announces full responsibility. <span class='impact-negative'>The company takes a $1.8M hit</span> for recalls and rebuilding quality systems.</p><p>The client is impressed by the integrity. <span class='impact-positive'>They not only maintain the contract but increase it.</span></p><p><span class='impact-highlight'>Sarah and Robert</span> feel they've upheld the company's values, despite the painful cost.</p><p>Employee morale and culture strengthen. The team sees leadership that prioritizes doing the right thing over short-term profits.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah announces full responsibility. <span class='impact-negative'>The company takes a major financial hit</span> for recalls and rebuilding quality systems.</p><p>The client is impressed by the integrity. <span class='impact-positive'>They not only maintain the contract but increase it.</span></p><p><span class='impact-highlight'>Sarah and Robert</span> feel they've upheld the company's values, despite the painful cost.</p><p>Employee morale and culture strengthen. The team sees leadership that prioritizes doing the right thing over short-term profits.</p>`
                         },
                         {
                             text: "Minimize liability and settle quietly ($600K)",
@@ -620,7 +629,7 @@ const EVENTS = [
                                 hasQualityIssues: true,
                                 managementQuality: -10
                             },
-                            impact: `<h4>Decision Impact</h4><p>The company settles quietly for $600K and moves on quickly.</p><p>The client accepts the settlement but doesn't renew the contract. <span class='impact-negative'>Revenue decreases as they take their business elsewhere.</span></p><p><span class='impact-highlight'>Sarah and Robert</span> both feel they've compromised their values. <span class='impact-negative'>Their happiness decreases</span> as they've chosen financial protection over doing the right thing.</p><p>Some employees lose respect for leadership. The culture begins to shift.</p>`
+                            impact: `<h4>Decision Impact</h4><p>The company settles quietly and moves on quickly.</p><p>The client accepts the settlement but doesn't renew the contract. <span class='impact-negative'>Revenue decreases as they take their business elsewhere.</span></p><p><span class='impact-highlight'>Sarah and Robert</span> both feel they've compromised their values. <span class='impact-negative'>Their happiness decreases</span> as they've chosen financial protection over doing the right thing.</p><p>Some employees lose respect for leadership. The culture begins to shift.</p>`
                         }
                     ]
                 },
@@ -686,7 +695,7 @@ const EVENTS = [
                 {
                     date: "2034",
                     title: "The Founder's Passing",
-                    description: `Robert Anderson passed away peacefully at age 75. The man who started with $50,000 in 1994 built a company now worth over $30M.\n\nHis funeral draws hundreds—employees past and present, clients, competitors, community members. The tributes speak of his integrity, vision, and loyalty.\n\nNow the family must navigate grief while managing succession. Robert's will transfers his ownership to Sarah (60%) and equally to any other active family members (40% if Michael still there, 0% if he left).\n\nSarah is now fully in control. But leading without her father's guidance—and wisdom—will be different.\n\nThe company must decide how to honor Robert's legacy while moving forward.`,
+                    description: `Robert Anderson passed away peacefully at age 75. The man who started with $50,000 in 1994 built a thriving company that employs over a hundred people and serves clients nationwide.\n\nHis funeral draws hundreds—employees past and present, clients, competitors, community members. The tributes speak of his integrity, vision, and loyalty.\n\nNow the family must navigate grief while managing succession. Robert's will transfers his ownership to Sarah (60%) and equally to any other active family members (40% if Michael still there, 0% if he left).\n\nSarah is now fully in control. But leading without her father's guidance—and wisdom—will be different.\n\nThe company must decide how to honor Robert's legacy while moving forward.`,
                     options: [
                         {
                             text: "Maintain Robert's vision and conservative approach",
@@ -839,7 +848,7 @@ const EVENTS = [
                             baseDesc += "Emily (30) and David (28) are rising leaders in the company. ";
                         }
 
-                        baseDesc += "The company employs over 100 people.\n\n";
+                        baseDesc += "The company employs " + gameState.employees + " people.\n\n";
 
                         // Offer amount varies based on company performance
                         var offerAmount = 45;
