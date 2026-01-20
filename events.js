@@ -268,7 +268,13 @@ const EVENTS = [
                     },
                     options: [
                         {
-                            text: "Give Michael same ownership as Sarah (consistent treatment)",
+                            text: function() {
+                                if (familyMembers.sarah.ownership > 0) {
+                                    return "Give Michael same " + familyMembers.sarah.ownership.toFixed(0) + "% as Sarah (consistent treatment)";
+                                } else {
+                                    return "Give Michael 10% ownership (even though Sarah has none yet)";
+                                }
+                            },
                             effects: {
                                 profit: -40000,
                                 revenue: 350000,
@@ -276,11 +282,19 @@ const EVENTS = [
                                 robertOwnership: -5,
                                 patriciaOwnership: -5,
                                 michaelHappiness: 20,
-                                sarahHappiness: 5,
+                                sarahHappiness: function() {
+                                    return familyMembers.sarah.ownership > 0 ? 5 : -10;
+                                },
                                 robertHappiness: 5,
                                 employees: 1
                             },
-                            impact: `<h4>Decision Impact</h4><p>Michael receives 10% ownership, matching Sarah's stake.</p><p>"Thank you for treating us equally, Dad," Michael says with genuine gratitude.</p><p><span class='impact-highlight'>Michael</span> feels valued and committed. <span class='impact-positive'>His happiness increases significantly.</span></p><p><span class='impact-positive'>Revenue increases</span> as Michael attacks the sales role with energy and ownership mentality.</p><p>The siblings are treated consistently, avoiding resentment. However, Jennifer notices she's still excluded from ownership despite being family.</p>`
+                            impact: function() {
+                                if (familyMembers.sarah.ownership > 0) {
+                                    return `<h4>Decision Impact</h4><p>Michael receives 10% ownership, matching Sarah's stake.</p><p>"Thank you for treating us equally, Dad," Michael says with genuine gratitude.</p><p><span class='impact-highlight'>Michael</span> feels valued and committed. <span class='impact-positive'>His happiness increases significantly.</span></p><p><span class='impact-positive'>Revenue increases</span> as Michael attacks the sales role with energy and ownership mentality.</p><p>The siblings are treated consistently, avoiding resentment. However, Jennifer notices she's still excluded from ownership despite being family.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Michael receives 10% ownership—but Sarah, who has been working here for three years, still has none.</p><p>"Thank you, Dad," Michael says, though he looks uncomfortable.</p><p><span class='impact-highlight'>Sarah</span> is hurt and confused. <span class='impact-negative'>Her happiness decreases.</span> "I've been here for three years and I don't have ownership. Michael joins and gets 10% immediately?"</p><p><span class='impact-highlight'>Michael</span> feels valued but guilty about the inconsistency.</p><p>The unfair treatment damages Sarah's motivation and creates awkward family dynamics.</p>`;
+                                }
+                            }
                         },
                         {
                             text: "Give 10% to ALL THREE siblings equally (family unity)",
@@ -288,30 +302,49 @@ const EVENTS = [
                                 profit: -50000,
                                 revenue: 350000,
                                 michaelOwnership: 10,
-                                sarahOwnership: 10,  // If Sarah doesn't have it yet
+                                sarahOwnership: function() {
+                                    // Only give Sarah 10% if she doesn't already have it
+                                    return familyMembers.sarah.ownership > 0 ? 0 : 10;
+                                },
                                 jenniferOwnership: 10,
                                 robertOwnership: -15,
                                 patriciaOwnership: -15,
                                 michaelHappiness: 18,
-                                sarahHappiness: 8,
+                                sarahHappiness: function() {
+                                    return familyMembers.sarah.ownership > 0 ? 5 : 15;
+                                },
                                 jenniferHappiness: 25,
                                 robertHappiness: 10,
                                 employees: 1
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert gives 10% ownership to each of his three children—regardless of business involvement.</p><p>"I won't create tiers among my children," Robert says firmly. "You're all equal in my eyes, business or not."</p><p><span class='impact-highlight'>Jennifer</span> is overwhelmed with gratitude. <span class='impact-positive'>She feels truly valued as part of the family legacy.</span></p><p><span class='impact-highlight'>Michael</span> is pleased, though slightly bothered that Jennifer gets the same stake without working.</p><p><span class='impact-highlight'>Sarah</span> has mixed feelings—she's been working hard for three years, and Jennifer gets the same reward for doing nothing in the business.</p>`
+                            impact: function() {
+                                if (familyMembers.sarah.ownership > 0) {
+                                    return `<h4>Decision Impact</h4><p>Robert gives 10% ownership to Michael and Jennifer. Sarah already has her 10% from when she joined.</p><p>"I won't create tiers among my children," Robert says firmly. "You're all equal in my eyes, business or not."</p><p><span class='impact-highlight'>Jennifer</span> is overwhelmed with gratitude. <span class='impact-positive'>She feels truly valued as part of the family legacy.</span></p><p><span class='impact-highlight'>Michael</span> is pleased, though slightly bothered that Jennifer gets the same stake without working.</p><p><span class='impact-highlight'>Sarah</span> appreciates the equality, though she wonders if Jennifer should get ownership without contributing to the business.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Robert gives 10% ownership to each of his three children—regardless of business involvement.</p><p>"I won't create tiers among my children," Robert says firmly. "You're all equal in my eyes, business or not."</p><p><span class='impact-highlight'>Jennifer</span> is overwhelmed with gratitude. <span class='impact-positive'>She feels truly valued as part of the family legacy.</span></p><p><span class='impact-highlight'>Michael</span> is pleased, though slightly bothered that Jennifer gets the same stake without working.</p><p><span class='impact-highlight'>Sarah</span> feels relieved to finally get ownership after three years—though she has mixed feelings that Jennifer gets the same reward for doing nothing in the business.</p>`;
+                                }
+                            }
                         },
                         {
                             text: "Michael gets employment but NO ownership yet—must earn it",
                             effects: {
                                 profit: -20000,
                                 revenue: 300000,
-                                michaelHappiness: -10,
+                                michaelHappiness: function() {
+                                    return familyMembers.sarah.ownership > 0 ? -15 : -5;
+                                },
                                 sarahHappiness: 10,
                                 jenniferHappiness: -5,
                                 robertHappiness: -5,
                                 employees: 1
                             },
-                            impact: `<h4>Decision Impact</h4><p>Michael joins as Sales Associate at market rate, but receives no ownership stake.</p><p>"Wait—Sarah got ownership when she joined," Michael says, confused and hurt.</p><p>"Different time, different circumstances," Robert explains, though he's not entirely sure of his reasoning.</p><p><span class='impact-highlight'>Michael</span> feels second-class compared to his sister. <span class='impact-negative'>His happiness decreases</span> and his motivation suffers.</p><p><span class='impact-highlight'>Sarah</span> appreciates that her ownership feels more earned, but feels bad for her brother.</p><p>The inconsistent treatment plants seeds of resentment. <span class='impact-positive'>Revenue still increases</span> from Michael's sales work, but not as much as it could have.</p>`
+                            impact: function() {
+                                if (familyMembers.sarah.ownership > 0) {
+                                    return `<h4>Decision Impact</h4><p>Michael joins as Sales Associate at market rate, but receives no ownership stake.</p><p>"Wait—Sarah got 10% when she joined," Michael says, confused and hurt. "Why am I different?"</p><p>"You need to prove yourself first," Robert explains, though the inconsistency is obvious.</p><p><span class='impact-highlight'>Michael</span> feels second-class compared to his sister. <span class='impact-negative'>His happiness decreases significantly.</span> His motivation suffers from the perceived unfairness.</p><p><span class='impact-highlight'>Sarah</span> feels awkward—she knows the treatment is inconsistent and feels bad for her brother.</p><p>The unfair treatment plants deep seeds of resentment.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Michael joins as Sales Associate at market rate, but receives no ownership stake—same as Sarah.</p><p>"So neither of us gets ownership?" Michael asks.</p><p>"Not yet," Robert says. "You both need to earn it."</p><p><span class='impact-highlight'>Michael</span> is disappointed but appreciates the consistent treatment. At least he's not being singled out.</p><p><span class='impact-highlight'>Sarah</span> feels validated that the ownership bar applies equally to both of them.</p><p>The consistent approach is fair, though both siblings wonder when ownership will come.</p>`;
+                                }
+                            }
                         }
                     ]
                 },
@@ -320,7 +353,18 @@ const EVENTS = [
                 {
                     date: "2012",
                     title: "The Sunday Dinner Discussion",
-                    description: `Robert is now 53. Over Sunday dinner, he brings up succession planning.\n\n"I'm not retiring tomorrow," he says, "but we need to talk about the future. About who will lead this company when I step back."\n\nThe table goes quiet.\n\nSarah has been COO for a year now. She's earned it—working 60-hour weeks, taking on more responsibility, making tough calls. She glances at Robert hopefully.\n\nMichael sets down his fork. He runs sales and has brought in significant new business, though his management skills are less developed than Sarah's. "Are we really having this conversation now?" he asks.\n\nJennifer, who became a teacher, looks concerned. She owns 10% and depends on dividends. "Whoever leads, I just hope they remember that some of us aren't in the business."\n\nPatricia touches Robert's hand. This is a minefield.\n\nShould he commit to Sarah as next CEO? Keep options open and evaluate both over time? This decision will shape family dynamics for years.`,
+                    description: function() {
+                        let baseDesc = "Robert is now 53. Over Sunday dinner, he brings up succession planning.\n\n\"I'm not retiring tomorrow,\" he says, \"but we need to talk about the future. About who will lead this company when I step back.\"\n\nThe table goes quiet.\n\nSarah has been COO for a year now. She's earned it—working 60-hour weeks, taking on more responsibility, making tough calls. She glances at Robert hopefully.\n\nMichael sets down his fork. He runs sales and has brought in significant new business, though his management skills are less developed than Sarah's. \"Are we really having this conversation now?\" he asks.\n\n";
+
+                        if (familyMembers.jennifer.ownership > 0) {
+                            baseDesc += "Jennifer, who became a teacher, looks concerned. She owns " + familyMembers.jennifer.ownership.toFixed(0) + "% and depends on dividends. \"Whoever leads, I just hope they remember that some of us aren't in the business.\"\n\n";
+                        } else {
+                            baseDesc += "Jennifer, who became a teacher, looks concerned. She doesn't own any shares. \"I'm not in the business, but I still care who leads it,\" she says quietly.\n\n";
+                        }
+
+                        baseDesc += "Patricia touches Robert's hand. This is a minefield.\n\nShould he commit to Sarah as next CEO? Keep options open and evaluate both over time? This decision will shape family dynamics for years.";
+                        return baseDesc;
+                    },
                     options: [
                         {
                             text: "Commit to Sarah as next CEO within 5 years",
@@ -596,11 +640,25 @@ const EVENTS = [
                                 jenniferHappiness: -15,
                                 sarahHappiness: -10,
                                 michaelLeft: true,
-                                michaelOwnership: 0,
-                                robertOwnership: 73,
-                                sarahOwnership: 17
+                                michaelOwnership: function() {
+                                    return -familyMembers.michael.ownership;
+                                },
+                                robertOwnership: function() {
+                                    return familyMembers.michael.ownership * 0.7;
+                                },
+                                sarahOwnership: function() {
+                                    return familyMembers.michael.ownership * 0.3;
+                                }
                             },
-                            impact: `<h4>Decision Impact</h4><p>Michael leaves Anderson Packaging for the competitor. <span class='impact-negative'>Revenue and profit drop sharply</span> without his sales leadership.</p><p><span class='impact-highlight'>Michael</span> is heartbroken. <span class='impact-negative'>His happiness plummets</span>—he wanted to stay but felt there was no path forward.</p><p>He sells his 10% ownership back to the family. The entire Anderson family is devastated by his departure.</p><p>Sunday dinners become awkward. The family business has fractured the family.</p>`
+                            impact: function() {
+                                const michaelOwn = familyMembers.michael.ownership;
+
+                                if (michaelOwn > 0) {
+                                    return `<h4>Decision Impact</h4><p>Michael leaves Anderson Packaging for the competitor. <span class='impact-negative'>Revenue and profit drop sharply</span> without his sales leadership.</p><p><span class='impact-highlight'>Michael</span> is heartbroken. <span class='impact-negative'>His happiness plummets</span>—he wanted to stay but felt there was no path forward.</p><p>He sells his ${michaelOwn.toFixed(0)}% ownership back to the family. The entire Anderson family is devastated by his departure.</p><p>Sunday dinners become awkward. The family business has fractured the family.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Michael leaves Anderson Packaging for the competitor. <span class='impact-negative'>Revenue and profit drop sharply</span> without his sales leadership.</p><p><span class='impact-highlight'>Michael</span> is heartbroken. <span class='impact-negative'>His happiness plummets</span>—he wanted to stay but felt there was no path forward.</p><p>The entire Anderson family is devastated by his departure. He never received ownership, and now he's gone.</p><p>Sunday dinners become awkward. The family business has fractured the family.</p>`;
+                                }
+                            }
                         }
                     ]
                 },
@@ -744,34 +802,95 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 17: 2032 - Jennifer's Buyout Request
+                // Event 17: 2032 - Jennifer's Buyout Request (only if she has ownership)
                 {
                     date: "2032",
-                    title: "Jennifer's Request",
-                    description: `Jennifer has come to the family with a difficult conversation. She's now 40, still teaching, and she'd like the company to buy out her 10% stake.\n\n"I've been patient," she says, her voice shaking slightly. "I've supported all of your decisions. Every time the business needed something, I voted yes. When you wanted to reinvest instead of paying dividends, I said okay."\n\nShe takes a breath: "But I'm 40 years old. I don't work in the business. I rarely see dividends. And I need capital. I want to buy a house. I want to secure my retirement. I'm asking you to buy me out for $3M—that's fair value based on recent offers."\n\nSarah shifts uncomfortably. Michael looks away.\n\n"I know it's not easy," Jennifer continues. "But I've been a passive shareholder for decades with almost no benefit. When does my financial security matter?"\n\nThis would require the company to use cash reserves or take on debt. But Jennifer has a point.`,
-                    options: [
-                        {
-                            text: "Buy out Jennifer's 10% for $3M",
-                            effects: {
-                                cash: -3000000,
-                                debt: 2000000,
-                                jenniferOwnership: 0,
-                                robertOwnership: 75,
-                                sarahOwnership: 25,
-                                jenniferHappiness: 25,
-                                hasDebt: true
-                            },
-                            impact: `<h4>Decision Impact</h4><p>The family borrows $2M and uses $1M in cash to buy out Jennifer's stake.</p><p><span class='impact-highlight'>Jennifer</span> receives $3M and is grateful. <span class='impact-positive'>Her happiness increases significantly</span>—she can finally buy a home and build financial security.</p><p>Ownership is now split 75% Robert, 25% Sarah. <span class='impact-negative'>The company carries $2M in new debt.</span></p><p>Jennifer remains part of the family but is no longer a shareholder. Her connection to the business fades.</p>`
-                        },
-                        {
-                            text: "Ask Jennifer to hold her shares—offer increased dividends instead",
-                            effects: {
-                                profit: -150000,
-                                jenniferHappiness: -20
-                            },
-                            impact: `<h4>Decision Impact</h4><p>The family asks Jennifer to keep her ownership and commits to paying consistent dividends going forward.</p><p><span class='impact-highlight'>Jennifer</span> is disappointed and hurt. <span class='impact-negative'>Her happiness decreases substantially</span>—the family won't help when she needs it most.</p><p>She feels trapped as a passive shareholder in a business she doesn't control, unable to access the value of her shares.</p><p>Family relationships become strained. Sunday dinners are tense.</p>`
+                    title: function() {
+                        return familyMembers.jennifer.ownership > 0 ? "Jennifer's Request" : "Jennifer's Financial Struggle";
+                    },
+                    condition: function() {
+                        // Only show this event if Jennifer has ownership OR if we want alternate version
+                        return true; // Show either version depending on ownership
+                    },
+                    description: function() {
+                        const jenOwnership = familyMembers.jennifer.ownership;
+
+                        if (jenOwnership > 0) {
+                            const valuation = jenOwnership * 300000; // Rough valuation
+                            const valuationM = (valuation / 1000000).toFixed(1);
+
+                            return `Jennifer has come to the family with a difficult conversation. She's now 40, still teaching, and she'd like the company to buy out her ${jenOwnership.toFixed(0)}% stake.\n\n"I've been patient," she says, her voice shaking slightly. "I've supported all of your decisions. Every time the business needed something, I voted yes. When you wanted to reinvest instead of paying dividends, I said okay."\n\nShe takes a breath: "But I'm 40 years old. I don't work in the business. I rarely see dividends. And I need capital. I want to buy a house. I want to secure my retirement. I'm asking you to buy me out for $${valuationM}M—that's fair value based on recent offers."\n\nSarah shifts uncomfortably. ${gameState.michaelLeft ? '' : 'Michael looks away.'}\n\n"I know it's not easy," Jennifer continues. "But I've been a passive shareholder for decades with almost no benefit. When does my financial security matter?"\n\nThis would require the company to use cash reserves or take on debt. But Jennifer has a point.`;
+                        } else {
+                            return `Jennifer calls a family meeting. She's now 40, still teaching, and she's struggling financially.\n\n"I know I don't own any shares," she says, her voice shaking slightly. "I chose teaching instead of the business. That was my choice, and I accept it."\n\nShe takes a breath: "But I'm watching you all build wealth through this company while I can barely afford rent. I can't buy a house. I can't save for retirement. And I'm starting to wonder... do I even matter to this family?"\n\nSarah shifts uncomfortably. ${gameState.michaelLeft ? '' : 'Michael looks away.'}\n\n"I'm not asking for a handout," Jennifer continues. "But could the company hire me for something? Give me a role? Or... maybe it's time to finally give me an ownership stake?"\n\nThis is awkward. Jennifer has never worked in the business and has no relevant skills. But she's family.`;
                         }
-                    ]
+                    },
+                    options: function() {
+                        const jenOwnership = familyMembers.jennifer.ownership;
+
+                        if (jenOwnership > 0) {
+                            // Jennifer HAS ownership - buyout options
+                            const buyoutValue = jenOwnership * 300000;
+                            const buyoutValueM = (buyoutValue / 1000000).toFixed(1);
+
+                            return [
+                                {
+                                    text: `Buy out Jennifer's ${jenOwnership.toFixed(0)}% for $${buyoutValueM}M`,
+                                    effects: {
+                                        cash: -buyoutValue,
+                                        debt: Math.max(0, buyoutValue - gameState.cash),
+                                        jenniferOwnership: -jenOwnership,
+                                        robertOwnership: jenOwnership * 0.7,
+                                        sarahOwnership: jenOwnership * 0.3,
+                                        jenniferHappiness: 25,
+                                        hasDebt: true
+                                    },
+                                    impact: `<h4>Decision Impact</h4><p>The family buys out Jennifer's ${jenOwnership.toFixed(0)}% stake for $${buyoutValueM}M.</p><p><span class='impact-highlight'>Jennifer</span> receives the money and is grateful. <span class='impact-positive'>Her happiness increases significantly</span>—she can finally buy a home and build financial security.</p><p>The family had to borrow to complete the buyout. <span class='impact-negative'>The company carries new debt.</span></p><p>Jennifer remains part of the family but is no longer a shareholder. Her connection to the business fades.</p>`
+                                },
+                                {
+                                    text: "Ask Jennifer to hold her shares—offer increased dividends instead",
+                                    effects: {
+                                        profit: -150000,
+                                        jenniferHappiness: -20
+                                    },
+                                    impact: `<h4>Decision Impact</h4><p>The family asks Jennifer to keep her ownership and commits to paying consistent dividends going forward.</p><p><span class='impact-highlight'>Jennifer</span> is disappointed and hurt. <span class='impact-negative'>Her happiness decreases substantially</span>—the family won't help when she needs it most.</p><p>She feels trapped as a passive shareholder in a business she doesn't control, unable to access the value of her shares.</p><p>Family relationships become strained. Sunday dinners are tense.</p>`
+                                }
+                            ];
+                        } else {
+                            // Jennifer has NO ownership - different options
+                            return [
+                                {
+                                    text: "Give Jennifer 10% ownership now (retroactive fairness)",
+                                    effects: {
+                                        jenniferOwnership: 10,
+                                        robertOwnership: -5,
+                                        sarahOwnership: -5,
+                                        jenniferHappiness: 30,
+                                        sarahHappiness: -10,
+                                        michaelHappiness: -8
+                                    },
+                                    impact: `<h4>Decision Impact</h4><p>The family grants Jennifer 10% ownership as a gesture of inclusion and fairness.</p><p><span class='impact-highlight'>Jennifer</span> is overwhelmed and grateful. <span class='impact-positive'>Her happiness soars</span>—she finally feels valued as part of the family legacy.</p><p><span class='impact-highlight'>Sarah</span> is frustrated. "She's never worked a day in the business and now gets 10%?" ${gameState.michaelLeft ? '' : '<span class=\'impact-highlight\'>Michael</span> also resents the decision.'}</p><p>The gift solves Jennifer's immediate problem but creates new tensions about merit vs. family equality.</p>`
+                                },
+                                {
+                                    text: "Offer Jennifer a token role with modest salary",
+                                    effects: {
+                                        profit: -60000,
+                                        jenniferHappiness: -5,
+                                        robertHappiness: -5,
+                                        employees: 1
+                                    },
+                                    impact: `<h4>Decision Impact</h4><p>The company creates a "Community Relations" role for Jennifer at $60K/year.</p><p><span class='impact-highlight'>Jennifer</span> accepts reluctantly. She knows it's a pity hire. The modest salary helps, but she's still far behind her siblings financially.</p><p>Employees notice Jennifer has a job but no real responsibilities. It's awkward for everyone.</p><p>The compromise satisfies no one—Jennifer still feels like an outsider, and the business has an unproductive employee on payroll.</p>`
+                                },
+                                {
+                                    text: "Explain that ownership must be earned through business contribution",
+                                    effects: {
+                                        jenniferHappiness: -30,
+                                        robertHappiness: -15
+                                    },
+                                    impact: `<h4>Decision Impact</h4><p>Robert gently but firmly explains that ownership requires direct business contribution.</p><p><span class='impact-highlight'>Jennifer</span> is devastated. <span class='impact-negative'>Her happiness plummets.</span> "So I'm just... not really part of this family?" she asks, tears streaming down her face.</p><p>She leaves the meeting early. Over the following months, she stops attending family gatherings.</p><p><span class='impact-highlight'>Robert</span> questions whether he made the right choice. The principle is sound, but the human cost is high.</p><p>The family business has created a permanent rift in the family.</p>`
+                                }
+                            ];
+                        }
+                    }
                 },
                 
                 // Event 18: 2034 - Robert's Death
