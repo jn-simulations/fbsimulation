@@ -40,7 +40,7 @@ const EVENTS = [
                 {
                     date: "1996",
                     title: "A Partner or Just a Spouse?",
-                    description: `The business is growing steadily. Robert's wife, Patricia, has been supportive from day one—managing the household, raising three children, and providing emotional support through the uncertain early years.\n\nNow Patricia wants to be more involved. She has a business degree and handled all the bookkeeping in the early days. She's proposing to join officially as CFO, handling finances, HR, and operations.\n\n"I've been doing half this work anyway," she explains. "Why shouldn't I get a title and salary?"\n\nRobert sees two paths:\n\n1. Bring Patricia in officially—give her the CFO title, market-rate salary, and equal ownership (50/50 partnership)\n2. Keep business and family separate—hire a professional bookkeeper, maintain Robert as sole owner\n\nBringing Patricia in could strengthen the business and their partnership. But mixing marriage and business ownership has destroyed many families. The kids are watching how their parents handle this.`,
+                    description: `The business is growing steadily. Robert's wife, Patricia, has been supportive from day one—managing the household, raising three children, and providing emotional support through the uncertain early years.\n\nOne evening, Patricia sits down across from Robert: "We need to talk about the business."\n\n"What about it?"\n\n"I've been doing your bookkeeping nights after the kids go to bed. I've been handling supplier calls. I helped you prepare that big presentation last month." She takes a breath. "I have a business degree. I'm essentially working as your unpaid CFO. Why shouldn't I get a title, a salary, and real ownership?"\n\nRobert shifts uncomfortably. "Patricia, you know how much I appreciate—"\n\n"That's not what I'm asking for," she interrupts gently. "I'm asking to be your partner. Really. Or... do you see this as just your business?"\n\nSarah (10), Michael (7), and Jennifer (4) are watching TV in the next room, unaware their parents are discussing something that will shape their entire futures.\n\nRobert sees two paths: Bring Patricia in as equal partner with 50/50 ownership, or keep clean boundaries between business and family.`,
                     options: [
                         {
                             text: "Bring Patricia in as CFO with 50/50 ownership",
@@ -149,7 +149,7 @@ const EVENTS = [
                 {
                     date: "2007",
                     title: "The Next Generation Enters",
-                    description: `Sarah graduated with her MBA and wants to join Anderson Packaging. She's smart, ambitious, and has real business skills.\n\nMichael also finished college. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nRobert needs to decide how to bring them into the business. Should they start at entry-level and earn their way up? Should they get elevated positions based on family status? How Robert handles this will set precedents for years to come.\n\nMore importantly: should family members working in the business receive ownership stakes immediately, or should ownership be earned over time? This decision will shape expectations about entitlement versus meritocracy.`,
+                    description: `Sarah graduated with her MBA and wants to join Anderson Packaging. She's smart, ambitious, and has real business skills.\n\nMichael also finished college. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nAt Sunday dinner, Robert raises a sensitive issue: "If we give ownership stakes to Sarah and Michael for joining the business, what about Jennifer?"\n\nJennifer (21, studying education) looks up: "Wait, are you only giving ownership to kids who work in the business? That doesn't seem fair."\n\n"But you're not working in the business," Michael says. "Why should you get the same stake as us?"\n\nPatricia intervenes: "This is exactly why we need to think carefully. Equal treatment, or equitable treatment?"\n\nRobert knows this decision will define family dynamics for decades. Should ownership be tied to business involvement, or should all children be treated equally regardless of career choices?`,
                     options: [
                         {
                             text: "Hire both at market-rate salaries in entry roles, no immediate ownership",
@@ -162,10 +162,29 @@ const EVENTS = [
                                 managementQuality: 5,
                                 employees: 2
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager, Michael in sales—both at market rates for their experience and without immediate ownership stakes.</p><p><span class='impact-positive'>Revenue increases as both contribute to the business.</span> They generate more value than they cost, so <span class='impact-positive'>profit increases modestly</span>.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they wonder when they'll receive ownership stakes.</p><p>Non-family employees respect that the family members are earning their positions. <span class='impact-positive'>Management quality improves.</span></p><p><span class='impact-highlight'>Robert</span> is proud of setting a meritocratic precedent.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager, Michael in sales—both at market rates for their experience and without immediate ownership stakes.</p><p><span class='impact-positive'>Revenue increases as both contribute to the business.</span> They generate more value than they cost, so <span class='impact-positive'>profit increases modestly</span>.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they wonder when they'll receive ownership stakes.</p><p>Non-family employees respect that the family members are earning their positions. <span class='impact-positive'>Management quality improves.</span></p><p><span class='impact-highlight'>Robert</span> is proud of setting a meritocratic precedent. Jennifer feels relieved the ownership question has been deferred.</p>`
                         },
                         {
-                            text: "Give them elevated titles, above-market pay, and immediate 10% ownership stakes each",
+                            text: "Give 10% ownership to all THREE children equally (fair to all)",
+                            effects: {
+                                profit: -80000,
+                                revenue: 300000,
+                                sarahOwnership: 10,
+                                michaelOwnership: 10,
+                                jenniferOwnership: 10,
+                                robertOwnership: -15,  // Split between both parents if Patricia is partner
+                                patriciaOwnership: -15,  // If Patricia is 50/50 partner, she gives up 15% too
+                                sarahHappiness: 10,
+                                michaelHappiness: 5,
+                                jenniferHappiness: 20,
+                                robertHappiness: 5,
+                                managementQuality: -3,
+                                employees: 2
+                            },
+                            impact: `<h4>Decision Impact</h4><p>Robert gives 10% ownership to each of his three children—Sarah and Michael who are joining the business, and Jennifer who is pursuing teaching.</p><p>"I can't treat my children differently," Robert says. "You're all equal in my eyes."</p><p><span class='impact-highlight'>Jennifer</span> tears up with gratitude. <span class='impact-positive'>Her happiness increases significantly</span>—she feels valued despite choosing a different path.</p><p><span class='impact-highlight'>Sarah</span> accepts the decision but privately wonders if Jennifer should get the same stake without working in the business. <span class='impact-highlight'>Michael</span> is openly frustrated: "This doesn't feel right."</p><p>Non-family employees notice that ownership isn't tied to contribution. Some question the family's business judgment.</p>`
+                        },
+                        {
+                            text: "Give 10% ownership only to Sarah and Michael (merit-based)",
                             effects: {
                                 profit: -80000,
                                 revenue: 300000,
@@ -175,11 +194,12 @@ const EVENTS = [
                                 patriciaOwnership: -10,  // If Patricia is 50/50 partner, she gives up 10% too
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
+                                jenniferHappiness: -20,
                                 robertHappiness: -5,
                                 managementQuality: -5,
                                 employees: 2
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO, Michael as Sales Director—with above-market salaries and immediate 10% ownership stakes each. The ownership comes from both parents' stakes.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and committed. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, <span class='impact-negative'>profit decreases</span> from the inflated compensation. Non-family employees notice the preferential treatment and morale suffers.</p><p><span class='impact-negative'>Management quality decreases</span> as employees question whether advancement is based on merit or family connections.</p><p><span class='impact-highlight'>Robert</span> worries he's set a bad precedent—entitlement over earning.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert gives 10% ownership to Sarah and Michael—the two children joining the business. Jennifer receives nothing.</p><p>"This is a business decision," Robert explains. "Ownership goes to those who contribute to building the company."</p><p><span class='impact-highlight'>Jennifer</span> is devastated. <span class='impact-negative'>Her happiness plummets.</span> "So I'm worth less because I chose to be a teacher?" she says quietly, tears in her eyes. "Is that what you're telling me, Dad?"</p><p>The Sunday dinner ends early. <span class='impact-highlight'>Jennifer</span> leaves without dessert.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel validated and committed to the business, but the family tension is palpable. Patricia worries about long-term damage to sibling relationships.</p><p>Non-family employees respect that ownership is tied to contribution. <span class='impact-positive'>The meritocratic approach is clear.</span></p>`
                         }
                     ]
                 },
@@ -188,7 +208,7 @@ const EVENTS = [
                 {
                     date: "2009",
                     title: "The Great Recession",
-                    description: `The 2008 financial crisis has devastated the economy. Anderson Packaging's orders are down 40%. Cash flow is critical.\n\nRobert is facing the hardest decision since founding the company. He needs to cut costs immediately. Options:\n\n1. Cut everyone's salary by 20%, including his own, to avoid layoffs\n2. Lay off 8 employees (including some who've been with him for years)\n3. Ask the family shareholders to forgo dividends and take salary cuts, protecting non-family employees\n\nSarah and Michael are both in the business now. Jennifer is in college and depends on dividend income to help with expenses.\n\nEvery option hurts someone.`,
+                    description: `The 2008 financial crisis has devastated the economy. Anderson Packaging's orders are down 40%. Cash flow is critical.\n\nRobert calls an emergency meeting. "We're bleeding cash," he says, his voice heavy. "I've run the numbers a dozen times. We need to cut costs immediately, or we won't make it through the year."\n\nSarah looks at the financial projections: "Dad, these numbers are terrifying."\n\nThe options are all painful:\n\n1. Cut everyone's salary by 20%, including his own, to avoid layoffs\n2. Lay off 8 employees (including some who've been with him for years)\n3. Ask the family shareholders to forgo dividends and take deep salary cuts, protecting non-family employees\n\nJennifer is in college and depends on dividend income to help with expenses. The long-tenured employees have families, mortgages.\n\nEvery option hurts someone Robert cares about.`,
                     options: [
                         {
                             text: "Cut all salaries by 20%, share the pain equally",
@@ -238,7 +258,7 @@ const EVENTS = [
                 {
                     date: "2012",
                     title: "The Sunday Dinner Discussion",
-                    description: `Robert is now 53. Over Sunday dinner, he brings up succession planning.\n\n"I'm not retiring tomorrow," he says, "but we need to talk about the future."\n\nSarah has been COO for a year now. She's earned it—working 60-hour weeks, taking on more responsibility, making tough calls. Michael runs sales and has brought in significant new business, though his management skills are less developed.\n\nJennifer, who became a teacher, looks concerned. She owns 10% and depends on dividends.\n\nRobert doesn't have all the answers. But this conversation needs to happen.\n\nShould he commit to Sarah as next CEO? Keep options open? Create a competition between Sarah and Michael?`,
+                    description: `Robert is now 53. Over Sunday dinner, he brings up succession planning.\n\n"I'm not retiring tomorrow," he says, "but we need to talk about the future. About who will lead this company when I step back."\n\nThe table goes quiet.\n\nSarah has been COO for a year now. She's earned it—working 60-hour weeks, taking on more responsibility, making tough calls. She glances at Robert hopefully.\n\nMichael sets down his fork. He runs sales and has brought in significant new business, though his management skills are less developed than Sarah's. "Are we really having this conversation now?" he asks.\n\nJennifer, who became a teacher, looks concerned. She owns 10% and depends on dividends. "Whoever leads, I just hope they remember that some of us aren't in the business."\n\nPatricia touches Robert's hand. This is a minefield.\n\nShould he commit to Sarah as next CEO? Keep options open and evaluate both over time? This decision will shape family dynamics for years.`,
                     options: [
                         {
                             text: "Commit to Sarah as next CEO within 5 years",
@@ -270,7 +290,7 @@ const EVENTS = [
                 {
                     date: "2014",
                     title: "The Major Contract",
-                    description: `A Fortune 100 company has offered Anderson Packaging a massive contract: $3M annually for five years.\n\nThe catch: fulfilling it requires a $1.2M investment in new equipment and hiring 20 additional workers.\n\nSarah has prepared a detailed analysis showing 22% ROI over five years. The numbers look solid. Michael is excited about the growth.\n\nBut Jennifer is concerned. The investment will reduce dividend payments for at least three years. She was counting on that income—teaching doesn't pay much, and she's planning to buy a house.\n\nRobert must balance growth ambitions with family member's financial needs.`,
+                    description: `A Fortune 100 company has offered Anderson Packaging a massive contract: $3M annually for five years.\n\nThe catch: fulfilling it requires a $1.2M investment in new equipment and hiring 20 additional workers.\n\n"This is exactly the kind of opportunity we've been working toward," Sarah says, presenting her analysis showing 22% ROI over five years. "The numbers are solid. We have to do this."\n\nMichael nods enthusiastically: "This could transform the company."\n\nBut Jennifer speaks up quietly: "What about dividends? I'm trying to save for a house. Teaching doesn't pay much, and I was counting on that income."\n\n"The business comes first, Jen," Michael says impatiently.\n\n"Easy for you to say—you get a salary from the company," Jennifer shoots back.\n\nRobert must balance growth ambitions with his daughter's financial needs.`,
                     options: [
                         {
                             text: "Accept the contract and make the investment",
@@ -390,7 +410,7 @@ const EVENTS = [
                             baseDesc += "In 2009, the company laid off employees to survive. Some of those people are back working here now, nervous about history repeating.\n\n";
                         }
 
-                        baseDesc += "The PPP loan program offers some relief, but it's not enough. Robert faces brutal choices:\n\n1. Massive layoffs to preserve cash\n2. Family members take no salary to protect jobs\n3. Take on significant debt, gambling on recovery\n\nThis crisis will define the company's character and the family's values.";
+                        baseDesc += "Sarah convenes an emergency family meeting via Zoom.\n\n\"We're burning through cash faster than ever,\" Sarah says, her face tired on screen. \"Without drastic action, we have maybe three months of runway.\"\n\nRobert's voice is grave: \"This is worse than 2009. Much worse.\"\n\n\"What are our options?\" Michael asks.\n\nSarah takes a breath: \"Massive layoffs. Or the family takes no salary for six months. Or we take on significant debt and gamble on recovery.\"\n\n\"People have families. Mortgages,\" Robert says quietly. \"But so do we.\"\n\nThis crisis will define the company's character and the family's values.";
                         return baseDesc;
                     },
                     options: [
@@ -490,7 +510,7 @@ const EVENTS = [
                             baseDesc += "He comes to Robert: \"Dad, I love this company, but I need to know there's a future for me here.\"\n\n";
                         }
 
-                        baseDesc += "Sarah is CEO. You're Executive Chairman. Where do I fit long-term?\"\n\nLosing Michael would hurt the company significantly—he brings in 40% of new business. But keeping him might require creating a role that's somewhat artificial.";
+                        baseDesc += "Sarah is CEO. You're Executive Chairman. Where do I fit long-term?\"\n\nRobert is quiet for a long moment.\n\nMichael continues: \"I've given everything to this business. But I need to know—is there actually a path for me here, or am I just the sales guy forever while Sarah runs everything?\"\n\n\"Michael, you're not 'just the sales guy'—\" Robert starts.\n\n\"Then what am I, Dad?\" Michael's voice cracks slightly. \"What's my future here?\"\n\nLosing Michael would hurt the company significantly—he brings in 40% of new business. But keeping him might require creating a role that's somewhat artificial.";
                         return baseDesc;
                     },
                     options: [
@@ -595,14 +615,14 @@ const EVENTS = [
                         // Check if they accepted the major growth contract in Event 7
                         var growthEvent = gameState.decisions.find(function(d) { return d.event === 7; });
                         if (growthEvent && growthEvent.choice === 0) {
-                            baseDesc += "Sarah's investigation reveals the root cause: to meet the aggressive growth targets from that major contract years ago, quality control protocols were loosened. The team was stretched too thin.\n\n";
+                            baseDesc += "Sarah's investigation reveals the root cause: to meet the aggressive growth targets from that major contract years ago, quality control protocols were loosened. The team was stretched too thin.\n\n\"We did this to ourselves,\" Sarah says, staring at the report. \"We grew too fast and cut corners.\"\n\n";
                         } else if (gameState.hasDebt && gameState.debt > 500000) {
-                            baseDesc += "Sarah's investigation reveals the problem: under pressure from debt obligations, the company cut corners on quality inspections to reduce costs and speed up production.\n\n";
+                            baseDesc += "Sarah's investigation reveals the problem: under pressure from debt obligations, the company cut corners on quality inspections to reduce costs and speed up production.\n\n\"The debt forced our hand,\" Sarah explains grimly. \"We sacrificed quality to make payments.\"\n\n";
                         } else {
                             baseDesc += "Sarah's investigation reveals the root cause: to meet aggressive growth targets, quality control was loosened. Some of this happened under pressure to perform.\n\n";
                         }
 
-                        baseDesc += "Options:\n1. Fight the claims and minimize liability\n2. Accept full responsibility, recall everything, and rebuild quality systems (expensive)\n3. Blame the problem on a specific employee to contain the crisis\n\nHow the family handles this will define their integrity.";
+                        baseDesc += "Robert speaks gravely: \"This is a test of who we are. We can fight this and maybe win. We can settle quietly. Or we can do the right thing—which will be expensive.\"\n\n\"Dad, taking full responsibility could cost us nearly two million dollars,\" Sarah says.\n\n\"I know,\" Robert replies. \"But what's our reputation worth?\"\n\nHow the family handles this will define their integrity.";
                         return baseDesc;
                     },
                     options: [
@@ -666,7 +686,7 @@ const EVENTS = [
                 {
                     date: "2032",
                     title: "Jennifer's Request",
-                    description: `Jennifer has come to the family with a difficult conversation. She's now 40, still teaching, and she'd like the company to buy out her 10% stake.\n\n"I've been patient," she explains. "I supported all of you. But I don't work in the business, I rarely see dividends when you reinvest everything, and I need capital. I want to buy a house and secure my retirement."\n\nShe's asking for $3M for her 10%—a fair valuation based on recent offers.\n\nThis would require the company to either use cash reserves or take on debt. It would also concentrate ownership further in Robert and Sarah's hands.\n\nBut Jennifer has a point. She's been a passive shareholder for decades with little benefit.`,
+                    description: `Jennifer has come to the family with a difficult conversation. She's now 40, still teaching, and she'd like the company to buy out her 10% stake.\n\n"I've been patient," she says, her voice shaking slightly. "I've supported all of your decisions. Every time the business needed something, I voted yes. When you wanted to reinvest instead of paying dividends, I said okay."\n\nShe takes a breath: "But I'm 40 years old. I don't work in the business. I rarely see dividends. And I need capital. I want to buy a house. I want to secure my retirement. I'm asking you to buy me out for $3M—that's fair value based on recent offers."\n\nSarah shifts uncomfortably. Michael looks away.\n\n"I know it's not easy," Jennifer continues. "But I've been a passive shareholder for decades with almost no benefit. When does my financial security matter?"\n\nThis would require the company to use cash reserves or take on debt. But Jennifer has a point.`,
                     options: [
                         {
                             text: "Buy out Jennifer's 10% for $3M",
