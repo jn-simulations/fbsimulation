@@ -276,29 +276,109 @@ function getBusinessPerformanceScore() {
 function getFamilyHarmonyScore() {
     let score = 100;
 
-    // Average happiness impact (worth 40 points)
-    const avgHappiness = getFamilyAverageHappiness();
-    const happinessScore = (avgHappiness / 100) * 40;
-    score = happinessScore;
+    // Check for major family fractures (structural problems)
+    if (gameState.michaelLeft) score -= 25; // Sibling left the business/family
 
-    // Family unity bonuses/penalties
-    if (gameState.michaelLeft) score -= 20; // Major family fracture
-    if (gameState.robertDeceased && getFamilyAverageHappiness() < 50) score -= 10;
+    // Check for happiness DISPARITY (not low happiness, but inequality)
+    const happinessValues = Object.keys(familyMembers)
+        .filter(key => !familyMembers[key].isDead)
+        .map(key => familyMembers[key].happiness);
 
-    // Ownership distribution (concentrated ownership can mean family conflict)
-    const ownershipGini = calculateOwnershipConcentration();
-    if (ownershipGini > 0.7) score -= 10; // Very concentrated
-    else if (ownershipGini > 0.5) score -= 5;
+    if (happinessValues.length > 1) {
+        const maxHappiness = Math.max(...happinessValues);
+        const minHappiness = Math.min(...happinessValues);
+        const disparity = maxHappiness - minHappiness;
 
-    // Check for very unhappy family members
+        // Large happiness gaps indicate relationship problems
+        if (disparity > 50) score -= 20; // One person thriving, another miserable = bad harmony
+        else if (disparity > 35) score -= 10;
+        else if (disparity > 20) score -= 5;
+    }
+
+    // Ownership inequality creates resentment
+    const ownershipDisparity = checkOwnershipFairness();
+    score -= ownershipDisparity;
+
+    // Check for any severely unhappy family members (indicates unresolved conflict)
     Object.keys(familyMembers).forEach(key => {
         const member = familyMembers[key];
         if (!member.isDead && member.happiness < 30) {
-            score -= 10; // Penalty for severely unhappy family members
+            score -= 15; // Someone is deeply unhappy = harmony problem
         }
     });
 
+    // Active business involvement vs passive ownership creates tension
+    const activeMismatch = checkActivePassiveTension();
+    score -= activeMismatch;
+
+    // Robert's death without good relationships is especially hard
+    if (gameState.robertDeceased) {
+        const avgHappiness = getFamilyAverageHappiness();
+        if (avgHappiness < 50) score -= 10; // Grief + poor relationships = very strained
+    }
+
     return Math.max(0, Math.min(100, score));
+}
+
+function checkOwnershipFairness() {
+    // Returns penalty points for ownership-related conflicts
+    let penalty = 0;
+
+    const active = [];
+    const passive = [];
+
+    Object.keys(familyMembers).forEach(key => {
+        const member = familyMembers[key];
+        if (!member.isDead) {
+            if (member.inBusiness && member.ownership > 0) {
+                active.push(member.ownership);
+            } else if (!member.inBusiness && member.ownership > 0) {
+                passive.push(member.ownership);
+            } else if (member.inBusiness && member.ownership === 0 && member.isActive) {
+                // Working in business but no ownership = resentment
+                penalty += 10;
+            }
+        }
+    });
+
+    // Passive owners with significant stakes while others work = tension
+    if (passive.length > 0 && active.length > 0) {
+        const maxPassive = Math.max(...passive);
+        const maxActive = Math.max(...active);
+
+        // If passive owner has more than active workers, that's problematic
+        if (maxPassive > maxActive) {
+            penalty += 15;
+        } else if (maxPassive > 0) {
+            penalty += 5; // Some tension from passive ownership
+        }
+    }
+
+    return penalty;
+}
+
+function checkActivePassiveTension() {
+    // Returns penalty for active vs passive member conflicts
+    let penalty = 0;
+
+    const inBusiness = Object.keys(familyMembers).filter(k =>
+        !familyMembers[k].isDead && familyMembers[k].inBusiness
+    ).length;
+
+    const hasOwnership = Object.keys(familyMembers).filter(k =>
+        !familyMembers[k].isDead && familyMembers[k].ownership > 0
+    ).length;
+
+    const notInBusinessButOwns = Object.keys(familyMembers).filter(k =>
+        !familyMembers[k].isDead && !familyMembers[k].inBusiness && familyMembers[k].ownership > 0
+    ).length;
+
+    // Passive owners create complexity
+    if (notInBusinessButOwns > 0 && inBusiness > 0) {
+        penalty += 5 * notInBusinessButOwns;
+    }
+
+    return penalty;
 }
 
 function calculateOwnershipConcentration() {
