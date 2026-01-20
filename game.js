@@ -71,7 +71,7 @@ function loadEvent() {
     let description = typeof event.description === 'function' ? event.description() : event.description;
     
     // Add state-dependent context for specific events
-    if (gameState.eventIndex === 10) {
+    if (gameState.eventIndex === 11) {
         // COVID event - add context about financial state
         if (gameState.cash > 1000000) {
             description = description.replace(
@@ -84,16 +84,16 @@ function loadEvent() {
                 `Robert is 61. The company is carrying $${formatNumber(gameState.debt)} in debt, making this crisis even more dangerous.`
             );
         }
-    } else if (gameState.eventIndex === 12) {
+    } else if (gameState.eventIndex === 13) {
         // Michael's offer - reference compensation conflict
-        const compensationEvent = gameState.decisions.find(d => d.event === 8);
+        const compensationEvent = gameState.decisions.find(d => d.event === 9);
         if (compensationEvent && compensationEvent.choice === 0) {
             description = description.replace(
                 "He comes to Robert:",
                 "\"Dad, I appreciate that you increased my salary, but even at $160K, I'm still watching Sarah make all the strategic decisions.\" He continues:"
             );
         }
-    } else if (gameState.eventIndex === 13) {
+    } else if (gameState.eventIndex === 14) {
         // Acquisition - adjust offer based on performance
         if (gameState.revenue > 10000000) {
             description = description.replace("$28M", "$35M");
@@ -101,7 +101,7 @@ function loadEvent() {
         if (gameState.michaelLeft) {
             description += "\n\nMichael left the business years ago. The remaining family wonders what he would think of this offer.";
         }
-    } else if (gameState.eventIndex === 19) {
+    } else if (gameState.eventIndex === 20) {
         // Strategic decision - reference current state
         if (gameState.revenue > 15000000) {
             description = description.replace(
@@ -112,15 +112,15 @@ function loadEvent() {
         if (gameState.hasDebt && gameState.debt > 2000000) {
             description += `\n\nThe company still carries $${formatNumber(gameState.debt)} in debt. Taking on more is risky.`;
         }
-    } else if (gameState.eventIndex === 20) {
+    } else if (gameState.eventIndex === 21) {
         // Final decision - personalize based on journey
         if (gameState.revenue > 20000000) {
             description = description.replace("$45M", "$55M");
         } else if (gameState.revenue < 10000000) {
             description = description.replace("$45M", "$30M");
         }
-        
-        const prevOffer = gameState.decisions.find(d => d.event === 13);
+
+        const prevOffer = gameState.decisions.find(d => d.event === 14);
         if (prevOffer && prevOffer.choice === 1) {
             description += "\n\nThe family declined an offer back in 2026. Some wonder if they should have sold then.";
         }
@@ -400,6 +400,14 @@ function getHealthLabel(score) {
     return 'Critical';
 }
 
+function getHarmonyLabel(score) {
+    if (score >= 80) return 'Strong';
+    if (score >= 70) return 'Good';
+    if (score >= 50) return 'Stable';
+    if (score >= 30) return 'Strained';
+    return 'Fractured';
+}
+
 function updateUI() {
     // Update business metrics
     document.getElementById('currentYear').textContent = gameState.year;
@@ -417,6 +425,24 @@ function updateUI() {
     const healthScore = calculateFinancialHealth();
     const healthLabel = getHealthLabel(healthScore);
     document.getElementById('financialHealth').textContent = healthScore + ' - ' + healthLabel;
+
+    // Update family harmony
+    const harmonyScore = getFamilyHarmonyScore();
+    const harmonyLabel = getHarmonyLabel(harmonyScore);
+    const harmonyEl = document.getElementById('familyHarmony');
+    if (harmonyEl) {
+        harmonyEl.textContent = harmonyLabel;
+        // Color code the harmony display
+        if (harmonyScore >= 70) {
+            harmonyEl.style.color = '#4caf50';  // Green
+        } else if (harmonyScore >= 50) {
+            harmonyEl.style.color = '#8bc34a';  // Light green
+        } else if (harmonyScore >= 30) {
+            harmonyEl.style.color = '#ff9800';  // Orange
+        } else {
+            harmonyEl.style.color = '#f44336';  // Red
+        }
+    }
     
     // Show changes
     const revenueChange = gameState.revenue - gameState.previousRevenue;

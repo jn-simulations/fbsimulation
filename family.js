@@ -94,39 +94,43 @@ function updateFamilyDisplay() {
             memberDiv.appendChild(ownershipDiv);
         }
 
-        // Happiness meter
+        // Happiness indicator (color only, no percentage)
         const happinessDiv = document.createElement('div');
         happinessDiv.className = 'family-happiness';
 
         const happinessLabel = document.createElement('div');
         happinessLabel.className = 'happiness-label';
-        happinessLabel.textContent = 'Happiness';
+        happinessLabel.textContent = 'Mood';
         happinessDiv.appendChild(happinessLabel);
 
-        const happinessBar = document.createElement('div');
-        happinessBar.className = 'happiness-bar';
+        const happinessIndicator = document.createElement('div');
+        happinessIndicator.className = 'happiness-indicator';
 
-        const happinessLevel = document.createElement('div');
-        happinessLevel.className = 'happiness-level';
-        happinessLevel.style.width = `${member.happiness}%`;
-
-        // Color based on happiness level
-        if (member.happiness >= 70) {
-            happinessLevel.style.backgroundColor = '#4caf50';
+        // Color and label based on happiness level
+        let moodColor, moodLabel;
+        if (member.happiness >= 80) {
+            moodColor = '#4caf50';  // Green
+            moodLabel = '●●●';
+        } else if (member.happiness >= 60) {
+            moodColor = '#8bc34a';  // Light green
+            moodLabel = '●●○';
         } else if (member.happiness >= 40) {
-            happinessLevel.style.backgroundColor = '#ff9800';
+            moodColor = '#ff9800';  // Orange
+            moodLabel = '●○○';
+        } else if (member.happiness >= 20) {
+            moodColor = '#ff5722';  // Deep orange
+            moodLabel = '●○○';
         } else {
-            happinessLevel.style.backgroundColor = '#f44336';
+            moodColor = '#f44336';  // Red
+            moodLabel = '○○○';
         }
 
-        happinessBar.appendChild(happinessLevel);
-        happinessDiv.appendChild(happinessBar);
+        happinessIndicator.style.color = moodColor;
+        happinessIndicator.style.fontSize = '18px';
+        happinessIndicator.style.fontWeight = 'bold';
+        happinessIndicator.textContent = moodLabel;
 
-        const happinessValue = document.createElement('div');
-        happinessValue.className = 'happiness-value';
-        happinessValue.textContent = `${Math.round(member.happiness)}%`;
-        happinessDiv.appendChild(happinessValue);
-
+        happinessDiv.appendChild(happinessIndicator);
         memberDiv.appendChild(happinessDiv);
 
         // Status indicators

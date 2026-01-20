@@ -145,61 +145,51 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 4: 2007 - Sarah and Michael Join
+                // Event 4: 2007 - Sarah Joins
                 {
                     date: "2007",
                     title: "The Next Generation Enters",
-                    description: `Sarah graduated with her MBA and wants to join Anderson Packaging. She's smart, ambitious, and has real business skills.\n\nMichael also finished college. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nAt Sunday dinner, Robert raises a sensitive issue: "If we give ownership stakes to Sarah and Michael for joining the business, what about Jennifer?"\n\nJennifer (21, studying education) looks up: "Wait, are you only giving ownership to kids who work in the business? That doesn't seem fair."\n\n"But you're not working in the business," Michael says. "Why should you get the same stake as us?"\n\nPatricia intervenes: "This is exactly why we need to think carefully. Equal treatment, or equitable treatment?"\n\nRobert knows this decision will define family dynamics for decades. Should ownership be tied to business involvement, or should all children be treated equally regardless of career choices?`,
+                    description: `Sarah has graduated with her MBA and wants to join Anderson Packaging. She's 21, smart, ambitious, and has real business skills.\n\nMichael is 18 and just starting college. He's shown interest in sales but won't be ready to join for a few years.\n\nRobert faces an important decision about HOW to bring Sarah into the business:\n\n"Should I start her at entry-level to earn her way up?" he asks Patricia. "Or recognize her credentials with an immediate leadership role?"\n\n"What about ownership?" Patricia asks. "Are you thinking of giving her shares now?"\n\n"I don't know," Robert admits. "Employment and ownership don't have to happen at the same time. Maybe she should prove herself first. Or maybe giving her ownership now shows commitment to the next generation."\n\nThis is the first time a second-generation family member is entering the business. How Robert handles this will set the precedent for Michael and potentially Jennifer later.`,
                     options: [
                         {
-                            text: "Hire both at market-rate salaries in entry roles, no immediate ownership",
+                            text: "Entry-level role, earn her way up, no immediate ownership",
                             effects: {
-                                profit: 24000,  // 6% margin on cardboard
-                                revenue: 400000,
+                                profit: 12000,  // 6% margin on cardboard
+                                revenue: 200000,
                                 sarahHappiness: 5,
-                                michaelHappiness: 5,
                                 robertHappiness: 10,
                                 managementQuality: 5,
-                                employees: 2
+                                employees: 1
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager, Michael in sales—both at market rates for their experience and without immediate ownership stakes.</p><p><span class='impact-positive'>Revenue increases as both contribute to the business.</span> They generate more value than they cost, so <span class='impact-positive'>profit increases modestly</span>.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they wonder when they'll receive ownership stakes.</p><p>Non-family employees respect that the family members are earning their positions. <span class='impact-positive'>Management quality improves.</span></p><p><span class='impact-highlight'>Robert</span> is proud of setting a meritocratic precedent. Jennifer feels relieved the ownership question has been deferred.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior operations manager at $55K—market rate for her experience. No ownership stake.</p><p>"I appreciate you treating me like any other employee," Sarah says, though she wonders when ownership might come.</p><p><span class='impact-positive'>Revenue increases as Sarah contributes to operations.</span> She generates more value than she costs, so <span class='impact-positive'>profit increases modestly</span>.</p><p>Non-family employees respect that Sarah is earning her position. <span class='impact-positive'>Management quality improves.</span></p><p><span class='impact-highlight'>Robert</span> feels proud of setting a meritocratic precedent. The ownership question remains open for the future.</p>`
                         },
                         {
-                            text: "Give 10% ownership to all THREE children equally (fair to all)",
+                            text: "Manager role with 10% ownership stake (recognizes credentials & commitment)",
                             effects: {
-                                profit: -80000,
-                                revenue: 300000,
+                                profit: -15000,
+                                revenue: 250000,
                                 sarahOwnership: 10,
-                                michaelOwnership: 10,
-                                jenniferOwnership: 10,
-                                robertOwnership: -15,  // Split between both parents if Patricia is partner
-                                patriciaOwnership: -15,  // If Patricia is 50/50 partner, she gives up 15% too
-                                sarahHappiness: 10,
-                                michaelHappiness: 5,
-                                jenniferHappiness: 20,
+                                robertOwnership: -5,
+                                patriciaOwnership: -5,  // If Patricia is partner, she gives up 5% too
+                                sarahHappiness: 20,
                                 robertHappiness: 5,
-                                managementQuality: -3,
-                                employees: 2
+                                managementQuality: 3,
+                                employees: 1
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert gives 10% ownership to each of his three children—Sarah and Michael who are joining the business, and Jennifer who is pursuing teaching.</p><p>"I can't treat my children differently," Robert says. "You're all equal in my eyes."</p><p><span class='impact-highlight'>Jennifer</span> tears up with gratitude. <span class='impact-positive'>Her happiness increases significantly</span>—she feels valued despite choosing a different path.</p><p><span class='impact-highlight'>Sarah</span> accepts the decision but privately wonders if Jennifer should get the same stake without working in the business. <span class='impact-highlight'>Michael</span> is openly frustrated: "This doesn't feel right."</p><p>Non-family employees notice that ownership isn't tied to contribution. Some question the family's business judgment.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah joins as Operations Manager at $75K with an immediate 10% ownership stake.</p><p>"Thank you for showing confidence in me, Dad," Sarah says, clearly touched by the gesture.</p><p><span class='impact-highlight'>Sarah</span> feels deeply committed to the business. <span class='impact-positive'>Her happiness increases significantly.</span></p><p><span class='impact-negative'>Profit decreases</span> from the higher compensation, but Sarah's ownership creates strong alignment.</p><p>The decision sets a precedent: joining the family business comes with ownership. This will affect how Michael and Jennifer are treated later.</p><p>Non-family employees notice the preferential treatment. Some wonder if they'll ever get equity.</p>`
                         },
                         {
-                            text: "Give 10% ownership only to Sarah and Michael (merit-based)",
+                            text: "Senior role BUT ownership deferred until she proves herself (2-3 years)",
                             effects: {
-                                profit: -80000,
-                                revenue: 300000,
-                                sarahOwnership: 10,
-                                michaelOwnership: 10,
-                                robertOwnership: -10,  // Split between both parents if Patricia is partner
-                                patriciaOwnership: -10,  // If Patricia is 50/50 partner, she gives up 10% too
-                                sarahHappiness: 15,
-                                michaelHappiness: 15,
-                                jenniferHappiness: -20,
-                                robertHappiness: -5,
-                                managementQuality: -5,
-                                employees: 2
+                                profit: -5000,
+                                revenue: 225000,
+                                sarahHappiness: 12,
+                                robertHappiness: 8,
+                                managementQuality: 4,
+                                employees: 1,
+                                sarahOwnershipPending: true  // Flag for future ownership decision
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert gives 10% ownership to Sarah and Michael—the two children joining the business. Jennifer receives nothing.</p><p>"This is a business decision," Robert explains. "Ownership goes to those who contribute to building the company."</p><p><span class='impact-highlight'>Jennifer</span> is devastated. <span class='impact-negative'>Her happiness plummets.</span> "So I'm worth less because I chose to be a teacher?" she says quietly, tears in her eyes. "Is that what you're telling me, Dad?"</p><p>The Sunday dinner ends early. <span class='impact-highlight'>Jennifer</span> leaves without dessert.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel validated and committed to the business, but the family tension is palpable. Patricia worries about long-term damage to sibling relationships.</p><p>Non-family employees respect that ownership is tied to contribution. <span class='impact-positive'>The meritocratic approach is clear.</span></p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah joins as Operations Manager at $70K, with the understanding that ownership will be discussed after she proves herself over 2-3 years.</p><p>"I get it," Sarah says. "I want to earn it anyway."</p><p><span class='impact-positive'>Revenue increases</span> as Sarah takes on real responsibility immediately. Her MBA and fresh perspective bring value.</p><p><span class='impact-highlight'>Sarah</span> feels respected by the approach—challenged to prove herself but with a clear path to ownership.</p><p>This hybrid approach balances meritocracy with family commitment. The ownership conversation will happen later, once Sarah has established her value.</p>`
                         }
                     ]
                 },
@@ -253,8 +243,80 @@ const EVENTS = [
                         }
                     ]
                 },
-                
-                // Event 6: 2012 - Succession Discussion
+
+                // Event 6: 2010 - Michael Joins & Ownership Question
+                {
+                    date: "2010",
+                    title: "Michael Joins & The Ownership Question",
+                    description: function() {
+                        let baseDesc = "Michael has graduated from college at age 23. He's energetic, loves connecting with people, and wants to join the family business in sales.\n\n";
+
+                        // Check if Sarah already has ownership
+                        if (familyMembers.sarah.ownership > 0) {
+                            baseDesc += "Sarah has been working in the business for three years now and already owns " + familyMembers.sarah.ownership.toFixed(0) + "% of the company.\n\n";
+                            baseDesc += "Michael looks at his older sister: \"So... when do I get ownership like Sarah?\"\n\n";
+                            baseDesc += "Robert faces a decision: Should Michael receive the same ownership stake Sarah got? Or has the situation changed?\n\n";
+                        } else {
+                            baseDesc += "Sarah has been working in the business for three years but doesn't have ownership yet. Neither sibling owns shares.\n\n";
+                            baseDesc += "Over Sunday dinner, the ownership question resurfaces.\n\n";
+                            baseDesc += "\"Sarah and I have both joined the business now,\" Michael says. \"What about ownership? And what about Jennifer—does she get anything?\"\n\n";
+                            baseDesc += "Jennifer (24, now a teacher) looks uncomfortable. \"I'm not in the business. But I'm still your daughter, Dad.\"\n\n";
+                        }
+
+                        baseDesc += "Robert must decide how to handle ownership distribution now that two children are in the business and one has chosen a different career.";
+                        return baseDesc;
+                    },
+                    options: [
+                        {
+                            text: "Give Michael same ownership as Sarah (consistent treatment)",
+                            effects: {
+                                profit: -40000,
+                                revenue: 350000,
+                                michaelOwnership: 10,
+                                robertOwnership: -5,
+                                patriciaOwnership: -5,
+                                michaelHappiness: 20,
+                                sarahHappiness: 5,
+                                robertHappiness: 5,
+                                employees: 1
+                            },
+                            impact: `<h4>Decision Impact</h4><p>Michael receives 10% ownership, matching Sarah's stake.</p><p>"Thank you for treating us equally, Dad," Michael says with genuine gratitude.</p><p><span class='impact-highlight'>Michael</span> feels valued and committed. <span class='impact-positive'>His happiness increases significantly.</span></p><p><span class='impact-positive'>Revenue increases</span> as Michael attacks the sales role with energy and ownership mentality.</p><p>The siblings are treated consistently, avoiding resentment. However, Jennifer notices she's still excluded from ownership despite being family.</p>`
+                        },
+                        {
+                            text: "Give 10% to ALL THREE siblings equally (family unity)",
+                            effects: {
+                                profit: -50000,
+                                revenue: 350000,
+                                michaelOwnership: 10,
+                                sarahOwnership: 10,  // If Sarah doesn't have it yet
+                                jenniferOwnership: 10,
+                                robertOwnership: -15,
+                                patriciaOwnership: -15,
+                                michaelHappiness: 18,
+                                sarahHappiness: 8,
+                                jenniferHappiness: 25,
+                                robertHappiness: 10,
+                                employees: 1
+                            },
+                            impact: `<h4>Decision Impact</h4><p>Robert gives 10% ownership to each of his three children—regardless of business involvement.</p><p>"I won't create tiers among my children," Robert says firmly. "You're all equal in my eyes, business or not."</p><p><span class='impact-highlight'>Jennifer</span> is overwhelmed with gratitude. <span class='impact-positive'>She feels truly valued as part of the family legacy.</span></p><p><span class='impact-highlight'>Michael</span> is pleased, though slightly bothered that Jennifer gets the same stake without working.</p><p><span class='impact-highlight'>Sarah</span> has mixed feelings—she's been working hard for three years, and Jennifer gets the same reward for doing nothing in the business.</p>`
+                        },
+                        {
+                            text: "Michael gets employment but NO ownership yet—must earn it",
+                            effects: {
+                                profit: -20000,
+                                revenue: 300000,
+                                michaelHappiness: -10,
+                                sarahHappiness: 10,
+                                jenniferHappiness: -5,
+                                robertHappiness: -5,
+                                employees: 1
+                            },
+                            impact: `<h4>Decision Impact</h4><p>Michael joins as Sales Associate at market rate, but receives no ownership stake.</p><p>"Wait—Sarah got ownership when she joined," Michael says, confused and hurt.</p><p>"Different time, different circumstances," Robert explains, though he's not entirely sure of his reasoning.</p><p><span class='impact-highlight'>Michael</span> feels second-class compared to his sister. <span class='impact-negative'>His happiness decreases</span> and his motivation suffers.</p><p><span class='impact-highlight'>Sarah</span> appreciates that her ownership feels more earned, but feels bad for her brother.</p><p>The inconsistent treatment plants seeds of resentment. <span class='impact-positive'>Revenue still increases</span> from Michael's sales work, but not as much as it could have.</p>`
+                        }
+                    ]
+                },
+
+                // Event 7: 2012 - Succession Discussion
                 {
                     date: "2012",
                     title: "The Sunday Dinner Discussion",
@@ -286,7 +348,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 7: 2014 - Growth Opportunity
+                // Event 8: 2014 - Growth Opportunity
                 {
                     date: "2014",
                     title: "The Major Contract",
@@ -321,7 +383,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 8: 2016 - Michael's Compensation Conflict
+                // Event 9: 2016 - Michael's Compensation Conflict
                 {
                     date: "2016",
                     title: "The Compensation Debate",
@@ -349,7 +411,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 9: 2018 - Outside Executive Opportunity
+                // Event 10: 2018 - Outside Executive Opportunity
                 {
                     date: "2018",
                     title: "The Outside COO Candidate",
@@ -387,7 +449,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 10: 2020 - COVID-19 Crisis
+                // Event 11: 2020 - COVID-19 Crisis
                 {
                     date: "2020",
                     title: "The Pandemic",
@@ -458,7 +520,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 11: 2022 - Robert's Health Scare
+                // Event 12: 2022 - Robert's Health Scare
                 {
                     date: "2022",
                     title: "A Wake-Up Call",
@@ -493,7 +555,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 12: 2024 - Michael's External Offer
+                // Event 13: 2024 - Michael's External Offer
                 {
                     date: "2024",
                     title: "Michael's Crossroads",
@@ -501,7 +563,7 @@ const EVENTS = [
                         var baseDesc = "Michael has received an offer from a competitor: $200K salary plus substantial equity and a VP title. It's a clear path to eventual CEO.\n\n";
 
                         // Check if compensation conflict was resolved in his favor
-                        var compensationEvent = gameState.decisions.find(function(d) { return d.event === 8; });
+                        var compensationEvent = gameState.decisions.find(function(d) { return d.event === 9; });
                         if (compensationEvent && compensationEvent.choice === 0) {
                             baseDesc += "\"Dad, I appreciate that you increased my salary a few years ago,\" Michael says. \"But even at $160K, I'm still watching Sarah make more strategic decisions while I'm stuck in sales.\"\n\n";
                         } else if (compensationEvent && compensationEvent.choice === 1) {
@@ -543,7 +605,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 13: 2026 - The Acquisition Offer
+                // Event 14: 2026 - The Acquisition Offer
                 {
                     date: "2026",
                     title: "The Temptation",
@@ -605,15 +667,15 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 14: 2028 - Quality Crisis
+                // Event 15: 2028 - Quality Crisis
                 {
                     date: "2028",
                     title: "The Quality Crisis",
                     description: function() {
                         var baseDesc = "A major client has discovered defects in Anderson Packaging's products. The problem affects $2.5M worth of delivered goods.\n\nThe client is threatening to terminate their contract and sue for damages. Industry reputation is at stake.\n\n";
 
-                        // Check if they accepted the major growth contract in Event 7
-                        var growthEvent = gameState.decisions.find(function(d) { return d.event === 7; });
+                        // Check if they accepted the major growth contract in Event 8
+                        var growthEvent = gameState.decisions.find(function(d) { return d.event === 8; });
                         if (growthEvent && growthEvent.choice === 0) {
                             baseDesc += "Sarah's investigation reveals the root cause: to meet the aggressive growth targets from that major contract years ago, quality control protocols were loosened. The team was stretched too thin.\n\n\"We did this to ourselves,\" Sarah says, staring at the report. \"We grew too fast and cut corners.\"\n\n";
                         } else if (gameState.hasDebt && gameState.debt > 500000) {
@@ -655,7 +717,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 15: 2030 - Third Generation
+                // Event 16: 2030 - Third Generation
                 {
                     date: "2030",
                     title: "The Next Generation",
@@ -682,7 +744,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 16: 2032 - Jennifer's Buyout Request
+                // Event 17: 2032 - Jennifer's Buyout Request
                 {
                     date: "2032",
                     title: "Jennifer's Request",
@@ -712,7 +774,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 17: 2034 - Robert's Death
+                // Event 18: 2034 - Robert's Death
                 {
                     date: "2034",
                     title: "The Founder's Passing",
@@ -749,7 +811,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 18: 2036 - Cousins Enter Business
+                // Event 19: 2036 - Cousins Enter Business
                 {
                     date: "2036",
                     title: "The Third Generation Arrives",
@@ -777,7 +839,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 19: 2040 - Major Strategic Decision
+                // Event 20: 2040 - Major Strategic Decision
                 {
                     date: "2040",
                     title: "The Crossroads",
@@ -852,7 +914,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 20: 2044 - Final Decision
+                // Event 21: 2044 - Final Decision
                 {
                     date: "2044",
                     title: "Fifty Years",
