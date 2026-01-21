@@ -10,17 +10,35 @@ function init() {
     gameState = {
         year: 1994,
         eventIndex: 0,
-        revenue: 0,
-        profit: 0,
-        cash: 50000,
-        assets: 50000, // Total assets (cash + equipment + inventory + property)
-        debt: 0,
-        employees: 1, // Starting with just Robert
+
+        // Market & Revenue (asset-constrained model)
+        marketDemand: 0,  // What customers want to buy
+        revenue: 0,  // Actual sales (limited by asset capacity)
+        lostSales: 0,  // Unmet demand due to capacity constraints
         previousRevenue: 0,
+
+        // Assets & Investment
+        assets: 50000, // Equipment, facilities, inventory (DRIVES capacity)
+        cash: 50000,  // Available for reinvestment or buffer
+        debt: 0,
+
+        // Profitability
+        profit: 0,
         previousProfit: 0,
 
-        // Management quality (0-100, affects profit margins, growth, efficiency)
-        managementQuality: 50, // Start at average
+        // Profit Allocation & Dividends
+        dividendPolicy: 0.3,  // % of profit paid as dividends (default 30%)
+        dividendsPaid: 0,  // Actual $ paid this period
+        retainedEarnings: 0,  // Profit kept in business (goes to cash)
+
+        // Operations
+        employees: 1, // Starting with just Robert
+        managementQuality: 50, // Start at average (0-100)
+
+        // Family Salaries (for active members)
+        robertSalary: 0,  // Will be set when business starts generating revenue
+        sarahSalary: 0,
+        michaelSalary: 0,
 
         // Decision tracking
         decisions: [],
@@ -33,10 +51,12 @@ function init() {
         robertDeceased: false,
         sarahCEO: false,
         michaelLeft: false,
-
-        // Risk factors
         hasQualityIssues: false,
-        hasDebt: false
+        hasDebt: false,
+
+        // Policy flags
+        reinvestmentPolicy: 'balanced',  // 'aggressive', 'balanced', 'conservative'
+        lastDividendDispute: 0  // Year of last dividend dispute event
     };
     
     // Initialize family members
@@ -225,7 +245,7 @@ function applyEffects(effects) {
     gameState.previousProfit = gameState.profit;
 
     // Apply numeric effects
-    const numericFields = ['revenue', 'profit', 'cash', 'assets', 'debt', 'employees'];
+    const numericFields = ['revenue', 'profit', 'cash', 'assets', 'debt', 'employees', 'marketDemand'];
     numericFields.forEach(field => {
         if (effects[field] !== undefined) {
             gameState[field] += effects[field];
@@ -243,7 +263,17 @@ function applyEffects(effects) {
         gameState.managementQuality += effects.managementQuality;
         gameState.managementQuality = Math.max(0, Math.min(100, gameState.managementQuality));
     }
-    
+
+    // Apply salary changes
+    if (effects.robertSalary !== undefined) gameState.robertSalary = effects.robertSalary;
+    if (effects.sarahSalary !== undefined) gameState.sarahSalary = effects.sarahSalary;
+    if (effects.michaelSalary !== undefined) gameState.michaelSalary = effects.michaelSalary;
+
+    // Apply dividend policy changes
+    if (effects.dividendPolicy !== undefined) {
+        gameState.dividendPolicy = Math.max(0, Math.min(1, effects.dividendPolicy));
+    }
+
     // Apply family effects
     Object.keys(familyMembers).forEach(key => {
         const member = familyMembers[key];
@@ -252,14 +282,14 @@ function applyEffects(effects) {
             member.happiness += happinessChange;
             member.happiness = Math.max(0, Math.min(100, member.happiness));
         }
-        
+
         const ownershipChange = effects[key + 'Ownership'];
         if (ownershipChange !== undefined) {
             member.ownership += ownershipChange;
             member.ownership = Math.max(0, member.ownership);
         }
     });
-    
+
     // Apply special effects
     if (effects.robertRetired) gameState.robertRetired = true;
     if (effects.sarahCEO) {
@@ -270,12 +300,14 @@ function applyEffects(effects) {
         gameState.michaelLeft = true;
         familyMembers.michael.inBusiness = false;
         familyMembers.michael.isActive = false;
+        gameState.michaelSalary = 0;  // No longer gets salary
     }
     if (effects.hasOutsideCEO) gameState.hasOutsideCEO = true;
     if (effects.hasProfessionalBoard) gameState.hasProfessionalBoard = true;
     if (effects.robertDeceased) {
         gameState.robertDeceased = true;
         familyMembers.robert.isDead = true;
+        gameState.robertSalary = 0;  // No longer gets salary
     }
     if (effects.hasQualityIssues) gameState.hasQualityIssues = true;
     if (effects.hasDebt) gameState.hasDebt = true;
@@ -286,51 +318,186 @@ function advanceGame() {
     const yearsToAdvance = 2;
     gameState.year += yearsToAdvance;
     gameState.eventIndex += 1;
-    
+
     // Age family members
     Object.keys(familyMembers).forEach(key => {
         familyMembers[key].age += yearsToAdvance;
     });
-    
+
     // Check for life events
     checkLifeEvents();
-    
-    // Natural business growth (influenced by management quality)
-    if (gameState.revenue > 0) {
-        // Growth rate based on management quality (3-7% annual)
-        // Poor management (0-30): 3%, Average (50): 5%, Excellent (100): 7%
+
+    // NEW FINANCIAL MODEL: Asset-constrained revenue growth
+    if (gameState.revenue > 0 || gameState.marketDemand > 0) {
+        // ═══════════════════════════════════════════════════════════
+        // STEP 1: Calculate Market Demand (what customers want)
+        // ═══════════════════════════════════════════════════════════
         const baseGrowth = 0.03;
         const managementBonus = (gameState.managementQuality / 100) * 0.04;
-        const growthRate = baseGrowth + managementBonus;
+        const marketGrowthRate = baseGrowth + managementBonus;  // 3-7% annually
 
-        gameState.revenue *= Math.pow(1 + growthRate, yearsToAdvance);
+        // Market demand grows regardless of capacity
+        if (gameState.marketDemand === 0) {
+            gameState.marketDemand = gameState.revenue > 0 ? gameState.revenue : 100000;
+        }
+        gameState.marketDemand *= Math.pow(1 + marketGrowthRate, yearsToAdvance);
 
-        // Profit margin based on management quality (8-15%)
-        // Poor management (0-30): 8%, Average (50): 10%, Excellent (100): 15%
+        // ═══════════════════════════════════════════════════════════
+        // STEP 2: Calculate Asset Capacity (what we CAN produce)
+        // ═══════════════════════════════════════════════════════════
+        // Asset turnover: how much revenue each $1 of assets can support
+        // Poor management: 1.5x, Excellent: 2.0x
+        const assetTurnoverRatio = 1.5 + (gameState.managementQuality / 100) * 0.5;
+        const assetCapacity = gameState.assets * assetTurnoverRatio;
+
+        // ═══════════════════════════════════════════════════════════
+        // STEP 3: Actual Revenue (limited by capacity)
+        // ═══════════════════════════════════════════════════════════
+        gameState.previousRevenue = gameState.revenue;
+        gameState.revenue = Math.min(gameState.marketDemand, assetCapacity);
+
+        // Track lost sales (unmet demand)
+        gameState.lostSales = Math.max(0, gameState.marketDemand - assetCapacity);
+
+        // ═══════════════════════════════════════════════════════════
+        // STEP 4: Calculate Profit
+        // ═══════════════════════════════════════════════════════════
         const baseMargin = 0.08;
         const marginBonus = (gameState.managementQuality / 100) * 0.07;
-        const profitMargin = baseMargin + marginBonus;
+        const profitMargin = baseMargin + marginBonus;  // 8-15%
 
+        gameState.previousProfit = gameState.profit;
         gameState.profit = gameState.revenue * profitMargin;
 
-        // Assets grow with revenue (equipment, inventory, facilities)
-        // Asset efficiency improves with management quality
-        // Poor management needs 0.7x revenue in assets, excellent needs 0.5x
-        const assetRatio = 0.7 - (gameState.managementQuality / 100) * 0.2;
-        gameState.assets = gameState.cash + (gameState.revenue * assetRatio);
+        // ═══════════════════════════════════════════════════════════
+        // STEP 5: Profit Allocation (dividends vs reinvestment)
+        // ═══════════════════════════════════════════════════════════
+        if (gameState.profit > 0) {
+            // Pay dividends based on policy
+            gameState.dividendsPaid = gameState.profit * gameState.dividendPolicy;
 
-        // Employees grow with revenue
-        // Better management = higher productivity (revenue per employee)
-        // Poor: $80K/employee, Average: $100K/employee, Excellent: $130K/employee
+            // Retained earnings go to cash
+            gameState.retainedEarnings = gameState.profit - gameState.dividendsPaid;
+            gameState.cash += gameState.retainedEarnings;
+        } else {
+            gameState.dividendsPaid = 0;
+            gameState.retainedEarnings = gameState.profit;  // Negative (loss)
+            gameState.cash += gameState.profit;  // Reduces cash
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // STEP 6: Update Family Income & Check for Unhappiness
+        // ═══════════════════════════════════════════════════════════
+        updateFamilyIncome();
+
+        // ═══════════════════════════════════════════════════════════
+        // STEP 7: Calculate Employees
+        // ═══════════════════════════════════════════════════════════
         const revenuePerEmployee = 80000 + (gameState.managementQuality / 100) * 50000;
         gameState.employees = Math.max(1, Math.round(gameState.revenue / revenuePerEmployee));
+
+        // ═══════════════════════════════════════════════════════════
+        // STEP 8: Check for Triggered Events
+        // ═══════════════════════════════════════════════════════════
+        checkForTriggeredEvents();
     }
-    
+
+    // Ensure cash doesn't go negative (would need debt/bankruptcy event)
+    if (gameState.cash < 0) {
+        gameState.cash = 0;
+    }
+
     // Check if game continues
     if (gameState.eventIndex < EVENTS.length) {
         loadEvent();
     } else {
         showEnding();
+    }
+}
+
+function updateFamilyIncome() {
+    // Update each family member's income from salary + dividends
+    const totalDividends = gameState.dividendsPaid;
+
+    Object.keys(familyMembers).forEach(key => {
+        const member = familyMembers[key];
+
+        // Calculate salary (only if actively in business)
+        let salary = 0;
+        if (key === 'robert' && !gameState.robertDeceased) {
+            salary = gameState.robertSalary;
+        } else if (key === 'sarah' && member.inBusiness) {
+            salary = gameState.sarahSalary;
+        } else if (key === 'michael' && member.inBusiness && !gameState.michaelLeft) {
+            salary = gameState.michaelSalary;
+        }
+
+        // Calculate dividend income based on ownership %
+        const dividendIncome = totalDividends * (member.ownership / 100);
+
+        // Total income
+        const totalIncome = salary + dividendIncome;
+
+        // Initialize accustomed income if not set
+        if (!member.accustomedIncome) {
+            member.accustomedIncome = totalIncome;
+            member.incomeExpectation = totalIncome * 0.85;  // 85% of peak
+        }
+
+        // Track peak income
+        if (totalIncome > member.accustomedIncome) {
+            member.accustomedIncome = totalIncome;
+            member.incomeExpectation = member.accustomedIncome * 0.85;
+        }
+
+        // Happiness penalty if income drops significantly
+        if (totalIncome < member.incomeExpectation && member.accustomedIncome > 50000) {
+            const dropPercent = (member.incomeExpectation - totalIncome) / member.incomeExpectation;
+            const happinessPenalty = Math.min(25, Math.round(dropPercent * 40));  // Up to -25 happiness
+
+            member.happiness -= happinessPenalty;
+            member.happiness = Math.max(0, member.happiness);
+
+            // Mark as unhappy for dividend dispute triggers
+            if (happinessPenalty > 10) {
+                member.unhappyAboutIncome = true;
+            }
+        } else {
+            member.unhappyAboutIncome = false;
+        }
+
+        // Store income for reference (not displayed to player)
+        member.lastSalary = salary;
+        member.lastDividendIncome = dividendIncome;
+        member.lastTotalIncome = totalIncome;
+    });
+}
+
+function checkForTriggeredEvents() {
+    // Check if we should trigger special events based on game state
+
+    // 1. DIVIDEND DISPUTE: Triggered if family members unhappy about income
+    const unhappyMembers = Object.keys(familyMembers).filter(key => {
+        const member = familyMembers[key];
+        return member.unhappyAboutIncome && member.isActive;
+    });
+
+    // Trigger dividend dispute if:
+    // - 2+ family members unhappy about income
+    // - Haven't had this event in last 4 years
+    // - Business is profitable
+    if (unhappyMembers.length >= 2 &&
+        (gameState.year - gameState.lastDividendDispute) >= 4 &&
+        gameState.profit > 0) {
+        // Insert dividend dispute event NEXT
+        // (We'll create this event later)
+        gameState.needsDividendDisputeEvent = true;
+    }
+
+    // 2. REINVESTMENT OPPORTUNITY: Triggered if capacity-constrained
+    // Lost sales > 25% of revenue and have cash to invest
+    if (gameState.lostSales > (gameState.revenue * 0.25) && gameState.cash > 500000) {
+        gameState.needsReinvestmentEvent = true;
     }
 }
 

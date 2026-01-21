@@ -12,10 +12,12 @@ const EVENTS = [
                         {
                             text: "Bootstrap slowly - keep the day job, grow cautiously",
                             effects: {
+                                marketDemand: 150000,
                                 revenue: 150000,
                                 profit: 30000,
                                 cash: 30000,
                                 assets: 60000,
+                                robertSalary: 45000,  // Robert takes modest salary while keeping day job
                                 robertHappiness: -5
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert keeps his day job and works on the business nights and weekends. Progress is slow but steady.</p><p><span class='impact-positive'>The family maintains financial stability</span>, though Robert is exhausted from working 70-hour weeks.</p><p>After two years, the business brings in modest revenue, and Robert has kept his family secure. But <span class='impact-highlight'>Robert's happiness decreases</span> from the relentless grind.</p>`
@@ -23,11 +25,13 @@ const EVENTS = [
                         {
                             text: "Take the $100K loan and go all-in immediately",
                             effects: {
+                                marketDemand: 400000,
                                 revenue: 400000,
                                 profit: 60000,
                                 cash: -30000,
                                 debt: 100000,
                                 assets: 160000,
+                                robertSalary: 80000,  // Robert pays himself good salary
                                 robertHappiness: 10,
                                 hasDebt: true
                             },
@@ -193,26 +197,28 @@ const EVENTS = [
                         {
                             text: "Hire both at market-rate salaries, make them earn their positions",
                             effects: {
-                                profit: -180000,
-                                revenue: 400000,
+                                marketDemand: 400000,
+                                sarahSalary: 65000,  // Market rate for MBA grad
+                                michaelSalary: 50000,  // Market rate for sales role
                                 sarahHappiness: 5,
                                 michaelHappiness: 5,
                                 robertHappiness: 10,
                                 managementQuality: 5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager at $65K, Michael in sales at $55K—both market rates for their experience.</p><p><span class='impact-positive'>Revenue increases</span> as both contribute to the business. <span class='impact-negative'>Profit decreases</span> due to additional payroll.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they sometimes wonder if family connections should provide more benefits.</p><p><span class='impact-highlight'>Robert</span> is proud of the professional approach.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager at $65K, Michael in sales at $50K—both market rates for their experience.</p><p><span class='impact-positive'>Revenue increases</span> as both contribute to the business. Their salaries will be paid from profits.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they sometimes wonder if family connections should provide more benefits.</p><p><span class='impact-highlight'>Robert</span> is proud of the professional approach.</p>`
                         },
                         {
                             text: "Give them elevated positions and above-market compensation",
                             effects: {
-                                profit: -250000,
-                                revenue: 300000,
+                                marketDemand: 300000,
+                                sarahSalary: 90000,  // Above market
+                                michaelSalary: 75000,  // Above market
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
                                 robertHappiness: -5,
                                 managementQuality: -5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO at $90K, Michael as Sales Director at $80K—well above market for their experience.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and trusted. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, <span class='impact-negative'>profit decreases substantially</span> from the high salaries. Non-family employees notice the special treatment and some grumble about nepotism.</p><p><span class='impact-highlight'>Robert</span> worries whether he's done the right thing.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO at $90K, Michael as Sales Director at $75K—well above market for their experience.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and trusted. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, the high salaries will reduce profits. Non-family employees notice the special treatment and some grumble about nepotism.</p><p><span class='impact-highlight'>Robert</span> worries whether he's done the right thing.</p>`
                         }
                     ]
                 },
@@ -375,19 +381,19 @@ const EVENTS = [
                         {
                             text: "Increase Michael's salary to $160K to recognize his sales success",
                             effects: {
-                                profit: -40000,
-                                revenue: 500000,
+                                michaelSalary: 160000,  // Raise from ~$120K to $160K
+                                marketDemand: 500000,
                                 michaelHappiness: 18,
                                 sarahHappiness: -10
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert raises Michael's salary to $160K, substantially narrowing the gap with Sarah.</p><p><span class='impact-highlight'>Michael</span> feels valued and recognized. <span class='impact-positive'>His happiness increases dramatically</span> and <span class='impact-positive'>his sales performance gets even better</span>.</p><p><span class='impact-negative'>Profit decreases</span> due to the higher compensation.</p><p><span class='impact-highlight'>Sarah</span> is frustrated. She feels the differential should reflect their very different roles and responsibilities. <span class='impact-negative'>Her happiness decreases</span>.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert raises Michael's salary to $160K, substantially narrowing the gap with Sarah.</p><p><span class='impact-highlight'>Michael</span> feels valued and recognized. <span class='impact-positive'>His happiness increases dramatically</span> and <span class='impact-positive'>his sales performance gets even better</span>.</p><p>The higher salary will reduce profits, but Michael's renewed energy drives more revenue.</p><p><span class='impact-highlight'>Sarah</span> is frustrated. She feels the differential should reflect their very different roles and responsibilities. <span class='impact-negative'>Her happiness decreases</span>.</p>`
                         },
                         {
                             text: "Maintain the differential and explain that different roles have different compensation",
                             effects: {
                                 michaelHappiness: -15,
                                 robertHappiness: -8,
-                                revenue: -300000
+                                marketDemand: -300000
                             },
                             impact: `<h4>Decision Impact</h4><p>Robert explains that compensation reflects both results and responsibility level. Sarah's role as COO justifies higher pay regardless of Michael's sales numbers.</p><p><span class='impact-highlight'>Michael</span> feels unappreciated and resentful. <span class='impact-negative'>His happiness drops significantly</span>. His sales performance declines as his motivation suffers.</p><p><span class='impact-highlight'>Robert</span> stands by the decision but worries about the growing tension between his children.</p>`
                         }

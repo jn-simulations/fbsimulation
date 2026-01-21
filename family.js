@@ -13,7 +13,14 @@ function initializeFamily() {
             happiness: 70,
             isActive: true,
             inBusiness: true,
-            isDead: false
+            isDead: false,
+            // Income tracking (backend only, not displayed)
+            accustomedIncome: 0,
+            incomeExpectation: 0,
+            lastSalary: 0,
+            lastDividendIncome: 0,
+            lastTotalIncome: 0,
+            unhappyAboutIncome: false
         },
         sarah: {
             name: "Sarah Anderson",
@@ -23,7 +30,14 @@ function initializeFamily() {
             happiness: 75,
             isActive: false,
             inBusiness: false,
-            isDead: false
+            isDead: false,
+            // Income tracking
+            accustomedIncome: 0,
+            incomeExpectation: 0,
+            lastSalary: 0,
+            lastDividendIncome: 0,
+            lastTotalIncome: 0,
+            unhappyAboutIncome: false
         },
         michael: {
             name: "Michael Anderson",
@@ -33,7 +47,14 @@ function initializeFamily() {
             happiness: 75,
             isActive: false,
             inBusiness: false,
-            isDead: false
+            isDead: false,
+            // Income tracking
+            accustomedIncome: 0,
+            incomeExpectation: 0,
+            lastSalary: 0,
+            lastDividendIncome: 0,
+            lastTotalIncome: 0,
+            unhappyAboutIncome: false
         },
         jennifer: {
             name: "Jennifer Anderson",
@@ -43,7 +64,14 @@ function initializeFamily() {
             happiness: 75,
             isActive: false,
             inBusiness: false,
-            isDead: false
+            isDead: false,
+            // Income tracking
+            accustomedIncome: 0,
+            incomeExpectation: 0,
+            lastSalary: 0,
+            lastDividendIncome: 0,
+            lastTotalIncome: 0,
+            unhappyAboutIncome: false
         }
     };
 }
