@@ -13,8 +13,6 @@ const EVENTS = [
                             text: "Bootstrap slowly - keep the day job, grow cautiously",
                             effects: {
                                 marketDemand: 150000,
-                                revenue: 150000,
-                                profit: 30000,
                                 cash: 30000,
                                 assets: 60000,
                                 robertSalary: 45000,  // Robert takes modest salary while keeping day job
@@ -26,8 +24,6 @@ const EVENTS = [
                             text: "Take the $100K loan and go all-in immediately",
                             effects: {
                                 marketDemand: 400000,
-                                revenue: 400000,
-                                profit: 60000,
                                 cash: -30000,
                                 debt: 100000,
                                 assets: 160000,
@@ -235,9 +231,9 @@ const EVENTS = [
                         {
                             text: "Cut all salaries by 20%, share the pain equally",
                             effects: {
-                                robertSalary: gameState.robertSalary * 0.8,
-                                sarahSalary: gameState.sarahSalary * 0.8,
-                                michaelSalary: gameState.michaelSalary * 0.8,
+                                robertSalary: 96000,  // 20% cut from ~$120K
+                                sarahSalary: 52000,   // 20% cut from $65K
+                                michaelSalary: 40000, // 20% cut from $50K
                                 cash: 150000,  // Reduced payroll
                                 robertHappiness: -10,
                                 sarahHappiness: -5,
@@ -262,9 +258,9 @@ const EVENTS = [
                         {
                             text: "Family takes 40% salary cuts and no dividends; protect non-family jobs",
                             effects: {
-                                robertSalary: gameState.robertSalary * 0.6,
-                                sarahSalary: gameState.sarahSalary * 0.6,
-                                michaelSalary: gameState.michaelSalary * 0.6,
+                                robertSalary: 72000,  // 40% cut from ~$120K
+                                sarahSalary: 39000,   // 40% cut from $65K
+                                michaelSalary: 30000, // 40% cut from $50K
                                 dividendPolicy: 0.0,  // No dividends temporarily
                                 cash: 80000,
                                 robertHappiness: 5,
@@ -717,9 +713,8 @@ const EVENTS = [
                         {
                             text: "Accept full responsibility and bear the cost ($1.8M)",
                             effects: {
-                                profit: -1800000,
                                 cash: -1800000,
-                                revenue: 1000000,
+                                marketDemand: 1000000,
                                 assets: 500000,
                                 sarahHappiness: 10,
                                 robertHappiness: 15,
@@ -730,9 +725,8 @@ const EVENTS = [
                         {
                             text: "Minimize liability and settle quietly ($600K)",
                             effects: {
-                                profit: -600000,
                                 cash: -600000,
-                                revenue: -800000,
+                                marketDemand: -800000,
                                 sarahHappiness: -15,
                                 robertHappiness: -20,
                                 hasQualityIssues: true,
@@ -771,8 +765,7 @@ const EVENTS = [
                             effects: {
                                 cash: -1200000,
                                 debt: 800000,
-                                revenue: 1800000,
-                                profit: 350000,
+                                marketDemand: 1800000,
                                 assets: 1200000,
                                 sarahHappiness: 15,
                                 managementQuality: 18,
@@ -784,8 +777,7 @@ const EVENTS = [
                             text: "Implement selective improvements—upgrade gradually ($300K)",
                             effects: {
                                 cash: -300000,
-                                revenue: 400000,
-                                profit: 60000,
+                                marketDemand: 400000,
                                 sarahHappiness: -8,
                                 managementQuality: 4
                             },
@@ -834,7 +826,7 @@ const EVENTS = [
                         {
                             text: "Ask Jennifer to hold her shares—offer increased dividends instead",
                             effects: {
-                                profit: -150000,
+                                dividendPolicy: 0.5,
                                 jenniferHappiness: -20
                             },
                             impact: `<h4>Decision Impact</h4><p>The family asks Jennifer to keep her ownership and commits to paying consistent dividends going forward.</p><p><span class='impact-highlight'>Jennifer</span> is disappointed and hurt. <span class='impact-negative'>Her happiness decreases substantially</span>—the family won't help when she needs it most.</p><p>She feels trapped as a passive shareholder in a business she doesn't control, unable to access the value of her shares.</p><p>Family relationships become strained. Sunday dinners are tense.</p>`
@@ -876,7 +868,7 @@ const EVENTS = [
                                 sarahHappiness: 5,
                                 robertHappiness: 0,
                                 robertDeceased: true,
-                                revenue: -300000
+                                marketDemand: -300000
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah commits to maintaining Robert's conservative, values-driven approach to the business.</p><p>The company continues steadily, but <span class='impact-negative'>growth slows</span> as opportunities are passed up to stay true to the founder's vision.</p><p>Some employees appreciate the continuity. Others feel the company is stuck in the past.</p><p>Sarah receives 70% ownership and Michael receives 30%.</p>`
                         },
@@ -888,8 +880,7 @@ const EVENTS = [
                                 sarahHappiness: 15,
                                 robertHappiness: 0,
                                 robertDeceased: true,
-                                revenue: 1200000,
-                                profit: 250000,
+                                marketDemand: 1200000,
                                 assets: 800000
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah decides to honor Robert's core values—integrity, employee welfare, quality—while modernizing strategy for the next generation.</p><p><span class='impact-positive'>Revenue, profit, and valuation all increase</span> as Sarah implements changes she's been planning.</p><p>The company evolves while maintaining its soul. Employees embrace the changes.</p><p>Sarah receives 70% ownership and Michael receives 30%. The business enters its third decade under new leadership.</p>`
@@ -923,8 +914,7 @@ const EVENTS = [
                         {
                             text: "Hire Emily now—she's ready and the business needs young talent",
                             effects: {
-                                profit: -80000,
-                                revenue: 700000,
+                                marketDemand: 700000,
                                 sarahHappiness: 18,
                                 michaelHappiness: 5,
                                 hasGen3: true,
@@ -991,8 +981,7 @@ const EVENTS = [
                             effects: {
                                 cash: -5000000,
                                 debt: 3000000,
-                                revenue: 5000000,
-                                profit: 1200000,
+                                marketDemand: 5000000,
                                 assets: 5000000,
                                 sarahHappiness: 10,
                                 hasDebt: true,
@@ -1005,8 +994,7 @@ const EVENTS = [
                             effects: {
                                 cash: -4000000,
                                 debt: 2500000,
-                                revenue: 4500000,
-                                profit: 800000,
+                                marketDemand: 4500000,
                                 assets: 3500000,
                                 sarahHappiness: 5,
                                 hasDebt: true,
@@ -1017,8 +1005,7 @@ const EVENTS = [
                         {
                             text: "Stay the course—gradual, organic growth",
                             effects: {
-                                revenue: 500000,
-                                profit: 100000,
+                                marketDemand: 500000,
                                 sarahHappiness: -10,
                                 managementQuality: -3
                             },
@@ -1127,8 +1114,7 @@ const EVENTS = [
                             text: "Keep the business—transition to Emily and the third generation",
                             effects: {
                                 sarahHappiness: 22,
-                                revenue: 2500000,
-                                profit: 500000,
+                                marketDemand: 2500000,
                                 managementQuality: 10
                             },
                             impact: `<h4>Decision Impact</h4><p>Sarah declines the offer and announces Emily will become CEO within three years.</p><p>The third generation takes the helm. <span class='impact-positive'>Revenue and profit surge</span> as Emily and her generation bring digital fluency, new networks, and fresh perspectives.</p><p><span class='impact-highlight'>Sarah</span> transitions to Executive Chairman, feeling profound pride. She gets to watch her daughter lead the company her grandfather started.</p><p>Anderson Manufacturing enters its second half-century as a family business. Robert's dream doesn't just survive—it thrives.</p><p>Fifty years from now, in 2094, Emily's children might face this same decision. But today, the family chooses legacy over liquidity.</p>`
@@ -1137,3 +1123,186 @@ const EVENTS = [
                 }
 
 ];
+
+// ============================================================================
+// TRIGGERED EVENTS
+// These events are dynamically inserted based on game state conditions
+// ============================================================================
+
+const TRIGGERED_EVENTS = {
+
+    // Triggered when 2+ family members are unhappy about declining income
+    dividendDispute: {
+        title: "Family Income Crisis",
+        description: function() {
+            var unhappyMembers = [];
+
+            Object.keys(familyMembers).forEach(function(key) {
+                var member = familyMembers[key];
+                if (member.unhappyAboutIncome && member.ownership > 0) {
+                    unhappyMembers.push(member.name);
+                }
+            });
+
+            var baseDesc = "Tensions are rising in the Anderson family. ";
+
+            if (unhappyMembers.length >= 2) {
+                baseDesc += unhappyMembers.slice(0, -1).join(", ") + " and " + unhappyMembers[unhappyMembers.length - 1];
+                baseDesc += " are all unhappy about their declining income from the business.\n\n";
+            } else if (unhappyMembers.length === 1) {
+                baseDesc += unhappyMembers[0] + " is upset about declining income from the business.\n\n";
+            }
+
+            baseDesc += "For years, the family has grown accustomed to a certain lifestyle supported by the business. But recent decisions to reinvest profits have meant smaller dividend payments.\n\n";
+
+            baseDesc += "Current dividend policy pays out " + Math.round(gameState.dividendPolicy * 100) + "% of profits as dividends. ";
+            baseDesc += "Last year's dividends: $" + formatNumber(gameState.dividendsPaid) + " total.\n\n";
+
+            var totalOwnership = 0;
+            Object.keys(familyMembers).forEach(function(key) {
+                if (familyMembers[key].ownership > 0 && !familyMembers[key].deceased) {
+                    totalOwnership += familyMembers[key].ownership;
+                }
+            });
+
+            baseDesc += "The unhappy family members are demanding a meeting to discuss dividend policy. They argue they've sacrificed enough and deserve to benefit from their ownership.\n\n";
+            baseDesc += "But increasing dividends means less cash for reinvestment, which could limit growth and put the company at a competitive disadvantage.\n\n";
+            baseDesc += "How should the family resolve this dispute?";
+
+            return baseDesc;
+        },
+        options: [
+            {
+                text: "Increase dividend payout to 60% of profits",
+                effects: {
+                    dividendPolicy: 0.60,
+                    robertHappiness: 8,
+                    sarahHappiness: -12,
+                    michaelHappiness: 12,
+                    jenniferHappiness: 20,
+                    managementQuality: -5
+                },
+                impact: `<h4>Decision Impact</h4><p>The family agrees to increase dividends to 60% of profits, significantly boosting family income.</p><p>Unhappy family members are relieved. <span class='impact-positive'>Jennifer and Michael's happiness increases</span> as they finally see better returns on their ownership.</p><p>However, <span class='impact-highlight'>Sarah</span> worries about the company's growth prospects. <span class='impact-negative'>Less retained earnings means slower expansion</span> and potentially falling behind competitors.</p><p><span class='impact-negative'>Management quality decreases</span> as the company can't invest as much in training, systems, and talent.</p><p>The family has chosen short-term income over long-term growth.</p>`
+            },
+            {
+                text: "Compromise at 40% dividend payout",
+                effects: {
+                    dividendPolicy: 0.40,
+                    robertHappiness: 3,
+                    sarahHappiness: -5,
+                    michaelHappiness: 5,
+                    jenniferHappiness: 8,
+                    managementQuality: -2
+                },
+                impact: `<h4>Decision Impact</h4><p>The family reaches a compromise: 40% of profits will go to dividends, balancing family needs with business reinvestment.</p><p>No one is thrilled, but everyone can live with it. <span class='impact-positive'>Passive shareholders get more income</span>, while the business still retains enough to grow.</p><p>Sarah accepts the compromise but remains concerned about competitive pressures. The company will need to be more selective about which growth opportunities to pursue.</p><p>The dispute is resolved, but the tension between family income and business growth remains.</p>`
+            },
+            {
+                text: "Maintain current policy—emphasize long-term value",
+                effects: {
+                    robertHappiness: -5,
+                    sarahHappiness: 10,
+                    michaelHappiness: -15,
+                    jenniferHappiness: -25,
+                    managementQuality: 3
+                },
+                impact: `<h4>Decision Impact</h4><p>Sarah argues forcefully that the current dividend policy is right for the business's long-term health. The active leadership refuses to change course.</p><p><span class='impact-highlight'>Passive shareholders</span> are furious. <span class='impact-negative'>Jennifer and Michael's happiness plummets</span>—they feel their needs are being ignored by those who control the company.</p><p>However, <span class='impact-positive'>the business maintains strong reinvestment</span>, allowing continued growth and modernization.</p><p>Family relationships suffer. The rift between active management and passive shareholders deepens. Some wonder how long this can continue.</p>`
+            }
+        ]
+    },
+
+    // Triggered when lost sales exceed 25% of revenue (capacity constraint)
+    reinvestmentOpportunity: {
+        title: "Growth Constrained",
+        description: function() {
+            var lostSalesPercent = Math.round((gameState.lostSales / gameState.marketDemand) * 100);
+            var lostSalesAmount = gameState.lostSales;
+
+            var baseDesc = "Anderson Manufacturing is leaving money on the table.\n\n";
+
+            baseDesc += "Current situation:\n";
+            baseDesc += "- Market demand: $" + formatNumber(gameState.marketDemand) + "\n";
+            baseDesc += "- Actual revenue: $" + formatNumber(gameState.revenue) + "\n";
+            baseDesc += "- Lost sales (unmet demand): $" + formatNumber(lostSalesAmount) + " (" + lostSalesPercent + "%)\n\n";
+
+            baseDesc += "The company is turning away customers. Demand exceeds capacity. The sales team is frustrated—they could be selling significantly more if the company could produce more.\n\n";
+
+            if (gameState.sarahCEO) {
+                baseDesc += "Sarah presents the analysis: the business needs approximately $" + formatNumber(Math.round(lostSalesAmount * 0.6 / 100000) * 100000) + " in additional assets ";
+            } else {
+                baseDesc += "Robert reviews the numbers: the business needs approximately $" + formatNumber(Math.round(lostSalesAmount * 0.6 / 100000) * 100000) + " in additional assets ";
+            }
+
+            baseDesc += "(equipment, facilities, inventory) to meet current demand.\n\n";
+
+            var investmentAmount = Math.round(lostSalesAmount * 0.6 / 100000) * 100000;
+
+            if (gameState.cash > investmentAmount) {
+                baseDesc += "The company has $" + formatNumber(gameState.cash) + " in cash reserves—enough to fund the expansion from internal resources.\n\n";
+            } else if (gameState.cash > investmentAmount * 0.4) {
+                baseDesc += "The company has $" + formatNumber(gameState.cash) + " in cash. They could fund part of the investment internally and take on debt for the rest.\n\n";
+            } else {
+                baseDesc += "The company has $" + formatNumber(gameState.cash) + " in cash—not enough to fund the expansion. They would need significant debt.\n\n";
+            }
+
+            baseDesc += "Investing now would capture the market opportunity and increase revenue substantially. But it also means committing capital and possibly taking on debt.\n\n";
+            baseDesc += "What should the company do?";
+
+            return baseDesc;
+        },
+        options: [
+            {
+                text: function() {
+                    var investmentAmount = Math.round(gameState.lostSales * 0.6 / 100000) * 100000;
+                    return "Invest aggressively—capture the full market opportunity ($" + formatNumber(investmentAmount) + ")";
+                },
+                effects: function() {
+                    var investmentAmount = Math.round(gameState.lostSales * 0.6 / 100000) * 100000;
+                    var debtNeeded = Math.max(0, investmentAmount - gameState.cash * 0.8);
+
+                    return {
+                        cash: -Math.min(gameState.cash * 0.8, investmentAmount),
+                        assets: investmentAmount,
+                        debt: debtNeeded,
+                        marketDemand: gameState.lostSales * 0.3,
+                        sarahHappiness: 15,
+                        robertHappiness: 8,
+                        hasDebt: debtNeeded > 0,
+                        managementQuality: 8
+                    };
+                },
+                impact: `<h4>Decision Impact</h4><p>The company commits to a major expansion to meet market demand.</p><p><span class='impact-positive'>Assets increase significantly</span>, allowing the company to capture previously lost sales. Revenue surges as capacity constraints are eliminated.</p><p><span class='impact-highlight'>Sarah</span> is energized by the growth. The aggressive investment demonstrates confidence in the business's future.</p><p>Some passive shareholders worry about the debt load, but the market opportunity is undeniable. The company is positioned to dominate its market segment.</p>`
+            },
+            {
+                text: function() {
+                    var investmentAmount = Math.round(gameState.lostSales * 0.35 / 100000) * 100000;
+                    return "Invest conservatively—gradual expansion ($" + formatNumber(investmentAmount) + ")";
+                },
+                effects: function() {
+                    var investmentAmount = Math.round(gameState.lostSales * 0.35 / 100000) * 100000;
+                    var debtNeeded = Math.max(0, investmentAmount - gameState.cash * 0.5);
+
+                    return {
+                        cash: -Math.min(gameState.cash * 0.5, investmentAmount),
+                        assets: investmentAmount,
+                        debt: debtNeeded,
+                        marketDemand: gameState.lostSales * 0.15,
+                        sarahHappiness: 3,
+                        robertHappiness: 5,
+                        hasDebt: debtNeeded > 0,
+                        managementQuality: 3
+                    };
+                },
+                impact: `<h4>Decision Impact</h4><p>The company invests conservatively, expanding capacity gradually to reduce risk.</p><p><span class='impact-positive'>Revenue increases modestly</span> as some of the lost sales are captured. The conservative approach limits debt and preserves flexibility.</p><p>However, the company still can't meet full market demand. Competitors may step in to serve customers Anderson Manufacturing is turning away.</p><p>Leadership feels they've balanced growth with prudence, but wonder if they're missing a major opportunity.</p>`
+            },
+            {
+                text: "Don't invest now—wait for better timing",
+                effects: {
+                    sarahHappiness: -8,
+                    robertHappiness: -5,
+                    managementQuality: -4
+                },
+                impact: `<h4>Decision Impact</h4><p>The family decides not to invest now, waiting for what they consider better timing or clearer market signals.</p><p>The opportunity passes. Frustrated customers find other suppliers. <span class='impact-negative'>Some of the market demand evaporates</span> as competitors fill the gap.</p><p><span class='impact-highlight'>Sarah and the sales team</span> are disappointed. They watched revenue slip away because the company wouldn't invest in capacity.</p><p><span class='impact-negative'>Management quality decreases</span> as the best employees question whether leadership can seize opportunities.</p><p>The conservative decision preserved cash but may have cost the company its competitive position.</p>`
+            }
+        ]
+    }
+};

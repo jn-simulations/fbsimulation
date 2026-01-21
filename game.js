@@ -112,7 +112,25 @@ function loadEvent() {
         return;
     }
 
-    const event = EVENTS[gameState.eventIndex];
+    // Check for triggered events that should be inserted
+    var triggeredEvent = null;
+
+    // Priority 1: Dividend Dispute (more urgent - family conflict)
+    if (gameState.needsDividendDisputeEvent && typeof TRIGGERED_EVENTS !== 'undefined') {
+        triggeredEvent = TRIGGERED_EVENTS.dividendDispute;
+        gameState.needsDividendDisputeEvent = false;
+        gameState.lastDividendDispute = gameState.year;
+        console.log("Inserting triggered event: Dividend Dispute");
+    }
+    // Priority 2: Reinvestment Opportunity (less urgent)
+    else if (gameState.needsReinvestmentEvent && typeof TRIGGERED_EVENTS !== 'undefined') {
+        triggeredEvent = TRIGGERED_EVENTS.reinvestmentOpportunity;
+        gameState.needsReinvestmentEvent = false;
+        console.log("Inserting triggered event: Reinvestment Opportunity");
+    }
+
+    // If we have a triggered event, use it instead of the regular event
+    const event = triggeredEvent || EVENTS[gameState.eventIndex];
 
     if (!event) {
         console.error("Event is undefined at index:", gameState.eventIndex);
@@ -479,7 +497,7 @@ function checkForTriggeredEvents() {
     // 1. DIVIDEND DISPUTE: Triggered if family members unhappy about income
     const unhappyMembers = Object.keys(familyMembers).filter(key => {
         const member = familyMembers[key];
-        return member.unhappyAboutIncome && member.isActive;
+        return member.unhappyAboutIncome && member.ownership > 0;
     });
 
     // Trigger dividend dispute if:
