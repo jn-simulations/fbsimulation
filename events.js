@@ -103,20 +103,22 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 3: 2004 - Industry Expansion
+                // Event 3: 2004 - Industry Expansion (NARRATIVE - Business Growth)
                 {
                     date: "2004",
-                    title: "New Market Opportunities",
+                    title: "Breaking Into New Markets",
                     description: function() {
-                        var baseDesc = "Anderson Manufacturing has built a solid reputation in its core market. The business is now generating $" + formatNumber(gameState.revenue > 0 ? gameState.revenue : 2000000) + " annually.\n\n";
-                        baseDesc += "Robert is 45 years old, and he's seeing opportunities to expand into adjacent industries—automotive and aerospace both need the specialized components Anderson produces.\n\n";
-                        baseDesc += "However, these industries have stricter quality certifications and longer sales cycles. Breaking in will require significant investment in new certifications, equipment upgrades, and hiring specialized sales talent.\n\n";
-                        baseDesc += "The safer path is to deepen relationships in current markets. The aggressive path could double the business in five years—or consume cash without results.";
+                        var baseDesc = "Anderson Manufacturing has built a solid reputation. The business is now generating $" + formatNumber(gameState.revenue > 0 ? gameState.revenue : 2000000) + " annually.\n\n";
+                        baseDesc += "Robert is 45, and he sees opportunities in automotive and aerospace—both industries need the specialized components Anderson produces.\n\n";
+                        baseDesc += "These markets have stricter quality certifications and longer sales cycles. Breaking in requires significant investment: $250K for new certifications, equipment upgrades, and specialized sales talent.\n\n";
+                        baseDesc += "Robert analyzes the risk carefully. The investment is substantial, but the potential is enormous. After consulting with his advisors and reviewing the numbers, he decides to pursue it.\n\n";
+                        baseDesc += "Over the next two years, the gamble pays off. Anderson Manufacturing wins its first aerospace contract. The team develops expertise in these demanding industries. The business is reaching new heights.\n\n";
+                        baseDesc += "Robert is energized. The calculated risk has opened doors that will drive growth for the next decade.";
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Invest $250K to pursue automotive and aerospace certifications",
+                            text: "Continue",
                             effects: {
                                 marketDemand: 800000,  // New market access
                                 cash: -250000,  // Certification costs
@@ -124,16 +126,7 @@ const EVENTS = [
                                 robertHappiness: 10,
                                 managementQuality: 8
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert invests heavily in certifications and equipment to break into automotive and aerospace markets.</p><p>The gamble pays off. <span class='impact-positive'>Demand surges by $800K</span> as Anderson Manufacturing wins its first aerospace contract. <span class='impact-positive'>Management quality improves</span> as the team develops expertise in these demanding industries.</p><p><span class='impact-highlight'>Robert</span> is energized by the growth. The business is reaching new heights.</p>`
-                        },
-                        {
-                            text: "Stay focused on current markets and deepen existing relationships",
-                            effects: {
-                                marketDemand: 300000,  // Organic growth
-                                cash: 100000,  // Retained earnings
-                                robertHappiness: -3
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert chooses the conservative path, focusing on strengthening current customer relationships.</p><p><span class='impact-positive'>Cash reserves grow</span> and the business remains stable. Existing clients appreciate the dedicated focus.</p><p>However, <span class='impact-highlight'>Robert</span> watches competitors enter the aerospace market and wonders if he's being too cautious. Growth is steady but unspectacular.</p>`
+                            impact: ``  // No impact display for narrative events
                         }
                     ]
                 },
@@ -253,47 +246,36 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 7: 2014 - Growth Opportunity
+                // Event 7: 2014 - Growth Opportunity (NARRATIVE - Family Tension Over Dividends)
                 {
                     date: "2014",
-                    title: "The Major Contract",
+                    title: "Growth vs. Family Needs",
                     description: function() {
-                        var baseDesc = "A Fortune 100 company has approached Anderson Manufacturing with a massive opportunity: a $3M annual contract for five years.\n\n";
-                        baseDesc += "Currently, the company generates $" + formatNumber(gameState.revenue > 0 ? gameState.revenue : 4000000) + " in annual revenue. This single contract could increase revenue by 75%.\n\n";
-                        baseDesc += "The catch: fulfilling it requires $1.2M in upfront investment—new equipment and hiring 20 additional workers.\n\n";
-                        baseDesc += "Sarah, now COO, has prepared a detailed analysis showing 22% ROI over five years. The numbers are solid. Michael is excited about the growth.\n\n";
-                        baseDesc += "But Jennifer is concerned. The investment will eliminate dividend payments for at least three years. She was counting on that income for a house down payment.\n\n";
-                        baseDesc += "Growth versus family financial security. The classic family business tension.";
+                        var baseDesc = "A Fortune 100 company approaches Anderson Manufacturing with a massive opportunity: a $3M annual contract for five years.\n\n";
+                        baseDesc += "The company currently generates $" + formatNumber(gameState.revenue > 0 ? gameState.revenue : 4000000) + " annually. This single contract could increase revenue by 75%.\n\n";
+                        baseDesc += "The catch: fulfilling it requires $1.2M in upfront investment—new equipment and hiring 20 additional workers. Dividends will need to be slashed to conserve cash.\n\n";
+                        baseDesc += "Sarah, now COO, has prepared detailed analysis showing 22% ROI over five years. She and Michael are adamant the company should accept. This is a transformative opportunity.\n\n";
+                        baseDesc += "Jennifer is upset. She was counting on dividend income for a house down payment. \"You all work at the company and get salaries,\" she argues. \"I only get dividends. This isn't fair to me.\"\n\n";
+                        baseDesc += "After a tense family meeting, Robert sides with Sarah and Michael. The contract is too good to pass up. Dividends are cut to 10% of profits for the foreseeable future.\n\n";
+                        baseDesc += "Sarah and Michael are energized. Jennifer feels sidelined and financially squeezed. The rift between active and passive family members deepens.";
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Accept the contract and make the investment",
+                            text: "Continue",
                             effects: {
                                 marketDemand: 3000000,  // Major new contract
-                                cash: -1200000,  // Investment
+                                cash: -1200000,  // Investment cost
                                 assets: 1200000,  // Equipment and facilities
                                 debt: 500000,  // Partial debt financing
-                                dividendPolicy: 0.1,  // Reduce dividends to 10% to fund growth
+                                dividendPolicy: 0.1,  // Cut dividends to 10%
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
                                 jenniferHappiness: -20,
                                 hasDebt: true,
                                 managementQuality: 5
                             },
-                            impact: `<h4>Decision Impact</h4><p>The company accepts the contract and makes the major investment. <span class='impact-positive'>Market demand increases by $3M annually</span> and <span class='impact-positive'>company valuation rises substantially</span>.</p><p>However, <span class='impact-negative'>cash is depleted and the company takes on $500K in debt</span> to complete the investment. Dividends are cut to 10% to conserve cash.</p><p><span class='impact-highlight'>Sarah and Michael</span> are thrilled with the growth opportunity. <span class='impact-highlight'>Jennifer</span> is upset—<span class='impact-negative'>her happiness drops significantly</span> as her dividend income plummets.</p>`
-                        },
-                        {
-                            text: "Decline and maintain stable dividend payments",
-                            effects: {
-                                cash: 200000,
-                                dividendPolicy: 0.4,  // Increase dividends to 40%
-                                sarahHappiness: -15,
-                                michaelHappiness: -15,
-                                jenniferHappiness: 15,
-                                robertHappiness: -10
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert declines the contract to protect dividend payments and avoid risk. Dividend policy is increased to 40% of profits.</p><p><span class='impact-highlight'>Jennifer</span> is relieved—<span class='impact-positive'>her dividend income increases</span>, and she can proceed with buying her house.</p><p><span class='impact-highlight'>Sarah and Michael</span> are deeply frustrated. <span class='impact-negative'>Their happiness decreases significantly</span>. They feel the family is holding the business back.</p><p><span class='impact-highlight'>Robert</span> worries he's made the wrong choice and is limiting the company's potential.</p>`
+                            impact: ``  // No impact display for narrative events
                         }
                     ]
                 },
@@ -679,10 +661,10 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 15: 2030 - Digital Transformation
+                // Event 15: 2030 - Digital Transformation (NARRATIVE - Business Modernization)
                 {
                     date: "2030",
-                    title: "The Digital Imperative",
+                    title: "Modernizing for the Future",
                     description: function() {
                         var baseDesc = "Anderson Manufacturing is now 36 years old. ";
                         if (gameState.sarahCEO) {
@@ -691,19 +673,21 @@ const EVENTS = [
                             baseDesc += "The business is generating $" + formatNumber(gameState.revenue > 0 ? gameState.revenue : 10000000) + " annually.\n\n";
                         }
 
-                        baseDesc += "But the industry is changing rapidly. Competitors are implementing AI-driven supply chains, automated quality systems, and digital customer portals. Anderson's systems are still largely paper-based and manual.\n\n";
-                        baseDesc += "Sarah has commissioned a digital transformation study. The recommendation: invest $1.2M over two years in cloud ERP, automated quality control, and digital customer systems.\n\n";
+                        baseDesc += "The industry is changing rapidly. Competitors are implementing AI-driven supply chains, automated quality systems, and digital customer portals. Anderson's systems are still largely paper-based and manual.\n\n";
+                        baseDesc += "Sarah commissions a comprehensive digital transformation study. The recommendation is clear: invest $1.2M in cloud ERP, automated quality control, and digital customer systems.\n\n";
 
                         if (gameState.hasDebt && gameState.debt > 1000000) {
-                            baseDesc += "The company is carrying $" + formatNumber(gameState.debt) + " in debt, making this large investment particularly challenging.\n\n";
+                            baseDesc += "The company is carrying $" + formatNumber(gameState.debt) + " in debt, making this investment challenging. But Sarah argues it's necessary to remain competitive.\n\n";
                         }
 
-                        baseDesc += "The investment would modernize operations and position Anderson for the future. But it's expensive, disruptive, and some longtime employees are resistant to change.";
+                        baseDesc += "The company takes on $800K in additional debt to fund the transformation. The first year is chaotic—system migrations, employee training, workflow disruptions. Some longtime employees struggle with the changes.\n\n";
+                        baseDesc += "But by year two, the results speak for themselves. Efficiency multiplies. The company can serve customers faster, make data-driven decisions, and compete with larger manufacturers.\n\n";
+                        baseDesc += "Anderson Manufacturing is positioned for the next 30 years.";
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Invest $1.2M in comprehensive digital transformation",
+                            text: "Continue",
                             effects: {
                                 cash: -1200000,
                                 debt: 800000,
@@ -713,17 +697,7 @@ const EVENTS = [
                                 managementQuality: 18,
                                 hasDebt: true
                             },
-                            impact: `<h4>Decision Impact</h4><p>Anderson Manufacturing takes on $800K in additional debt to fund a comprehensive digital transformation.</p><p>The first year is chaotic—system migrations, employee training, workflow disruptions. But by year two, <span class='impact-positive'>revenue and profit surge</span> as efficiency multiplies.</p><p><span class='impact-positive'>Management quality improves dramatically.</span> The company can now serve customers faster, make data-driven decisions, and compete with larger manufacturers.</p><p><span class='impact-highlight'>Sarah</span> is energized. Anderson Manufacturing is positioned for the next 30 years.</p>`
-                        },
-                        {
-                            text: "Implement selective improvements—upgrade gradually ($300K)",
-                            effects: {
-                                cash: -300000,
-                                marketDemand: 400000,
-                                sarahHappiness: -8,
-                                managementQuality: 4
-                            },
-                            impact: `<h4>Decision Impact</h4><p>The company invests $300K in selective technology upgrades—a new CRM system and basic automation in quality control.</p><p><span class='impact-positive'>Revenue and profit increase modestly</span> from the improvements. The changes are less disruptive and employees adapt more easily.</p><p>However, <span class='impact-highlight'>Sarah</span> worries they're falling behind. Competitors who invested more aggressively are pulling ahead in capabilities and market share.</p><p>The incremental approach feels safe but may not be enough in a rapidly digitizing industry.</p>`
+                            impact: ``  // No impact display for narrative events
                         }
                     ]
                 },
@@ -876,10 +850,10 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 19: 2040 - Major Strategic Decision
+                // Event 19: 2040 - Major Strategic Decision (NARRATIVE - Final Modernization)
                 {
                     date: "2040",
-                    title: "The Crossroads",
+                    title: "The Final Modernization",
                     description: function() {
                         var baseDesc = "Anderson Manufacturing is 46 years old. Current revenue: $" + formatNumber(gameState.revenue) + " annually with " + gameState.employees + " employees. ";
 
@@ -892,34 +866,30 @@ const EVENTS = [
                         }
 
                         if (gameState.sarahCEO) {
-                            baseDesc += "Sarah (54) has been CEO for 18 years. She's built a strong company. But she also sees the threats on the horizon.\n\n";
+                            baseDesc += "Sarah (54) has been CEO for 18 years. She's built a strong company, but she sees the threats ahead.\n\n";
                         }
 
-                        baseDesc += "The manufacturing industry is being transformed by automation, AI, and global competition. Companies that don't modernize are being left behind. The next 10 years will separate winners from losers.\n\n";
-
-                        // Reference financial position
-                        if (gameState.hasDebt && gameState.debt > 2000000) {
-                            baseDesc += "The company carries $" + formatNumber(gameState.debt) + " in debt. Taking on more is risky but may be necessary.\n\n";
-                        } else if (gameState.cash > 5000000) {
-                            baseDesc += "Strong cash reserves of $" + formatNumber(gameState.cash) + " provide flexibility for major investments.\n\n";
-                        } else {
-                            baseDesc += "Cash reserves of $" + formatNumber(gameState.cash) + " are adequate but not abundant. Major investments will require debt.\n\n";
-                        }
-
-                        baseDesc += "Sarah has commissioned studies and identified three strategic paths:\n\n";
-                        baseDesc += "1. Invest $5M in cutting-edge automation and AI (modernize aggressively)\n2. Acquire a struggling competitor for $4M (consolidate market share)\n3. Stay the current course (organic growth, avoid risk)\n\n";
+                        baseDesc += "The manufacturing industry is being transformed by automation, AI, and global competition. Companies that don't modernize are being left behind.\n\n";
 
                         if (gameState.hasGen3) {
-                            baseDesc += "Emily (26), now a rising leader, strongly advocates for option 1. \"We need to modernize or we'll be irrelevant in 10 years,\" she argues.\n\n";
+                            baseDesc += "Emily (26), now a rising leader, makes an impassioned case: \"We need to invest $5M in cutting-edge automation and AI. Otherwise we'll be irrelevant in 10 years.\"\n\n";
                         }
 
-                        baseDesc += "Some longtime employees worry about automation eliminating jobs. Acquisitions bring cultural integration challenges.\n\n";
-                        baseDesc += "This decision will define Anderson Manufacturing's final decade as a family business.";
+                        baseDesc += "Sarah agrees. Anderson Manufacturing takes on $3M in debt and invests heavily in automation and AI.\n\n";
+                        baseDesc += "The transition is painful. Some longtime employees are displaced, though the company works hard to retrain and redeploy them. The transformation requires difficult decisions.\n\n";
+                        baseDesc += "But the results are undeniable. Efficiency multiplies. Revenue and profit surge. Company valuation increases dramatically.\n\n";
+
+                        if (gameState.hasGen3) {
+                            baseDesc += "Emily and the third generation are instrumental in the transformation. Anderson Manufacturing is positioned for its next 50 years.";
+                        } else {
+                            baseDesc += "Anderson Manufacturing is positioned for the future. The company Robert founded in 1994 is ready for whatever comes next.";
+                        }
+
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Invest $5M in automation and AI",
+                            text: "Continue",
                             effects: {
                                 cash: -5000000,
                                 debt: 3000000,
@@ -929,29 +899,7 @@ const EVENTS = [
                                 hasDebt: true,
                                 managementQuality: 15
                             },
-                            impact: `<h4>Decision Impact</h4><p>Anderson Manufacturing takes on $3M debt and invests heavily in cutting-edge technology.</p><p>The transition is painful. Some long-time employees are displaced. But <span class='impact-positive'>revenue and profit surge</span> as efficiency multiplies.</p><p><span class='impact-positive'>Company valuation increases dramatically.</span> Anderson Manufacturing is now positioned for the future.</p><p>Emily and David, the third generation, are instrumental in the transformation. The company is ready for its next 50 years.</p>`
-                        },
-                        {
-                            text: "Acquire competitor for $4M",
-                            effects: {
-                                cash: -4000000,
-                                debt: 2500000,
-                                marketDemand: 4500000,
-                                assets: 3500000,
-                                sarahHappiness: 5,
-                                hasDebt: true,
-                                managementQuality: 5
-                            },
-                            impact: `<h4>Decision Impact</h4><p>The company acquires a competitor, doubling in size overnight.</p><p><span class='impact-positive'>Revenue and profit increase substantially</span>, but integrating two company cultures proves challenging.</p><p>The acquisition brings new clients but also new problems. Growth through acquisition is messier than Sarah expected.</p><p>Still, Anderson Manufacturing is now a major regional player. <span class='impact-positive'>Valuation increases significantly.</span></p>`
-                        },
-                        {
-                            text: "Stay the course—gradual, organic growth",
-                            effects: {
-                                marketDemand: 500000,
-                                sarahHappiness: -10,
-                                managementQuality: -3
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Sarah chooses the conservative path, avoiding risk and debt.</p><p>The company continues to grow modestly. <span class='impact-positive'>Employees appreciate the stability</span> and lack of disruption.</p><p>But <span class='impact-highlight'>Sarah</span> worries they're being left behind. Competitors are modernizing. Anderson Manufacturing feels increasingly dated.</p><p>Emily and David are frustrated by the cautious approach. They wonder if the family business will survive their generation.</p>`
+                            impact: ``  // No impact display for narrative events
                         }
                     ]
                 },
