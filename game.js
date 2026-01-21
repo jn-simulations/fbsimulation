@@ -143,7 +143,7 @@ function loadEvent() {
     event.options.forEach((option, index) => {
         const button = document.createElement('button');
         button.className = 'option-button';
-        button.textContent = option.text;
+        button.textContent = typeof option.text === 'function' ? option.text() : option.text;
         button.addEventListener('click', () => {
             makeDecision(index, option);
         });

@@ -77,40 +77,81 @@ const EVENTS = [
                 {
                     date: "2000",
                     title: "The Dot-Com Crash",
-                    description: `The dot-com bubble has burst. Several of Anderson Packaging's clients are tech companies or tech suppliers—and they're cutting orders dramatically.\n\nRevenue is down 30% from last year. Robert has 15 employees, and he's struggling to make payroll. He has three options:\n\n1. Lay off 5 employees to cut costs and survive\n2. Take on more debt to maintain the team through the downturn\n3. Pivot to serving more stable industries, though this means abandoning relationships Robert has spent years building\n\nEach choice has consequences. Layoffs will devastate families who depend on these jobs. Debt is risky in an uncertain economy. Pivoting means starting over in some ways.`,
+                    description: function() {
+                        let baseDesc = "The dot-com bubble has burst. Several of Anderson Packaging's clients are tech companies or tech suppliers—and they're cutting orders dramatically.\n\nRevenue is down 30% from last year. Robert has 15 employees, and he's struggling to make payroll.\n\n";
+
+                        if (familyMembers.patricia.ownership > 0) {
+                            baseDesc += "Patricia, now CFO and co-owner, reviews the numbers: \"We can't sustain this for more than two months,\" she says grimly.\n\nSarah (14), Michael (11), and Jennifer (8) overhear their parents arguing late at night.\n\n\"We have to protect the employees,\" Robert insists. \"These families depend on us.\"\n\n\"And our family?\" Patricia responds. \"We have three kids, Robert. We can't bankrupt ourselves to save everyone.\"\n\n";
+                        } else {
+                            baseDesc += "Robert sits at the kitchen table with the books spread out. The children are asleep, but Patricia can see the stress on his face.\n\n\"What are you going to do?\" she asks quietly.\n\n\"I don't know,\" he admits. \"These employees have families. But so do we.\"\n\n";
+                        }
+
+                        baseDesc += "The question isn't just about business strategy—it's about values. Should the family sacrifice their own financial security to protect employees? Or does Robert have a duty to his own family first?";
+
+                        return baseDesc;
+                    },
                     options: [
                         {
-                            text: "Lay off 5 employees to cut costs",
+                            text: "Family takes 40% pay cuts to avoid layoffs—protect employees first",
+                            effects: {
+                                revenue: -250000,
+                                profit: -40000,
+                                cash: 80000,
+                                robertHappiness: 10,
+                                patriciaHappiness: function() {
+                                    return familyMembers.patricia.ownership > 0 ? -5 : -15;
+                                },
+                                sarahHappiness: 5,
+                                employees: 0
+                            },
+                            impact: function() {
+                                if (familyMembers.patricia.ownership > 0) {
+                                    return `<h4>Decision Impact</h4><p>Robert and Patricia agree to slash their own salaries by 40% to avoid layoffs. <span class='impact-positive'>All 15 employees keep their jobs.</span></p><p>The Anderson family's lifestyle changes dramatically—no vacation this year, no new car, cutting back everywhere.</p><p><span class='impact-highlight'>Robert</span> feels he's living his values. The employees are deeply loyal—they'll never forget this sacrifice.</p><p><span class='impact-highlight'>Patricia</span> supports the decision but worries privately about their own children's futures. The business is consuming everything.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Robert slashes his own salary by 40% to avoid layoffs. <span class='impact-positive'>All 15 employees keep their jobs.</span></p><p>The Anderson family's lifestyle changes dramatically—no vacation this year, no new car, cutting back everywhere.</p><p><span class='impact-highlight'>Robert</span> feels he's living his values. The employees are deeply loyal—they'll never forget this sacrifice.</p><p><span class='impact-highlight'>Patricia</span> is frustrated—she wasn't consulted but bears the consequences. She questions whether Robert prioritizes the business over their own family.</p>`;
+                                }
+                            }
+                        },
+                        {
+                            text: "Lay off 5 non-family employees—family security comes first",
                             effects: {
                                 revenue: -300000,
                                 profit: -50000,
                                 cash: 100000,
-                                robertHappiness: -15
+                                robertHappiness: -15,
+                                patriciaHappiness: function() {
+                                    return familyMembers.patricia.ownership > 0 ? -10 : 5;
+                                },
+                                employees: -5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert makes the painful decision to lay off one-third of his workforce. <span class='impact-negative'>Revenue and profit decline</span>, but <span class='impact-positive'>cash flow stabilizes</span>.</p><p>The layoffs save the company, but <span class='impact-highlight'>Robert</span> is haunted by the decision. <span class='impact-negative'>His happiness drops significantly</span>—he feels he's failed the employees who trusted him.</p><p>The remaining team is nervous and morale is low.</p>`
+                            impact: function() {
+                                if (familyMembers.patricia.ownership > 0) {
+                                    return `<h4>Decision Impact</h4><p>After agonizing discussions, Robert and Patricia decide to lay off 5 employees—one-third of the workforce.</p><p><span class='impact-negative'>Revenue continues declining</span>, but <span class='impact-positive'>the family's financial security is protected</span>.</p><p><span class='impact-highlight'>Robert</span> is haunted by the decision. He sees the faces of the laid-off workers every night.</p><p><span class='impact-highlight'>Patricia</span> also struggles with guilt, but she's relieved their own children's futures aren't at risk. The business relationship strains their marriage.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Robert makes the painful decision alone to lay off 5 employees—one-third of the workforce.</p><p><span class='impact-negative'>Revenue continues declining</span>, but <span class='impact-positive'>the family's financial security is protected</span>.</p><p><span class='impact-highlight'>Robert</span> is devastated. <span class='impact-negative'>His happiness plummets.</span></p><p><span class='impact-highlight'>Patricia</span> is relieved but feels guilty for feeling that way. She notices Robert pulling away, consumed by guilt and unable to talk about it.</p>`;
+                                }
+                            }
                         },
                         {
-                            text: "Take on $150K debt to maintain the full team",
+                            text: "Take on $150K debt—bet on recovery, protect everyone for now",
                             effects: {
                                 revenue: -200000,
                                 profit: -80000,
                                 debt: 150000,
                                 cash: 50000,
-                                robertHappiness: 5,
+                                robertHappiness: -5,
+                                patriciaHappiness: function() {
+                                    return familyMembers.patricia.ownership > 0 ? -10 : -5;
+                                },
                                 hasDebt: true
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert refuses to lay anyone off and borrows $150K to weather the storm. <span class='impact-negative'>Revenue and profit decrease</span>, and <span class='impact-negative'>debt increases</span>.</p><p>The team is grateful and loyal. <span class='impact-highlight'>Robert</span> feels he's done the right thing, though the financial pressure is intense.</p><p>The company survives with its team intact, but now carries significant debt going into an uncertain economy.</p>`
-                        },
-                        {
-                            text: "Pivot to serving food packaging and industrial clients",
-                            effects: {
-                                revenue: 100000,
-                                profit: 6000,  // 6% margin on cardboard
-                                cash: -50000,
-                                assets: 100000,
-                                robertHappiness: -5
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert pivots to more stable markets. <span class='impact-positive'>Revenue stabilizes</span> as new clients from food packaging and industrial applications sign on.</p><p>However, building these new relationships takes time and money. <span class='impact-negative'>Cash reserves decrease</span> from sales and marketing efforts.</p><p><span class='impact-highlight'>Robert</span> is moderately stressed but believes this diversification will pay off long-term.</p>`
+                            impact: function() {
+                                if (familyMembers.patricia.ownership > 0) {
+                                    return `<h4>Decision Impact</h4><p>Robert and Patricia decide to borrow $150K to keep everyone employed through the crisis.</p><p><span class='impact-negative'>The company now carries significant debt</span> in a highly uncertain economy. Family and employees are temporarily protected, but the risk is enormous.</p><p><span class='impact-highlight'>Patricia</span>, as CFO, runs the numbers repeatedly. If the recovery takes longer than six months, they could lose everything—including their family home.</p><p>The debt decision keeps everyone together but puts the entire family legacy at risk. The children can feel the tension.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Robert borrows $150K to keep everyone employed through the crisis.</p><p><span class='impact-negative'>The company now carries significant debt</span> in a highly uncertain economy. Family and employees are temporarily protected, but the risk is enormous.</p><p><span class='impact-highlight'>Patricia</span> is terrified. Robert made this decision without fully consulting her. Their family home could be at risk.</p><p>The tension at home is palpable. The business is threatening to tear the family apart.</p>`;
+                                }
+                            }
                         }
                     ]
                 },
@@ -396,10 +437,41 @@ const EVENTS = [
                 {
                     date: "2014",
                     title: "The Major Contract",
-                    description: `A Fortune 100 company has offered Anderson Packaging a massive contract: $3M annually for five years.\n\nThe catch: fulfilling it requires a $1.2M investment in new equipment and hiring 20 additional workers.\n\n"This is exactly the kind of opportunity we've been working toward," Sarah says, presenting her analysis showing 22% ROI over five years. "The numbers are solid. We have to do this."\n\nMichael nods enthusiastically: "This could transform the company."\n\nBut Jennifer speaks up quietly: "What about dividends? I'm trying to save for a house. Teaching doesn't pay much, and I was counting on that income."\n\n"The business comes first, Jen," Michael says impatiently.\n\n"Easy for you to say—you get a salary from the company," Jennifer shoots back.\n\nRobert must balance growth ambitions with his daughter's financial needs.`,
+                    description: function() {
+                        let baseDesc = "A Fortune 100 company has offered Anderson Packaging a massive contract: $3M annually for five years.\n\nThe catch: fulfilling it requires a $1.2M investment in new equipment and hiring 20 additional workers.\n\n";
+
+                        // Build narrative based on ownership structure
+                        const sarahOwn = familyMembers.sarah.ownership;
+                        const michaelOwn = familyMembers.michael.ownership;
+                        const jenOwn = familyMembers.jennifer.ownership;
+                        const robertOwn = familyMembers.robert.ownership;
+
+                        baseDesc += "At the family meeting, Sarah presents her analysis: \"This is a 22% ROI over five years. It's an incredible opportunity.\"\n\nMichael agrees enthusiastically: \"This could transform the company. We can't pass this up.\"\n\n";
+
+                        if (jenOwn > 0) {
+                            baseDesc += "Jennifer shifts uncomfortably. \"But what about dividends? I own " + jenOwn.toFixed(0) + "% of this company. I'm trying to save for a house, and teaching doesn't pay much. You're talking about years with no dividends.\"\n\n";
+                        } else {
+                            baseDesc += "Jennifer speaks up quietly: \"What about me? I don't own shares, but I'm still part of this family. You're all building wealth through this business while I can barely afford rent.\"\n\n";
+                        }
+
+                        baseDesc += "\"The business comes first, Jen,\" Michael says impatiently.\n\n\"Easy for you to say—you get a salary from the company,\" Jennifer shoots back. \"";
+
+                        if (jenOwn > 0) {
+                            baseDesc += "But I'm an owner too. Don't I get a vote on whether we reinvest everything I own into your growth plans?\"\n\n";
+                        } else {
+                            baseDesc += "You and Sarah are building careers and equity. What am I building?\"\n\n";
+                        }
+
+                        baseDesc += "Robert looks around the table. Sarah and Michael work in the business and want growth. Jennifer ";
+                        baseDesc += jenOwn > 0 ? "owns shares but doesn't work there. " : "doesn't work there and has no ownership. ";
+
+                        baseDesc += "\n\nThis raises a fundamental question: Who gets to decide how capital is allocated in a family business? Those who work in it? Those who own it? Or should all family members have equal say?";
+
+                        return baseDesc;
+                    },
                     options: [
                         {
-                            text: "Accept the contract and make the investment",
+                            text: "Accept contract—business growth over dividends",
                             effects: {
                                 revenue: 3000000,
                                 profit: 180000,  // 6% margin on cardboard
@@ -409,12 +481,20 @@ const EVENTS = [
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
                                 jenniferHappiness: -20,
+                                robertHappiness: 5,
                                 hasDebt: true
                             },
-                            impact: `<h4>Decision Impact</h4><p>The company accepts the contract and makes the major investment. <span class='impact-positive'>Revenue increases by $3M annually</span> and <span class='impact-positive'>company valuation rises substantially</span>.</p><p>However, <span class='impact-negative'>cash is depleted and the company takes on $500K in debt</span> to complete the investment.</p><p><span class='impact-highlight'>Sarah and Michael</span> are thrilled with the growth opportunity. <span class='impact-highlight'>Jennifer</span> is upset—<span class='impact-negative'>her happiness drops significantly</span> as her dividend income disappears for years.</p>`
+                            impact: function() {
+                                const jenOwn = familyMembers.jennifer.ownership;
+                                if (jenOwn > 0) {
+                                    return `<h4>Decision Impact</h4><p>Robert sides with Sarah and Michael. The company accepts the contract and makes the major investment. <span class='impact-positive'>Revenue increases by $3M annually</span> and <span class='impact-positive'>company valuation rises substantially</span>.</p><p>However, <span class='impact-negative'>cash is depleted and the company takes on $500K in debt</span> to complete the investment.</p><p><span class='impact-highlight'>Sarah and Michael</span> are thrilled with the growth opportunity.</p><p><span class='impact-highlight'>Jennifer</span> feels powerless. <span class='impact-negative'>Her happiness drops significantly.</span> "I own ${jenOwn.toFixed(0)}% but apparently that doesn't matter. You all just decided for me." Her dividend income disappears for years.</p><p>The decision establishes a precedent: <span class='impact-negative'>active family members control decisions</span>, even over passive owners' objections.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Robert sides with Sarah and Michael. The company accepts the contract and makes the major investment. <span class='impact-positive'>Revenue increases by $3M annually</span> and <span class='impact-positive'>company valuation rises substantially</span>.</p><p>However, <span class='impact-negative'>cash is depleted and the company takes on $500K in debt</span> to complete the investment.</p><p><span class='impact-highlight'>Sarah and Michael</span> are thrilled with the growth opportunity.</p><p><span class='impact-highlight'>Jennifer</span> is devastated. <span class='impact-negative'>Her happiness drops significantly.</span> "So I just... don't matter? You all get to build wealth while I struggle?" She stops attending family dinners for months.</p><p>The growing wealth gap between family members in the business and those outside it becomes painfully visible.</p>`;
+                                }
+                            }
                         },
                         {
-                            text: "Decline and maintain stable dividend payments",
+                            text: "Decline contract—protect Jennifer's financial needs",
                             effects: {
                                 cash: 200000,
                                 sarahHappiness: -15,
@@ -422,7 +502,37 @@ const EVENTS = [
                                 jenniferHappiness: 15,
                                 robertHappiness: -10
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert declines the contract to protect dividend payments and avoid risk.</p><p><span class='impact-highlight'>Jennifer</span> is relieved—<span class='impact-positive'>her dividend income continues</span>, and she can proceed with buying her house.</p><p><span class='impact-highlight'>Sarah and Michael</span> are deeply frustrated. <span class='impact-negative'>Their happiness decreases significantly</span>. They feel the family is holding the business back.</p><p><span class='impact-highlight'>Robert</span> worries he's made the wrong choice and is limiting the company's potential.</p>`
+                            impact: function() {
+                                const jenOwn = familyMembers.jennifer.ownership;
+                                if (jenOwn > 0) {
+                                    return `<h4>Decision Impact</h4><p>Robert declines the contract to honor Jennifer's ownership rights and financial needs.</p><p><span class='impact-highlight'>Jennifer</span> is relieved—<span class='impact-positive'>her dividend income continues</span>, and she can proceed with buying her house. Her ownership stake is finally being respected.</p><p><span class='impact-highlight'>Sarah and Michael</span> are furious. <span class='impact-negative'>Their happiness decreases significantly.</span> "We're letting Jennifer's ${jenOwn.toFixed(0)}% ownership block a transformational opportunity? This is insane," Michael says bitterly.</p><p>Sarah starts quietly exploring CEO opportunities at other companies. The family business feels like a cage.</p><p>The decision establishes a different precedent: <span class='impact-negative'>ownership rights can block operational growth</span>, even when it hurts the business.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Robert declines the contract to protect family harmony and Jennifer's needs, even though she doesn't own shares.</p><p><span class='impact-highlight'>Jennifer</span> is relieved and grateful that she still matters to the family.</p><p><span class='impact-highlight'>Sarah and Michael</span> are furious. <span class='impact-negative'>Their happiness decreases significantly.</span> "We're turning down a transformational opportunity for Jennifer, who doesn't even work here or own shares? This is insane," Michael says bitterly.</p><p>Sarah starts quietly exploring CEO opportunities at other companies. The family business feels like it prioritizes everyone except those who actually run it.</p>`;
+                                }
+                            }
+                        },
+                        {
+                            text: "Compromise: Accept contract but guarantee Jennifer dividend priority",
+                            effects: {
+                                revenue: 3000000,
+                                profit: 180000,
+                                cash: -1200000,
+                                assets: 1200000,
+                                debt: 500000,
+                                sarahHappiness: 8,
+                                michaelHappiness: 8,
+                                jenniferHappiness: 10,
+                                robertHappiness: 10,
+                                hasDebt: true
+                            },
+                            impact: function() {
+                                const jenOwn = familyMembers.jennifer.ownership;
+                                if (jenOwn > 0) {
+                                    return `<h4>Decision Impact</h4><p>Robert proposes a compromise: accept the contract, but guarantee Jennifer receives dividends equal to 8% return on her ownership stake annually, even during the investment period.</p><p><span class='impact-positive'>Revenue grows substantially</span>, and <span class='impact-positive'>company valuation increases</span>. <span class='impact-negative'>The company takes on debt</span> to fund both the investment and Jennifer's dividends.</p><p>Everyone is moderately satisfied but not thrilled. <span class='impact-highlight'>Sarah and Michael</span> feel they're "paying Jennifer" for growth. <span class='impact-highlight'>Jennifer</span> appreciates being considered but wonders if she's now seen as a burden.</p><p>The compromise establishes important precedent: <span class='impact-positive'>passive owners have rights that must be balanced with business needs</span>. But it's messy and expensive.</p>`;
+                                } else {
+                                    return `<h4>Decision Impact</h4><p>Robert proposes a compromise: accept the contract, but the family will personally support Jennifer with $30K annually during the investment period.</p><p><span class='impact-positive'>Revenue grows substantially</span>, and <span class='impact-positive'>company valuation increases</span>. <span class='impact-negative'>The company takes on debt</span> for the investment.</p><p>Everyone is moderately satisfied. <span class='impact-highlight'>Jennifer</span> feels the family cares about her welfare even though she's not in the business.</p><p><span class='impact-highlight'>Sarah and Michael</span> accept this but wonder: "Will Jennifer always constrain our decisions? Should we have given her ownership just to formalize this?"</p><p>The compromise keeps family harmony but raises questions about fairness and precedent.</p>`;
+                                }
+                            }
                         }
                     ]
                 },
@@ -725,52 +835,102 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 15: 2028 - Quality Crisis
+                // Event 15: 2028 - Quality Crisis & Family Accountability
                 {
                     date: "2028",
                     title: "The Quality Crisis",
                     description: function() {
-                        var baseDesc = "A major client has discovered defects in Anderson Packaging's products. The problem affects $2.5M worth of delivered goods.\n\nThe client is threatening to terminate their contract and sue for damages. Industry reputation is at stake.\n\n";
+                        var baseDesc = "A major client has discovered defects in Anderson Packaging's products. The problem affects $2.5M worth of delivered goods. The client is threatening to terminate their contract and sue.\n\nThe Anderson family name is on the line.\n\n";
 
-                        // Check if they accepted the major growth contract in Event 8
+                        const sarahIsCEO = gameState.sarahCEO;
+                        const michaelStillHere = !gameState.michaelLeft;
+                        const robertRetired = gameState.robertRetired;
+
+                        // Determine root cause narrative
                         var growthEvent = gameState.decisions.find(function(d) { return d.event === 8; });
                         if (growthEvent && growthEvent.choice === 0) {
-                            baseDesc += "Sarah's investigation reveals the root cause: to meet the aggressive growth targets from that major contract years ago, quality control protocols were loosened. The team was stretched too thin.\n\n\"We did this to ourselves,\" Sarah says, staring at the report. \"We grew too fast and cut corners.\"\n\n";
+                            baseDesc += "Sarah's investigation reveals the root cause: the aggressive growth from that major contract years ago. The team was stretched too thin, and quality control protocols were compromised.\n\n";
                         } else if (gameState.hasDebt && gameState.debt > 500000) {
-                            baseDesc += "Sarah's investigation reveals the problem: under pressure from debt obligations, the company cut corners on quality inspections to reduce costs and speed up production.\n\n\"The debt forced our hand,\" Sarah explains grimly. \"We sacrificed quality to make payments.\"\n\n";
+                            baseDesc += "Sarah's investigation reveals the root cause: under pressure from debt obligations, quality inspections were loosened to reduce costs.\n\n";
                         } else {
-                            baseDesc += "Sarah's investigation reveals the root cause: to meet aggressive growth targets, quality control was loosened. Some of this happened under pressure to perform.\n\n";
+                            baseDesc += "Sarah's investigation reveals the root cause: aggressive growth targets led to loosened quality control.\n\n";
                         }
 
-                        baseDesc += "Robert speaks gravely: \"This is a test of who we are. We can fight this and maybe win. We can settle quietly. Or we can do the right thing—which will be expensive.\"\n\n\"Dad, taking full responsibility could cost us nearly two million dollars,\" Sarah says.\n\n\"I know,\" Robert replies. \"But what's our reputation worth?\"\n\nHow the family handles this will define their integrity.";
+                        // Family accountability conversation
+                        if (sarahIsCEO) {
+                            baseDesc += "\"This happened on my watch,\" Sarah says, her voice tight. \"I'm the CEO. This is my responsibility.\"\n\n";
+                            if (!robertRetired) {
+                                baseDesc += "Robert shakes his head. \"Sarah, some of these problems started years ago, during my leadership. We share this.\"\n\n";
+                            }
+                            if (michaelStillHere) {
+                                baseDesc += "Michael speaks up: \"I run sales—I'm the one who pushed for those aggressive timelines to land clients. I'm culpable too.\"\n\n";
+                            }
+                        } else {
+                            baseDesc += "Robert, still CEO, reviews the findings grimly. \"This happened under my leadership,\" he says.\n\nSarah tries to be diplomatic: \"Dad, this was a systemic issue. It's not about one person.\"\n\n";
+                            if (michaelStillHere) {
+                                baseDesc += "Michael adds: \"We all made decisions that led here. The whole family leadership bears responsibility.\"\n\n";
+                            }
+                        }
+
+                        baseDesc += "\nThe question isn't just about the right thing to do—it's about what the Anderson name means. ";
+                        baseDesc += "Robert built this company on integrity. If the family compromises now to save money, what does that say about the Anderson legacy?\n\n";
+
+                        baseDesc += "But there's also a practical question: Should the family personally contribute money to make this right, or is this purely a business expense?";
+
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Accept full responsibility and bear the cost ($1.8M)",
+                            text: "Accept full responsibility—family personally contributes $500K of the $1.8M cost",
+                            effects: {
+                                profit: -1800000,
+                                cash: -1800000,
+                                revenue: 1000000,
+                                assets: 500000,
+                                robertOwnership: 2,  // Family puts personal money in
+                                sarahOwnership: 1,
+                                michaelOwnership: function() { return gameState.michaelLeft ? 0 : 0.5; },
+                                sarahHappiness: 15,
+                                robertHappiness: 20,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 10; },
+                                managementQuality: 10
+                            },
+                            impact: function() {
+                                const michaelStillHere = !gameState.michaelLeft;
+                                const familyContrib = michaelStillHere ? "$500K split three ways" : "$500K split between Robert and Sarah";
+
+                                return `<h4>Decision Impact</h4><p>The Anderson family makes a powerful statement: they personally contribute ${familyContrib} from their own wealth, with the company covering the remaining $1.3M.</p><p>"The Anderson name means something," ` + (gameState.sarahCEO ? "Sarah" : "Robert") + ` announces publicly. "When we fail, we own it completely."</p><p><span class='impact-negative'>The total cost is enormous</span>, but the client is deeply impressed. <span class='impact-positive'>They not only maintain the contract but increase it</span> and refer new business.</p><p>The personal financial sacrifice by the family sends a powerful message to employees: <span class='impact-positive'>leadership accountability is real</span>, not just words.</p><p>The Anderson family's reputation for integrity becomes legendary in the industry. Competitors talk about this decision for years.</p>`;
+                            }
+                        },
+                        {
+                            text: "Company accepts full responsibility and bears the $1.8M cost",
                             effects: {
                                 profit: -1800000,
                                 cash: -1800000,
                                 revenue: 1000000,
                                 assets: 500000,
                                 sarahHappiness: 10,
-                                robertHappiness: 15,
+                                robertHappiness: 12,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 8; },
                                 managementQuality: 7
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah announces full responsibility. <span class='impact-negative'>The company takes a major financial hit</span> for recalls and rebuilding quality systems.</p><p>The client is impressed by the integrity. <span class='impact-positive'>They not only maintain the contract but increase it.</span></p><p><span class='impact-highlight'>Sarah and Robert</span> feel they've upheld the company's values, despite the painful cost.</p><p>Employee morale and culture strengthen. The team sees leadership that prioritizes doing the right thing over short-term profits.</p>`
+                            impact: `<h4>Decision Impact</h4><p>The company accepts full responsibility. <span class='impact-negative'>The business takes a major financial hit</span> for recalls and rebuilding quality systems.</p><p>The client is impressed by the integrity. <span class='impact-positive'>They maintain the contract and eventually increase it.</span></p><p><span class='impact-highlight'>The Anderson family</span> feels they've upheld their values, though some wonder if personal family contribution would have sent a stronger message about accountability.</p><p>Employee morale improves—leadership did the right thing, even though it was expensive.</p>`
                         },
                         {
-                            text: "Minimize liability and settle quietly ($600K)",
+                            text: "Settle quietly for $600K—protect family wealth and business",
                             effects: {
                                 profit: -600000,
                                 cash: -600000,
                                 revenue: -800000,
-                                sarahHappiness: -15,
-                                robertHappiness: -20,
+                                sarahHappiness: -18,
+                                robertHappiness: -25,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -12; },
                                 hasQualityIssues: true,
-                                managementQuality: -10
+                                managementQuality: -12
                             },
-                            impact: `<h4>Decision Impact</h4><p>The company settles quietly and moves on quickly.</p><p>The client accepts the settlement but doesn't renew the contract. <span class='impact-negative'>Revenue decreases as they take their business elsewhere.</span></p><p><span class='impact-highlight'>Sarah and Robert</span> both feel they've compromised their values. <span class='impact-negative'>Their happiness decreases</span> as they've chosen financial protection over doing the right thing.</p><p>Some employees lose respect for leadership. The culture begins to shift.</p>`
+                            impact: function() {
+                                return `<h4>Decision Impact</h4><p>The family chooses the cheaper settlement, avoiding full accountability.</p><p>The client accepts the settlement but terminates the contract. <span class='impact-negative'>Revenue decreases substantially.</span> Word spreads in the industry that the Andersons cut corners.</p><p><span class='impact-highlight'>Robert</span> is devastated. <span class='impact-negative'>His happiness plummets.</span> "I spent 30+ years building a reputation for integrity. We just sold it for $1.2M in savings."</p><p><span class='impact-highlight'>Sarah</span> also struggles with deep regret. ` + (gameState.sarahCEO ? "As CEO, she feels she's betrayed her father's legacy." : "She wonders if she should have pushed harder for full accountability.") + `</p><p>Employees lose respect for family leadership. <span class='impact-negative'>Some of the best people start quietly looking for other jobs.</span> The company culture shifts—integrity is negotiable after all.</p>`;
+                            }
                         }
                     ]
                 },
@@ -958,77 +1118,149 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 20: 2040 - Major Strategic Decision
+                // Event 20: 2040 - Legacy vs. Modernization
                 {
                     date: "2040",
                     title: "The Crossroads",
                     description: function() {
-                        var baseDesc = "Anderson Packaging is now 46 years old. Revenue is $" + formatNumber(gameState.revenue) + " annually. ";
+                        var baseDesc = "Anderson Packaging is now 46 years old. ";
+
+                        if (gameState.robertDeceased) {
+                            baseDesc += "Robert has been gone for six years, but his presence still looms over every major decision. ";
+                        } else {
+                            baseDesc += "Robert, now 81, still attends board meetings when his health allows. ";
+                        }
+
+                        baseDesc += "Revenue is $" + formatNumber(gameState.revenue) + " annually. ";
 
                         if (gameState.revenue > 15000000 && gameState.assets > 20000000) {
-                            baseDesc += "The company is thriving—Robert would be proud.\n\n";
+                            baseDesc += "The company is thriving.\n\n";
                         } else if (gameState.revenue < 8000000) {
-                            baseDesc += "The company has survived but never reached its full potential.\n\n";
+                            baseDesc += "The company has survived but plateaued.\n\n";
                         } else {
                             baseDesc += "The company is stable and profitable.\n\n";
                         }
 
-                        baseDesc += "But Sarah sees the writing on the wall: the packaging industry is changing rapidly. Automation, sustainable materials, e-commerce demands, global competition—the industry won't look the same in 10 years.\n\n";
-
-                        // Reference if they took on debt before
-                        if (gameState.hasDebt && gameState.debt > 2000000) {
-                            baseDesc += "The company still carries $" + formatNumber(gameState.debt) + " in debt from earlier decisions. Taking on more is risky.\n\n";
-                        } else if (gameState.cash > 5000000) {
-                            baseDesc += "The company has strong cash reserves of $" + formatNumber(gameState.cash) + ", which provides flexibility for major investments.\n\n";
-                        }
-
-                        baseDesc += "She's identified three paths:\n\n1. Invest $5M in automation and AI (modernize or die)\n2. Acquire a smaller competitor for $4M (grow through consolidation)\n3. Stay the course (conservative approach, gradually decline)\n\n";
+                        baseDesc += "Sarah, now 54, faces a defining moment. The packaging industry is transforming—automation, AI, sustainable materials, global competition. In 10 years, the industry will be unrecognizable.\n\n";
 
                         if (gameState.hasGen3) {
-                            baseDesc += "Emily and David push for aggressive growth. They're the future of this company.\n\n";
+                            baseDesc += "Emily (26) and David (24) have been working in the business for several years now. Over Sunday dinner, Emily makes her case:\n\n\"Grandpa built something incredible from nothing. But the world has changed. If we don't modernize dramatically, we won't survive another generation.\"\n\nDavid agrees: \"We need to go big. Automation, AI, acquisitions. The companies that don't transform won't make it.\"\n\n";
+                        } else {
+                            baseDesc += "Sarah sees younger competitors implementing automation and AI. Without the next generation in the business yet, any transformation will fall entirely on her aging management team.\n\n";
                         }
 
-                        baseDesc += "Older employees worry about their jobs being automated.\n\nThis decision will shape Anderson Packaging for its final decade.";
+                        if (gameState.robertDeceased) {
+                            baseDesc += "Sarah thinks about her father. \"What would Robert want?\" she wonders. \"Would he want us to preserve what he built, or transform it to survive?\"\n\n";
+                        } else {
+                            baseDesc += "Robert speaks quietly from across the table: \"I'm not telling you what to do, Sarah. This is your company now. But I built this with my hands, one customer at a time. I'm... not sure I recognize what you're describing.\"\n\n";
+                        }
+
+                        baseDesc += "The question isn't just strategic—it's existential. Should the family preserve Robert's legacy as he built it? Or transform it so radically that it barely resembles the company he founded?\n\n";
+
+                        baseDesc += "This is a defining moment about family identity: Are the Andersons builders who constantly evolve? Or preservers who honor what came before?";
+
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Invest $5M in automation and AI",
+                            text: "Transform dramatically—$5M automation investment (Gen 3 leads)",
                             effects: {
                                 cash: -5000000,
                                 debt: 3000000,
                                 revenue: 5000000,
-                                profit: 300000,  // 6% margin on cardboard
+                                profit: 300000,
                                 assets: 5000000,
-                                sarahHappiness: 10,
+                                sarahHappiness: function() { return gameState.hasGen3 ? 15 : 5; },
+                                robertHappiness: function() { return gameState.robertDeceased ? 0 : -15; },
                                 hasDebt: true,
-                                managementQuality: 15
+                                managementQuality: 15,
+                                employees: -12  // Automation displaces workers
                             },
-                            impact: `<h4>Decision Impact</h4><p>Anderson Packaging takes on $3M debt and invests heavily in cutting-edge technology.</p><p>The transition is painful. Some long-time employees are displaced. But <span class='impact-positive'>revenue and profit surge</span> as efficiency multiplies.</p><p><span class='impact-positive'>Company valuation increases dramatically.</span> Anderson Packaging is now positioned for the future.</p><p>Emily and David, the third generation, are instrumental in the transformation. The company is ready for its next 50 years.</p>`
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Sarah gives the green light. The company takes on $3M debt and invests massively in automation and AI.</p>`;
+
+                                if (gameState.hasGen3) {
+                                    result += `<p>Emily and David lead the transformation. <span class='impact-positive'>Revenue and profit surge</span> as efficiency multiplies. <span class='impact-positive'>Company valuation increases dramatically.</span></p><p>But the transformation is wrenching. <span class='impact-negative'>Twelve long-time employees lose their jobs to automation</span>—people who knew Robert personally. Some had been with the company for 20+ years.</p>`;
+                                } else {
+                                    result += `<p>Without the next generation to drive it, the transformation is slower and more difficult. <span class='impact-positive'>Revenue eventually increases</span>, but <span class='impact-highlight'>Sarah</span> shoulders an enormous burden.</p><p><span class='impact-negative'>Twelve long-time employees lose their jobs to automation.</span></p>`;
+                                }
+
+                                if (gameState.robertDeceased) {
+                                    result += `<p><span class='impact-highlight'>Sarah</span> wonders what her father would think. "Did I honor his legacy by ensuring survival? Or betray it by transforming everything he built?"</p>`;
+                                } else {
+                                    result += `<p><span class='impact-highlight'>Robert</span> is deeply troubled. <span class='impact-negative'>His happiness drops significantly.</span> He barely recognizes the company he founded. "I built this with relationships and craftsmanship. Now it's algorithms and machines."</p>`;
+                                }
+
+                                result += `<p>The third generation will inherit a modernized, competitive company. But it looks nothing like the business Robert started in 1994.</p>`;
+
+                                return result;
+                            }
                         },
                         {
-                            text: "Acquire competitor for $4M",
-                            effects: {
-                                cash: -4000000,
-                                debt: 2500000,
-                                revenue: 4500000,
-                                profit: 270000,  // 6% margin on cardboard
-                                assets: 3500000,
-                                sarahHappiness: 5,
-                                hasDebt: true,
-                                managementQuality: 5
-                            },
-                            impact: `<h4>Decision Impact</h4><p>The company acquires a competitor, doubling in size overnight.</p><p><span class='impact-positive'>Revenue and profit increase substantially</span>, but integrating two company cultures proves challenging.</p><p>The acquisition brings new clients but also new problems. Growth through acquisition is messier than Sarah expected.</p><p>Still, Anderson Packaging is now a major regional player. <span class='impact-positive'>Valuation increases significantly.</span></p>`
-                        },
-                        {
-                            text: "Stay the course—gradual, organic growth",
+                            text: "Preserve Robert's approach—modest organic growth only",
                             effects: {
                                 revenue: 500000,
-                                profit: 30000,  // 6% margin on cardboard
-                                sarahHappiness: -10,
-                                managementQuality: -3
+                                profit: 30000,
+                                sarahHappiness: function() { return gameState.hasGen3 ? -15 : 5; },
+                                robertHappiness: function() { return gameState.robertDeceased ? 0 : 15; },
+                                managementQuality: -5,
+                                employees: 0
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah chooses the conservative path, avoiding risk and debt.</p><p>The company continues to grow modestly. <span class='impact-positive'>Employees appreciate the stability</span> and lack of disruption.</p><p>But <span class='impact-highlight'>Sarah</span> worries they're being left behind. Competitors are modernizing. Anderson Packaging feels increasingly dated.</p><p>Emily and David are frustrated by the cautious approach. They wonder if the family business will survive their generation.</p>`
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Sarah chooses to honor Robert's legacy by preserving his approach—personal relationships, craftsmanship, steady organic growth.</p>`;
+
+                                result += `<p><span class='impact-positive'>No employees lose their jobs.</span> The company culture remains unchanged. Loyal customers appreciate the continuity.</p>`;
+
+                                if (gameState.hasGen3) {
+                                    result += `<p>But Emily and David are devastated. "Mom, we're choosing to become irrelevant," Emily argues. "Grandpa would want us to survive, not to preserve a museum."</p><p>David starts exploring opportunities at other companies. The third generation may not stick around to inherit a declining business.</p>`;
+                                } else {
+                                    result += `<p><span class='impact-highlight'>Sarah</span> feels she's honored her father's vision, even though it means slower growth.</p>`;
+                                }
+
+                                if (gameState.robertDeceased) {
+                                    result += `<p><span class='impact-highlight'>Sarah</span> feels at peace. She preserved what Robert built, even if it means the company won't dominate the market.</p>`;
+                                } else {
+                                    result += `<p><span class='impact-highlight'>Robert</span> is grateful. "Thank you for keeping my vision alive, Sarah. This is the company I wanted it to be."</p>`;
+                                }
+
+                                result += `<p>The company remains recognizable as Robert Anderson's creation. But competitors are pulling ahead. The question becomes: Will there be a fourth generation to inherit this?</p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Hybrid approach—modernize gradually while preserving culture ($2M investment)",
+                            effects: {
+                                cash: -2000000,
+                                debt: 1000000,
+                                revenue: 2500000,
+                                profit: 150000,
+                                assets: 2000000,
+                                sarahHappiness: 10,
+                                robertHappiness: function() { return gameState.robertDeceased ? 0 : 5; },
+                                hasDebt: true,
+                                managementQuality: 8,
+                                employees: -3  // Modest workforce reduction
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Sarah charts a middle path: modernize selectively while preserving the company culture and values Robert built.</p>`;
+
+                                result += `<p>The company invests $2M in targeted automation—enough to stay competitive without becoming unrecognizable. <span class='impact-positive'>Revenue and profit increase moderately.</span></p><p><span class='impact-negative'>Three positions are eliminated</span>, but Sarah works to find those employees other roles or generous severance packages.</p>`;
+
+                                if (gameState.hasGen3) {
+                                    result += `<p>Emily and David are moderately satisfied. It's not the aggressive transformation they wanted, but it's progress. They can work with this.</p>`;
+                                }
+
+                                if (gameState.robertDeceased) {
+                                    result += `<p><span class='impact-highlight'>Sarah</span> believes she's found the balance her father would have wanted—evolution without revolution.</p>`;
+                                } else {
+                                    result += `<p><span class='impact-highlight'>Robert</span> accepts the compromise. "It's not what I would have chosen, but I understand. Times change."</p>`;
+                                }
+
+                                result += `<p>The company remains recognizably "Anderson Packaging" while adapting to survive. It's not the most aggressive path, but it honors both legacy and pragmatism.</p><p>The family has chosen to be both builders AND preservers—a delicate balance that defines who the Andersons are.</p>`;
+
+                                return result;
+                            }
                         }
                     ]
                 },
