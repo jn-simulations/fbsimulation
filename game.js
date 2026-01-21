@@ -197,16 +197,20 @@ function loadEvent() {
         }
     }
     
+    // Update business metrics and family display to match current state
+    updateUI();
+    updateFamilyDisplay();
+
     // Update event display
     document.getElementById('eventDate').textContent = event.date;
     document.getElementById('eventTitle').textContent = event.title;
     document.getElementById('eventDescription').textContent = description;
-    
+
     // Clear previous options and impact
     const optionsContainer = document.getElementById('optionsContainer');
     optionsContainer.innerHTML = '';
     document.getElementById('impactDisplay').classList.add('hidden');
-    
+
     // Show options container
     optionsContainer.classList.remove('hidden');
     

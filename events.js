@@ -36,10 +36,10 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 1: 1996 - First Major Client
+                // Event 1: 1996 - First Major Client (NARRATIVE - Business Growth)
                 {
                     date: "1996",
-                    title: "The First Major Client",
+                    title: "Early Growth",
                     description: function() {
                         var baseDesc = "Two years in, Anderson Manufacturing has survived. ";
                         if (gameState.hasDebt) {
@@ -48,88 +48,57 @@ const EVENTS = [
                             baseDesc += "The bootstrap approach worked—the business is growing steadily.\n\n";
                         }
 
-                        baseDesc += "Now a Fortune 500 company has approached Robert with an opportunity that could transform everything: a $1.2M contract over three years.\n\n";
-                        baseDesc += "The catch: To deliver at this scale, Robert needs to hire six more people immediately, lease a 10,000 sq ft facility, and invest $200K in equipment and setup. Monthly overhead will triple.\n\n";
-                        baseDesc += "If Anderson Manufacturing delivers quality work on time, this client could become an anchor account worth millions over the next decade. But if they fail to deliver, the reputational damage in this tight-knit industry could be fatal.\n\n";
-                        baseDesc += "Robert's current setup could maybe handle it—working nights and weekends, pushing his small team to the limit. But quality would likely suffer, and burnout is certain.";
+                        baseDesc += "A Fortune 500 company approaches Robert with a significant contract opportunity: $1.2M over three years. It requires expanding the team, leasing a larger facility, and investing $200K in equipment.\n\n";
+                        baseDesc += "Robert weighs the risks carefully. After consulting with his wife and reviewing the numbers, he decides to take the leap. The potential for long-term growth outweighs the short-term financial strain.\n\n";
+                        baseDesc += "Over the next two years, Anderson Manufacturing delivers excellent work. The Fortune 500 client is impressed and extends the contract. The business is transforming from a one-man operation into a real company.\n\n";
+                        baseDesc += "Robert is energized—this is what he envisioned when he left his engineering job. The business is taking off.";
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Accept the contract and invest in scaling up",
+                            text: "Continue",
                             effects: {
-                                marketDemand: 1200000,  // Adds to market demand
-                                cash: -200000,  // Investment cost
-                                assets: 200000,  // Buy equipment
+                                marketDemand: 1200000,  // Major client boosts demand
+                                cash: -200000,  // Investment in scaling
+                                assets: 200000,  // Equipment and facility
                                 robertHappiness: 15,
                                 managementQuality: 5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert accepts the contract and makes the necessary investments. <span class='impact-positive'>Market demand jumps</span> with the new Fortune 500 client.</p><p>The new facility and expanded team deliver excellent work. <span class='impact-positive'>The client is impressed and extends the contract.</span></p><p><span class='impact-highlight'>Robert</span> is thrilled—the business is truly taking off. However, <span class='impact-negative'>cash reserves are depleted</span> from the expansion costs.</p>`
-                        },
-                        {
-                            text: "Decline—stay small and avoid the risk",
-                            effects: {
-                                marketDemand: 200000,
-                                cash: 50000,
-                                robertHappiness: -10
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert declines the major contract, choosing stability over growth risk.</p><p>The business continues to grow slowly. <span class='impact-positive'>Cash reserves remain healthy</span>, but market opportunities are modest.</p><p><span class='impact-highlight'>Robert</span> wonders if he's made a mistake. <span class='impact-negative'>His happiness decreases</span>—he can't shake the feeling that he's missed a huge opportunity.</p>`
+                            impact: ``  // No impact display for narrative events
                         }
                     ]
                 },
                 
-                // Event 2: 2000 - Dot-com Crash Impact
+                // Event 2: 2000 - Dot-com Crash Impact (NARRATIVE - Business Crisis)
                 {
                     date: "2000",
-                    title: "The Dot-Com Crash",
+                    title: "Weathering the Storm",
                     description: function() {
-                        var baseDesc = "March 2000. The dot-com bubble has burst spectacularly. The NASDAQ has crashed, and the fallout is spreading through the entire economy.\n\n";
-                        baseDesc += "Several of Anderson Manufacturing's clients are tech companies or tech suppliers. Orders are being canceled. One client just filed for bankruptcy owing Anderson $180K.\n\n";
-                        baseDesc += "Robert looks at the numbers: revenue is projected to drop 30-40% this year. The company employs " + (gameState.employees || 15) + " people, many who have been with him since the early days.\n\n";
+                        var baseDesc = "March 2000. The dot-com bubble bursts, and the fallout spreads through the entire economy. Several of Anderson Manufacturing's clients are tech companies or suppliers. Orders are canceled. One client files for bankruptcy owing Anderson $180K.\n\n";
+                        baseDesc += "Revenue drops 30% year-over-year. The company employs " + (gameState.employees || 15) + " people, many who have been with Robert since the early days.\n\n";
 
                         if (gameState.hasDebt && gameState.debt > 50000) {
                             baseDesc += "The situation is particularly dire because Anderson is carrying $" + formatNumber(gameState.debt) + " in debt. Loan payments are due every month regardless of revenue.\n\n";
                         }
 
-                        baseDesc += "Robert faces brutal choices:\n\n";
-                        baseDesc += "1. Lay off one-third of the workforce to slash costs and survive\n2. Take on $150K in new debt to maintain the team and weather the storm\n3. Pivot to more stable industries like traditional manufacturing and construction\n\n";
-                        baseDesc += "Each path has consequences. Layoffs will devastate families. More debt in an uncertain economy is dangerous. Pivoting means abandoning years of relationship-building.\n\n";
-                        baseDesc += "This crisis will define what kind of leader Robert is.";
+                        baseDesc += "Robert faces a choice: lay off employees to cut costs, or take on debt to protect jobs.\n\n";
+                        baseDesc += "After agonizing for days, Robert makes his decision. He refuses to lay anyone off. These people have families. They trusted him and helped build this company.\n\n";
+                        baseDesc += "He secures a $150K line of credit to bridge the gap. It's risky—more debt in an uncertain economy. But Robert would rather lose money than lose the loyalty and trust of his team.\n\n";
+                        baseDesc += "Over the next two years, the economy recovers. Anderson Manufacturing survives with its team intact. The employees remember that when times got tough, Robert protected them. That loyalty will endure for decades.";
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Lay off 5 employees to cut costs",
+                            text: "Continue",
                             effects: {
-                                marketDemand: -300000,  // Lost customers
-                                cash: 100000,  // Reduced payroll saves cash
-                                employees: -5,
-                                robertHappiness: -15,
-                                managementQuality: -8
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert makes the painful decision to lay off one-third of his workforce. <span class='impact-positive'>Cash flow stabilizes</span> from reduced payroll.</p><p>However, the smaller team struggles to serve all clients. <span class='impact-negative'>Some customers leave.</span></p><p><span class='impact-highlight'>Robert</span> is haunted by the decision. <span class='impact-negative'>His happiness drops significantly</span>—he feels he's failed the employees who trusted him.</p><p>The remaining team is nervous and morale is low.</p>`
-                        },
-                        {
-                            text: "Take on $150K debt to maintain the full team",
-                            effects: {
-                                marketDemand: -200000,  // Market still down
+                                marketDemand: -200000,  // Market contracts
                                 debt: 150000,
                                 cash: 150000,  // Debt provides cash cushion
                                 robertHappiness: 5,
                                 hasDebt: true,
                                 managementQuality: 3
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert refuses to lay anyone off and borrows $150K to weather the storm. <span class='impact-negative'>Market demand decreases</span> as the economy contracts.</p><p>The team is grateful and loyal. <span class='impact-highlight'>Robert</span> feels he's done the right thing, though the financial pressure is intense.</p><p>The company survives with its team intact, but <span class='impact-negative'>now carries $150K in debt</span> going into an uncertain economy.</p>`
-                        },
-                        {
-                            text: "Pivot to serving manufacturing and construction industries",
-                            effects: {
-                                marketDemand: 100000,  // New markets
-                                cash: -50000,  // Marketing costs
-                                robertHappiness: -5,
-                                managementQuality: 2
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert pivots to more stable industries. <span class='impact-positive'>New demand emerges</span> as clients from construction and traditional manufacturing sign on.</p><p>However, building these new relationships takes time and money. <span class='impact-negative'>Cash reserves decrease</span> from sales and marketing efforts.</p><p><span class='impact-highlight'>Robert</span> is moderately stressed but believes this diversification will pay off long-term.</p>`
+                            impact: ``  // No impact display for narrative events
                         }
                     ]
                 },
@@ -213,50 +182,23 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 5: 2009 - Financial Crisis
+                // Event 5: 2009 - Financial Crisis (NARRATIVE - Family Values)
                 {
                     date: "2009",
-                    title: "The Great Recession",
+                    title: "Family Values Tested",
                     description: function() {
-                        var baseDesc = "September 2009. The 2008 financial crisis has devastated the economy. Lehman Brothers collapsed. The auto industry is on life support. Credit markets are frozen.\n\n";
-                        baseDesc += "Anderson Manufacturing's orders are down 40% year-over-year. Clients are canceling contracts, delaying payments, and some are going bankrupt.\n\n";
-                        baseDesc += "The company employs " + (gameState.employees || 35) + " people. Cash reserves: $" + formatNumber(gameState.cash > 0 ? gameState.cash : 300000) + ". At the current burn rate, that's " + (gameState.cash > 200000 ? "3-4 months" : "6-8 weeks") + " of runway.\n\n";
-                        baseDesc += "Sarah (23) and Michael (20) are both working in the business now. Jennifer (19) is in college, depending on dividend income to help with expenses.\n\n";
-                        baseDesc += "Robert is facing the hardest decision since 1994. He needs to cut costs immediately:\n\n";
-                        baseDesc += "1. Cut everyone's salary by 20%—family and non-family alike—to avoid layoffs\n2. Lay off 8 employees (including some who've been here for years)\n3. Family members take 40% salary cuts and zero dividends; protect all non-family jobs\n\n";
-                        baseDesc += "Every option hurts someone. This crisis will reveal what Anderson Manufacturing truly values.";
+                        var baseDesc = "September 2009. The 2008 financial crisis devastates the economy. Lehman Brothers has collapsed. The auto industry is on life support. Credit markets are frozen.\n\n";
+                        baseDesc += "Anderson Manufacturing's orders are down 40% year-over-year. Clients are canceling contracts and delaying payments. The company employs " + (gameState.employees || 35) + " people. Cash reserves: $" + formatNumber(gameState.cash > 0 ? gameState.cash : 300000) + ".\n\n";
+                        baseDesc += "Sarah (23) and Michael (20) are both working in the business now. Jennifer (19) is in college, depending on dividend income for expenses.\n\n";
+                        baseDesc += "Robert calls a family meeting. The numbers are brutal. He could lay off employees to preserve cash, or the family could take the hit themselves.\n\n";
+                        baseDesc += "The decision is unanimous. The Anderson family takes 40% salary cuts and suspends all dividend payments. Every employee job is protected.\n\n";
+                        baseDesc += "Jennifer is upset—she needed that dividend income. But Robert, Sarah, and Michael are in agreement. These employees have families. They've helped build this company. If anyone suffers financially, it will be the family, not the team.\n\n";
+                        baseDesc += "The employees are deeply moved. This decision will cement a culture of loyalty that lasts for decades. The Anderson family has demonstrated what they truly value.";
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Cut all salaries by 20%, share the pain equally",
-                            effects: {
-                                robertSalary: 96000,  // 20% cut from ~$120K
-                                sarahSalary: 52000,   // 20% cut from $65K
-                                michaelSalary: 40000, // 20% cut from $50K
-                                cash: 150000,  // Reduced payroll
-                                robertHappiness: -10,
-                                sarahHappiness: -5,
-                                michaelHappiness: -5,
-                                managementQuality: 3
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert announces a company-wide 20% salary cut. Everyone shares the pain—family and non-family employees alike.</p><p><span class='impact-positive'>Cash flow stabilizes</span> and <span class='impact-positive'>no one loses their job</span>. The team appreciates that everyone is sacrificing together.</p><p>The Anderson family's income drops sharply. <span class='impact-highlight'>Robert, Sarah, and Michael</span> all feel the financial strain, though they understand it's necessary.</p>`
-                        },
-                        {
-                            text: "Lay off 8 non-family employees",
-                            effects: {
-                                cash: 120000,  // Lower payroll
-                                marketDemand: -400000,  // Lost capacity
-                                robertHappiness: -20,
-                                sarahHappiness: -10,
-                                michaelHappiness: -8,
-                                employees: -8,
-                                managementQuality: -8
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert makes the painful decision to lay off 8 employees. <span class='impact-positive'>Cash flow improves</span>, but <span class='impact-negative'>the smaller team can't serve all customers</span>.</p><p>The laid-off employees feel betrayed, especially when they see the Anderson family kept their positions. Company culture suffers.</p><p><span class='impact-highlight'>Robert</span> is devastated by the decision. <span class='impact-negative'>His happiness plummets</span>—he questions whether he should have protected his employees before his family.</p>`
-                        },
-                        {
-                            text: "Family takes 40% salary cuts and no dividends; protect non-family jobs",
+                            text: "Continue",
                             effects: {
                                 robertSalary: 72000,  // 40% cut from ~$120K
                                 sarahSalary: 39000,   // 40% cut from $65K
@@ -269,7 +211,7 @@ const EVENTS = [
                                 jenniferHappiness: -15,
                                 managementQuality: 6
                             },
-                            impact: `<h4>Decision Impact</h4><p>The Anderson family agrees to deep salary cuts and forgoes all dividends to protect employee jobs.</p><p>The employees are deeply grateful. Non-family staff work even harder, knowing the family sacrificed for them. <span class='impact-positive'>Company loyalty and culture strengthens.</span></p><p><span class='impact-highlight'>Jennifer</span> is upset—she was counting on dividend income for college expenses. <span class='impact-negative'>Her happiness decreases significantly.</span></p><p><span class='impact-highlight'>Robert and Sarah</span> feel they've done the right thing.</p>`
+                            impact: ``  // No impact display for narrative events
                         }
                     ]
                 },
