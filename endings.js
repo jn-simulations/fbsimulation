@@ -65,16 +65,24 @@ function showEnding() {
                         <div class="stat-value">$${formatNumber(gameState.profit)}</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">Company Valuation</div>
-                        <div class="stat-value">$${formatNumber(gameState.valuation)}</div>
-                    </div>
-                    <div class="stat-item">
                         <div class="stat-label">Cash Position</div>
                         <div class="stat-value">$${formatNumber(gameState.cash)}</div>
                     </div>
                     <div class="stat-item">
+                        <div class="stat-label">ROA (Return on Assets)</div>
+                        <div class="stat-value">${calculateROA()}%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Employees</div>
+                        <div class="stat-value">${gameState.employees}</div>
+                    </div>
+                    <div class="stat-item">
                         <div class="stat-label">Outstanding Debt</div>
                         <div class="stat-value">$${formatNumber(gameState.debt)}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Financial Health</div>
+                        <div class="stat-value">${calculateFinancialHealth()} - ${getHealthLabel(calculateFinancialHealth())}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Family Avg. Happiness</div>
@@ -105,7 +113,7 @@ function determineEnding(businessScore, harmonyScore) {
     const lastDecision = gameState.decisions[gameState.decisions.length - 1];
 
     // Sold to PE firm ending
-    if (lastDecision && lastDecision.event === 19 && lastDecision.choice === 0) {
+    if (lastDecision && lastDecision.event === 20 && lastDecision.choice === 0) {
         if (harmonyScore >= 70) {
             return {
                 title: "The Golden Exit",
@@ -130,7 +138,7 @@ function determineEnding(businessScore, harmonyScore) {
     }
 
     // Third generation transition ending
-    if (lastDecision && lastDecision.event === 19 && lastDecision.choice === 1) {
+    if (lastDecision && lastDecision.event === 20 && lastDecision.choice === 1) {
         if (businessScore >= 70 && harmonyScore >= 70) {
             return {
                 title: "The Dynasty Continues",
@@ -305,11 +313,12 @@ function generateLessons() {
     const lessons = [];
 
     // Analyze key decision patterns
-    const protectedEmployees2009 = gameState.decisions.find(d => d.event === 4 && d.choice === 2);
-    const protectedEmployees2020 = gameState.decisions.find(d => d.event === 9 && d.choice === 1);
-    const qualityDecision = gameState.decisions.find(d => d.event === 13);
-    const michaelCompensation = gameState.decisions.find(d => d.event === 7);
-    const successionClarity = gameState.decisions.find(d => d.event === 5);
+    // Note: Event indices updated after adding 4 new events (Sarah's Wedding, Michael's Wedding, In-Law Question, Family Boundaries)
+    const protectedEmployees2009 = gameState.decisions.find(d => d.event === 6 && d.choice === 2);
+    const protectedEmployees2020 = gameState.decisions.find(d => d.event === 14 && d.choice === 1);
+    const qualityDecision = gameState.decisions.find(d => d.event === 18);
+    const michaelCompensation = gameState.decisions.find(d => d.event === 11);
+    const successionClarity = gameState.decisions.find(d => d.event === 7);
 
     // Lesson 1: Values vs Profits
     if (protectedEmployees2009 || protectedEmployees2020) {
@@ -354,8 +363,8 @@ function generateLessons() {
 
     // Lesson 4: Growth vs Family
     const majorInvestments = gameState.decisions.filter(d =>
-        (d.event === 6 && d.choice === 0) ||
-        (d.event === 18 && d.choice === 0)
+        (d.event === 9 && d.choice === 0) ||
+        (d.event === 23 && d.choice === 0)
     );
     if (majorInvestments.length >= 2) {
         lessons.push(`
@@ -366,7 +375,7 @@ function generateLessons() {
     }
 
     // Lesson 5: Exit timing
-    const acquisitionOffers = gameState.decisions.filter(d => d.event === 12 || d.event === 19);
+    const acquisitionOffers = gameState.decisions.filter(d => d.event === 17 || d.event === 24);
     const declined = acquisitionOffers.filter(d => d.choice === 1);
     if (declined.length >= 2) {
         lessons.push(`
