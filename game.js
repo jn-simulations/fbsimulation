@@ -11,6 +11,7 @@ function init() {
         year: 1994,
         eventIndex: 0,
         revenue: 0,
+        profitMargin: 0.06,  // Base profit margin (will be modified)
         profit: 0,
         cash: 50000,
         assets: 50000, // Total assets (cash + equipment + inventory + property)
@@ -19,8 +20,29 @@ function init() {
         previousRevenue: 0,
         previousProfit: 0,
 
-        // Management quality (0-100, affects profit margins, growth, efficiency)
+        // Management quality (0-100, affected by monitoring, governance, conflicts)
         managementQuality: 50, // Start at average
+
+        // Family cohesion (0-100, conflicts reduce this)
+        familyCohesion: 80,  // Start high - founder era
+
+        // Shareholder monitoring effectiveness (0-100)
+        shareholderMonitoring: 30,  // Low initially - founder controls everything
+
+        // Board effectiveness (0-100)
+        boardEffectiveness: 0,  // No board initially
+
+        // Profit allocation (must sum to 100)
+        // How annual profits are distributed
+        allocation: {
+            growth: 60,       // Reinvested for revenue growth
+            efficiency: 20,   // Invested in margin improvements
+            cash: 15,         // Retained as cash reserves
+            dividends: 5      // Distributed to shareholders
+        },
+
+        // Cumulative investment effects
+        cumulativeEfficiencyInvestment: 0,  // Builds up margin over time
 
         // Decision tracking
         decisions: [],
@@ -225,6 +247,55 @@ function applyEffects(effects) {
         gameState.managementQuality += effects.managementQuality;
         gameState.managementQuality = Math.max(0, Math.min(100, gameState.managementQuality));
     }
+
+    // Apply family cohesion changes (clamped 0-100)
+    if (effects.familyCohesion !== undefined) {
+        gameState.familyCohesion += effects.familyCohesion;
+        gameState.familyCohesion = Math.max(0, Math.min(100, gameState.familyCohesion));
+    }
+
+    // Apply shareholder monitoring changes (clamped 0-100)
+    if (effects.shareholderMonitoring !== undefined) {
+        gameState.shareholderMonitoring += effects.shareholderMonitoring;
+        gameState.shareholderMonitoring = Math.max(0, Math.min(100, gameState.shareholderMonitoring));
+    }
+
+    // Apply board effectiveness changes (clamped 0-100)
+    if (effects.boardEffectiveness !== undefined) {
+        gameState.boardEffectiveness += effects.boardEffectiveness;
+        gameState.boardEffectiveness = Math.max(0, Math.min(100, gameState.boardEffectiveness));
+    }
+
+    // Apply profit margin changes
+    if (effects.profitMargin !== undefined) {
+        gameState.profitMargin += effects.profitMargin;
+        gameState.profitMargin = Math.max(0.01, Math.min(0.15, gameState.profitMargin));
+    }
+
+    // Apply allocation changes (ensure they sum to 100)
+    if (effects.allocation !== undefined) {
+        const alloc = gameState.allocation;
+        if (effects.allocation.growth !== undefined) alloc.growth += effects.allocation.growth;
+        if (effects.allocation.efficiency !== undefined) alloc.efficiency += effects.allocation.efficiency;
+        if (effects.allocation.cash !== undefined) alloc.cash += effects.allocation.cash;
+        if (effects.allocation.dividends !== undefined) alloc.dividends += effects.allocation.dividends;
+
+        // Clamp each to valid range
+        alloc.growth = Math.max(0, Math.min(100, alloc.growth));
+        alloc.efficiency = Math.max(0, Math.min(100, alloc.efficiency));
+        alloc.cash = Math.max(0, Math.min(100, alloc.cash));
+        alloc.dividends = Math.max(0, Math.min(100, alloc.dividends));
+
+        // Normalize to sum to 100
+        const total = alloc.growth + alloc.efficiency + alloc.cash + alloc.dividends;
+        if (total > 0 && total !== 100) {
+            const factor = 100 / total;
+            alloc.growth *= factor;
+            alloc.efficiency *= factor;
+            alloc.cash *= factor;
+            alloc.dividends *= factor;
+        }
+    }
     
     // Apply family effects
     Object.keys(familyMembers).forEach(key => {
@@ -309,6 +380,26 @@ function applyEffects(effects) {
     if (effects.hasSpousePolicy) gameState.hasSpousePolicy = true;
     if (effects.hasFormalSpouseGovernance) gameState.hasFormalSpouseGovernance = true;
     if (effects.spouseAdvisoryRoles) gameState.spouseAdvisoryRoles = true;
+
+    // Apply family member attribute changes
+    Object.keys(familyMembers).forEach(key => {
+        const member = familyMembers[key];
+
+        // Business training updates
+        if (effects[key + 'BusinessTraining'] !== undefined) {
+            member.hasBusinessTraining = effects[key + 'BusinessTraining'];
+        }
+
+        // Liquidity needs updates
+        if (effects[key + 'LiquidityNeeds'] !== undefined) {
+            member.liquidityNeeds = effects[key + 'LiquidityNeeds'];
+        }
+
+        // Other income updates
+        if (effects[key + 'OtherIncome'] !== undefined) {
+            member.otherIncome = effects[key + 'OtherIncome'];
+        }
+    });
 }
 
 function advanceGame() {
@@ -325,35 +416,111 @@ function advanceGame() {
     // Check for life events
     checkLifeEvents();
 
-    // Natural business growth (influenced by management quality)
-    if (gameState.revenue > 0) {
-        // Growth rate based on management quality (3-7% annual)
-        // Poor management (0-30): 3%, Average (50): 5%, Excellent (100): 7%
-        const baseGrowth = 0.03;
-        const managementBonus = (gameState.managementQuality / 100) * 0.04;
-        const growthRate = baseGrowth + managementBonus;
+    // ============================================
+    // CONFLICT EFFECTS
+    // Unresolved shareholder conflicts hurt performance
+    // ============================================
+    const conflictPenalty = calculateConflictPenalty();
+    if (conflictPenalty > 0) {
+        // Conflicts reduce effective management quality
+        gameState.familyCohesion = Math.max(0, gameState.familyCohesion - conflictPenalty * 0.5);
+    }
 
+    // Effective management quality considers monitoring and conflicts
+    const effectiveManagement = calculateEffectiveManagement();
+
+    // ============================================
+    // SHAREHOLDER PREFERENCE INFLUENCE
+    // Aggregate preferences affect growth/margin tradeoffs
+    // ============================================
+    const shareholderPrefs = getShareholderPreferences();
+
+    // ============================================
+    // PROFIT ALLOCATION & GROWTH MODEL
+    // ============================================
+    if (gameState.revenue > 0) {
+        // Calculate this period's profit
+        const currentProfit = gameState.revenue * gameState.profitMargin;
+
+        // Allocate profit according to current allocation percentages
+        const allocated = {
+            growth: currentProfit * (gameState.allocation.growth / 100),
+            efficiency: currentProfit * (gameState.allocation.efficiency / 100),
+            cash: currentProfit * (gameState.allocation.cash / 100),
+            dividends: currentProfit * (gameState.allocation.dividends / 100)
+        };
+
+        // ============================================
+        // GROWTH RATE
+        // Driven by: risk preference, growth investment, management quality
+        // ============================================
+        const baseGrowth = 0.02;  // 2% baseline
+
+        // Risk preference bonus (from shareholders): 0-3%
+        const riskBonus = (shareholderPrefs.riskTolerance / 100) * 0.03;
+
+        // Growth investment bonus: ROI on reinvested profits
+        // Higher investment = higher growth, but diminishing returns
+        const growthInvestmentRatio = allocated.growth / gameState.revenue;
+        const investmentBonus = Math.min(0.04, growthInvestmentRatio * 0.5);  // Cap at 4%
+
+        // Management execution bonus: 0-2%
+        const managementBonus = (effectiveManagement / 100) * 0.02;
+
+        const growthRate = baseGrowth + riskBonus + investmentBonus + managementBonus;
+
+        // Apply growth over the period
         gameState.revenue *= Math.pow(1 + growthRate, yearsToAdvance);
 
-        // Profit margin based on management quality (4-8%)
-        // Cardboard/packaging industry has thin margins
-        // Poor management (0): 4%, Average (50): 6%, Excellent (100): 8%
-        const baseMargin = 0.04;
-        const marginBonus = (gameState.managementQuality / 100) * 0.04;
-        const profitMargin = baseMargin + marginBonus;
+        // ============================================
+        // PROFIT MARGIN
+        // Driven by: efficiency investment, management quality, focus preference
+        // ============================================
+        const baseMargin = 0.03;  // 3% baseline for cardboard industry
 
-        gameState.profit = gameState.revenue * profitMargin;
+        // Cumulative efficiency investment improves margins over time
+        gameState.cumulativeEfficiencyInvestment += allocated.efficiency;
+        const efficiencyBonus = Math.min(0.03, (gameState.cumulativeEfficiencyInvestment / gameState.revenue) * 0.1);
 
-        // Assets grow with revenue (equipment, inventory, facilities)
+        // Management quality bonus: 0-2%
+        const marginManagementBonus = (effectiveManagement / 100) * 0.02;
+
+        // Focus preference: growth-focused sacrifices some margin
+        // If shareholders strongly prefer growth over profit, margin suffers slightly
+        const focusPenalty = ((shareholderPrefs.growthPreference - 50) / 100) * 0.01;
+
+        gameState.profitMargin = Math.max(0.02, Math.min(0.10,
+            baseMargin + efficiencyBonus + marginManagementBonus - focusPenalty
+        ));
+
+        // Calculate new profit
+        gameState.profit = gameState.revenue * gameState.profitMargin;
+
+        // ============================================
+        // CASH RETENTION
+        // ============================================
+        gameState.cash += allocated.cash;
+
+        // ============================================
+        // DIVIDEND DISTRIBUTION
+        // Track per-shareholder (affects happiness)
+        // ============================================
+        if (allocated.dividends > 0) {
+            distributeDividends(allocated.dividends);
+        }
+
+        // ============================================
+        // ASSETS
         // Asset efficiency improves with management quality
-        // Poor management needs 0.7x revenue in assets, excellent needs 0.5x
-        const assetRatio = 0.7 - (gameState.managementQuality / 100) * 0.2;
+        // ============================================
+        const assetRatio = 0.7 - (effectiveManagement / 100) * 0.2;
         gameState.assets = gameState.cash + (gameState.revenue * assetRatio);
 
-        // Employees grow with revenue
-        // Better management = higher productivity (revenue per employee)
-        // Poor: $80K/employee, Average: $100K/employee, Excellent: $130K/employee
-        const revenuePerEmployee = 80000 + (gameState.managementQuality / 100) * 50000;
+        // ============================================
+        // EMPLOYEES
+        // Better management = higher productivity
+        // ============================================
+        const revenuePerEmployee = 80000 + (effectiveManagement / 100) * 50000;
         gameState.employees = Math.max(1, Math.round(gameState.revenue / revenuePerEmployee));
     }
 
@@ -367,6 +534,62 @@ function advanceGame() {
     } else {
         showEnding();
     }
+}
+
+// ============================================
+// EFFECTIVE MANAGEMENT CALCULATION
+// Management quality modified by monitoring and cohesion
+// ============================================
+function calculateEffectiveManagement() {
+    let effective = gameState.managementQuality;
+
+    // Shareholder monitoring improves management accountability
+    // But only if there's something to monitor (board, governance)
+    const monitoringBonus = (gameState.shareholderMonitoring / 100) * 10;
+    effective += monitoringBonus;
+
+    // Board effectiveness adds oversight value
+    const boardBonus = (gameState.boardEffectiveness / 100) * 10;
+    effective += boardBonus;
+
+    // Family conflict reduces effective management (distraction, poor decisions)
+    const cohesionPenalty = ((100 - gameState.familyCohesion) / 100) * 15;
+    effective -= cohesionPenalty;
+
+    // Unresolved shareholder conflicts create further drag
+    const conflictPenalty = calculateConflictPenalty();
+    effective -= conflictPenalty;
+
+    return Math.max(0, Math.min(100, effective));
+}
+
+// ============================================
+// DIVIDEND DISTRIBUTION
+// Allocates dividends to shareholders, affects happiness
+// ============================================
+function distributeDividends(totalDividends) {
+    Object.keys(familyMembers).forEach(key => {
+        const member = familyMembers[key];
+        if (member.isDead || member.ownership <= 0) return;
+
+        const share = totalDividends * (member.ownership / 100);
+        const prefs = getMemberPreferences(member);
+
+        // Happiness effect depends on dividend preference
+        // High dividend preference + receiving dividends = happiness
+        // But amount matters relative to expectations
+        const expectedDividend = gameState.revenue * 0.05 * (member.ownership / 100);  // 5% of revenue share as baseline
+        const satisfactionRatio = share / Math.max(1, expectedDividend);
+
+        if (prefs.dividendPreference > 50) {
+            // This shareholder cares about dividends
+            if (satisfactionRatio >= 1) {
+                member.happiness = Math.min(100, member.happiness + 3);
+            } else if (satisfactionRatio < 0.5) {
+                member.happiness = Math.max(0, member.happiness - 2);
+            }
+        }
+    });
 }
 
 function calculateROA() {
