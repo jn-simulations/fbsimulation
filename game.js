@@ -66,7 +66,7 @@ function loadEvent() {
     let description = typeof event.description === 'function' ? event.description() : event.description;
     
     // Add state-dependent context for specific events
-    if (gameState.eventIndex === 10) {
+    if (gameState.eventIndex === 9) {
         // COVID event - add context about financial state
         if (gameState.cash > 1000000) {
             description = description.replace(
@@ -79,16 +79,16 @@ function loadEvent() {
                 `Robert is 61. The company is carrying $${formatNumber(gameState.debt)} in debt, making this crisis even more dangerous.`
             );
         }
-    } else if (gameState.eventIndex === 12) {
+    } else if (gameState.eventIndex === 11) {
         // Michael's offer - reference compensation conflict
-        const compensationEvent = gameState.decisions.find(d => d.event === 8);
+        const compensationEvent = gameState.decisions.find(d => d.event === 7);
         if (compensationEvent && compensationEvent.choice === 0) {
             description = description.replace(
                 "He comes to Robert:",
                 "\"Dad, I appreciate that you increased my salary, but even at $160K, I'm still watching Sarah make all the strategic decisions.\" He continues:"
             );
         }
-    } else if (gameState.eventIndex === 13) {
+    } else if (gameState.eventIndex === 12) {
         // Acquisition - adjust offer based on performance
         if (gameState.revenue > 10000000) {
             description = description.replace("$28M", "$35M");
@@ -96,7 +96,7 @@ function loadEvent() {
         if (gameState.michaelLeft) {
             description += "\n\nMichael left the business years ago. The remaining family wonders what he would think of this offer.";
         }
-    } else if (gameState.eventIndex === 19) {
+    } else if (gameState.eventIndex === 18) {
         // Strategic decision - reference current state
         if (gameState.revenue > 15000000) {
             description = description.replace(
@@ -107,7 +107,7 @@ function loadEvent() {
         if (gameState.hasDebt && gameState.debt > 2000000) {
             description += `\n\nThe company still carries $${formatNumber(gameState.debt)} in debt. Taking on more is risky.`;
         }
-    } else if (gameState.eventIndex === 20) {
+    } else if (gameState.eventIndex === 19) {
         // Final decision - personalize based on journey
         if (gameState.revenue > 20000000) {
             description = description.replace("$45M", "$55M");
@@ -115,7 +115,7 @@ function loadEvent() {
             description = description.replace("$45M", "$30M");
         }
         
-        const prevOffer = gameState.decisions.find(d => d.event === 13);
+        const prevOffer = gameState.decisions.find(d => d.event === 12);
         if (prevOffer && prevOffer.choice === 1) {
             description += "\n\nThe family declined an offer back in 2026. Some wonder if they should have sold then.";
         }
@@ -233,27 +233,47 @@ function applyEffects(effects) {
 }
 
 function advanceGame() {
-    // Advance year
-    const yearsToAdvance = 2;
-    gameState.year += yearsToAdvance;
     gameState.eventIndex += 1;
-    
+
+    // Sync year with next event's date, or use last event's date if at end
+    let yearsToAdvance;
+    if (gameState.eventIndex < EVENTS.length) {
+        const nextEventYear = parseInt(EVENTS[gameState.eventIndex].date);
+        yearsToAdvance = nextEventYear - gameState.year;
+        gameState.year = nextEventYear;
+    } else {
+        // Final event completed, advance to 2044
+        yearsToAdvance = 2044 - gameState.year;
+        gameState.year = 2044;
+    }
+
     // Age family members
     Object.keys(familyMembers).forEach(key => {
         familyMembers[key].age += yearsToAdvance;
     });
-    
+
     // Check for life events
     checkLifeEvents();
-    
-    // Natural business growth
+
+    // Natural business growth - higher in early years, lower as company matures
     if (gameState.revenue > 0) {
-        const growthRate = 0.05; // 5% annual growth
+        // Growth rate decreases as company matures
+        // Early years (pre-2005): 15% annual growth
+        // Growth years (2005-2015): 10% annual growth
+        // Mature years (2015+): 5% annual growth
+        let growthRate;
+        if (gameState.year <= 2005) {
+            growthRate = 0.15; // 15% in early years
+        } else if (gameState.year <= 2015) {
+            growthRate = 0.10; // 10% in growth phase
+        } else {
+            growthRate = 0.05; // 5% when mature
+        }
         gameState.revenue *= Math.pow(1 + growthRate, yearsToAdvance);
         gameState.profit = gameState.revenue * 0.1; // 10% margin
         gameState.valuation = gameState.revenue * 0.4;
     }
-    
+
     // Check if game continues
     if (gameState.eventIndex < EVENTS.length) {
         loadEvent();

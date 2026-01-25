@@ -109,64 +109,69 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 3: 2004 - First Succession Thoughts
+                // Event 3: 2007 - Michael Joins & The Ownership Question
                 {
-                    date: "2004",
-                    title: "Looking to the Future",
-                    description: `Robert is 45 years old. The business is doing well, bringing in $3M annually with healthy margins. He's been thinking about the future.\n\nSarah is 18 and just started college, studying business. She's shown interest in joining the company someday. Michael (15) is more interested in sports than business, but that could change. Jennifer (12) is still young.\n\nRobert has never given his children formal ownership. Some advisors tell him to start transferring shares now for tax purposes and to begin grooming successors. Others say he should wait—the kids are too young, and it's too early to commit to succession plans.\n\nRobert's wife suggests he at least create a basic estate plan and start documenting the business.`,
+                    date: "2007",
+                    title: "Michael Joins & The Ownership Question",
+                    description: `Sarah graduated with her MBA and has been working at the company for a year now—she's proven herself as a capable manager. Michael also finished college and wants to join. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nAs Robert welcomes Michael into the business, his advisors raise an important question: ownership. "You've got all three kids now adults," his lawyer says. "It's time to think about transferring some equity. For tax purposes, for succession planning, for motivation."\n\nRobert can transfer up to 30% of the company to his children combined. The question is: how much, and to whom?\n\nSarah has proven herself. Michael is just starting. Jennifer (19) is in college studying education—she may never work in the business, but she's still family.\n\nHow Robert distributes ownership now will shape family dynamics for decades.`,
                     options: [
                         {
-                            text: "Begin transferring 30% ownership to children (10% each) and create formal succession plan",
+                            text: "Transfer 30% equally (10% each to Sarah, Michael, and Jennifer)",
                             effects: {
+                                profit: -180000,
+                                revenue: 400000,
                                 robertOwnership: -30,
                                 sarahOwnership: 10,
                                 michaelOwnership: 10,
                                 jenniferOwnership: 10,
                                 sarahHappiness: 10,
-                                michaelHappiness: 5,
+                                michaelHappiness: 10,
+                                jenniferHappiness: 15,
                                 robertHappiness: 5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert transfers 10% ownership to each of his three children and begins documenting succession plans.</p><p><span class='impact-highlight'>Sarah</span> is excited and feels trusted. <span class='impact-highlight'>Michael</span> is pleased but unsure what it means yet. <span class='impact-highlight'>Jennifer</span> is too young to fully understand.</p><p>The early planning creates clarity and tax advantages, though Robert sometimes second-guesses whether it's too soon.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert transfers 10% ownership to each of his three children equally. Sarah and Michael join the business at market-rate salaries.</p><p><span class='impact-highlight'>All three children</span> feel equally valued as family. <span class='impact-highlight'>Jennifer</span> is especially pleased—even though she won't work in the business, she's included as an owner.</p><p>The equal split avoids favoritism but may create complications later if contributions differ significantly.</p>`
                         },
                         {
-                            text: "Wait—the children are too young to make ownership decisions now",
-                            effects: {
-                                cash: 50000,
-                                robertHappiness: -5,
-                                sarahHappiness: -5
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert decides to wait on ownership transfers and formal succession planning.</p><p>The business continues to grow without complication from family ownership issues. <span class='impact-positive'>Robert maintains full control and operational flexibility.</span></p><p>However, <span class='impact-highlight'>Sarah</span> notices her friends' parents are bringing them into family businesses and wonders if her father sees a future for her in the company.</p>`
-                        }
-                    ]
-                },
-                
-                // Event 4: 2007 - Sarah and Michael Join
-                {
-                    date: "2007",
-                    title: "The Next Generation Enters",
-                    description: `Sarah graduated with her MBA and wants to join Anderson Manufacturing. She's smart, ambitious, and has real business skills.\n\nMichael also finished college. He doesn't have Sarah's credentials, but he's charismatic and interested in sales.\n\nRobert needs to decide how to bring them into the business. Should they start at the bottom and earn their way up? Should they get special treatment as family? Should their compensation reflect market rates or family privilege?\n\nRobert knows that how he handles this will set precedents for years to come. He's also aware that Sarah and Michael might end up competing for leadership someday.`,
-                    options: [
-                        {
-                            text: "Hire both at market-rate salaries, make them earn their positions",
+                            text: "Transfer 20% to working children only (10% Sarah, 10% Michael)",
                             effects: {
                                 profit: -180000,
                                 revenue: 400000,
-                                sarahHappiness: 5,
-                                michaelHappiness: 5,
-                                robertHappiness: 10
+                                robertOwnership: -20,
+                                sarahOwnership: 10,
+                                michaelOwnership: 10,
+                                sarahHappiness: 12,
+                                michaelHappiness: 12,
+                                jenniferHappiness: -10,
+                                robertHappiness: 5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior manager at $65K, Michael in sales at $55K—both market rates for their experience.</p><p><span class='impact-positive'>Revenue increases</span> as both contribute to the business. <span class='impact-negative'>Profit decreases</span> due to additional payroll.</p><p><span class='impact-highlight'>Sarah and Michael</span> appreciate being treated professionally, though they sometimes wonder if family connections should provide more benefits.</p><p><span class='impact-highlight'>Robert</span> is proud of the professional approach.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert transfers 10% each to Sarah and Michael, the two children working in the business.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel recognized for their commitment. <span class='impact-positive'>Their motivation increases.</span></p><p><span class='impact-highlight'>Jennifer</span> understands the logic but <span class='impact-negative'>feels excluded</span> from the family enterprise. She wonders if her career choice means she's less valued as a family member.</p>`
                         },
                         {
-                            text: "Give them elevated positions and above-market compensation",
+                            text: "Transfer 15% to Sarah only—she's earned it and is the likely successor",
                             effects: {
-                                profit: -250000,
-                                revenue: 300000,
-                                sarahHappiness: 15,
-                                michaelHappiness: 15,
+                                profit: -180000,
+                                revenue: 400000,
+                                robertOwnership: -15,
+                                sarahOwnership: 15,
+                                sarahHappiness: 20,
+                                michaelHappiness: -10,
+                                jenniferHappiness: -8,
+                                robertHappiness: 3
+                            },
+                            impact: `<h4>Decision Impact</h4><p>Robert transfers 15% to Sarah alone, recognizing her year of proven performance and MBA credentials.</p><p><span class='impact-highlight'>Sarah</span> is energized—<span class='impact-positive'>she feels trusted and positioned as the clear successor</span>.</p><p><span class='impact-highlight'>Michael</span> starts his first day already feeling he's in his sister's shadow. <span class='impact-negative'>His happiness decreases.</span></p><p><span class='impact-highlight'>Jennifer</span> feels overlooked as well. The decision signals that merit trumps equal treatment in this family.</p>`
+                        },
+                        {
+                            text: "Keep 100% ownership for now—too early to decide",
+                            effects: {
+                                profit: -180000,
+                                revenue: 400000,
+                                cash: 50000,
+                                sarahHappiness: -5,
+                                michaelHappiness: -3,
+                                jenniferHappiness: 0,
                                 robertHappiness: -5
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as Assistant COO at $90K, Michael as Sales Director at $80K—well above market for their experience.</p><p><span class='impact-highlight'>Sarah and Michael</span> feel valued and trusted. <span class='impact-positive'>Their happiness increases significantly.</span></p><p>However, <span class='impact-negative'>profit decreases substantially</span> from the high salaries. Non-family employees notice the special treatment and some grumble about nepotism.</p><p><span class='impact-highlight'>Robert</span> worries whether he's done the right thing.</p>`
+                            impact: `<h4>Decision Impact</h4><p>Robert decides to wait on ownership transfers. Sarah and Michael join at market-rate salaries with no equity.</p><p><span class='impact-highlight'>Sarah</span> is mildly disappointed—she's proven herself but doesn't yet have skin in the game.</p><p><span class='impact-highlight'>Michael</span> understands but wonders when ownership might come.</p><p><span class='impact-highlight'>Robert</span> maintains flexibility but has postponed a difficult decision. His advisors warn that delaying too long has tax implications.</p>`
                         }
                     ]
                 },
@@ -361,7 +366,7 @@ const EVENTS = [
                         baseDesc += "Robert is 61. Sarah is 34. Michael is 31. The company employs 45 people, many with families who depend on these paychecks.\n\n";
 
                         // Check if they protected employees in 2009 crisis
-                        var crisisEvent = gameState.decisions.find(function(d) { return d.event === 5; });
+                        var crisisEvent = gameState.decisions.find(function(d) { return d.event === 4; });
                         if (crisisEvent && crisisEvent.choice === 2) {
                             baseDesc += "In 2009, the family sacrificed their own salaries to protect employee jobs. Employees remember. There's strong loyalty, but can the family do it again?\n\n";
                         } else if (crisisEvent && crisisEvent.choice === 1) {
@@ -451,7 +456,7 @@ const EVENTS = [
                         var baseDesc = "Michael has received an offer from a competitor: $200K salary plus substantial equity and a VP title. It's a clear path to eventual CEO.\n\n";
 
                         // Check if compensation conflict was resolved in his favor
-                        var compensationEvent = gameState.decisions.find(function(d) { return d.event === 8; });
+                        var compensationEvent = gameState.decisions.find(function(d) { return d.event === 7; });
                         if (compensationEvent && compensationEvent.choice === 0) {
                             baseDesc += "\"Dad, I appreciate that you increased my salary a few years ago,\" Michael says. \"But even at $160K, I'm still watching Sarah make more strategic decisions while I'm stuck in sales.\"\n\n";
                         } else if (compensationEvent && compensationEvent.choice === 1) {
@@ -563,7 +568,7 @@ const EVENTS = [
                         var baseDesc = "A major client has discovered defects in Anderson Manufacturing's products. The problem affects $2.5M worth of delivered goods.\n\nThe client is threatening to terminate their contract and sue for damages. Industry reputation is at stake.\n\n";
 
                         // Check if they accepted the major growth contract in Event 7
-                        var growthEvent = gameState.decisions.find(function(d) { return d.event === 7; });
+                        var growthEvent = gameState.decisions.find(function(d) { return d.event === 6; });
                         if (growthEvent && growthEvent.choice === 0) {
                             baseDesc += "Sarah's investigation reveals the root cause: to meet the aggressive growth targets from that major contract years ago, quality control protocols were loosened. The team was stretched too thin.\n\n";
                         } else if (gameState.hasDebt && gameState.debt > 500000) {
@@ -827,7 +832,7 @@ const EVENTS = [
                         baseDesc += "A private equity firm has made another offer: $" + offerAmount + "M.\n\n";
 
                         // Reference if they declined a previous offer
-                        var prevOffer = gameState.decisions.find(function(d) { return d.event === 13; });
+                        var prevOffer = gameState.decisions.find(function(d) { return d.event === 12; });
                         if (prevOffer && prevOffer.choice === 1) {
                             baseDesc += "The family declined a $28M offer back in 2026. This new offer is ";
                             if (offerAmount > 35) {
