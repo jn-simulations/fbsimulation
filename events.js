@@ -789,7 +789,23 @@ const EVENTS = [
                                 sarahOwnership: function() { return familyMembers.sarah.ownership > 0 ? -2 : 0; },
                                 michaelOwnership: function() { return familyMembers.michael.ownership > 0 ? -2 : 0; },
                                 jenniferOwnership: function() { return familyMembers.jennifer.ownership > 0 ? -1 : 0; },
-                                cash: 2000000,                  // Investment capital
+                                // Cash from investment = 20% of valuation
+                                // Valuation = profit × multiple (4-7x based on growth)
+                                cash: function() {
+                                    const profit = gameState.profit || 100000;
+                                    // Calculate growth rate from previous period
+                                    const growthRate = gameState.previousRevenue > 0 ?
+                                        (gameState.revenue - gameState.previousRevenue) / gameState.previousRevenue : 0.05;
+                                    // Base multiple 4x, up to 7x for high growth (>15% annual)
+                                    const baseMultiple = 4;
+                                    const growthPremium = Math.min(3, Math.max(0, growthRate * 20));
+                                    const multiple = baseMultiple + growthPremium;
+                                    // Valuation and 20% stake
+                                    const valuation = profit * multiple;
+                                    const investmentAmount = valuation * 0.20;
+                                    // Round to nearest 50K
+                                    return Math.round(investmentAmount / 50000) * 50000;
+                                },
                                 managementQuality: 5,           // Investor oversight helps
                                 shareholderMonitoring: 15,      // External accountability
                                 boardEffectiveness: 10,         // Investor wants board seat
@@ -801,7 +817,19 @@ const EVENTS = [
                                 hasExternalInvestors: true
                             },
                             impact: function() {
-                                let result = `<p>Robert accepts the investment. Fresh capital flows into Anderson Packaging, and the family's ownership is diluted to make room for the new investors.</p>`;
+                                // Calculate the investment amount for display
+                                const profit = gameState.profit || 100000;
+                                const growthRate = gameState.previousRevenue > 0 ?
+                                    (gameState.revenue - gameState.previousRevenue) / gameState.previousRevenue : 0.05;
+                                const baseMultiple = 4;
+                                const growthPremium = Math.min(3, Math.max(0, growthRate * 20));
+                                const multiple = baseMultiple + growthPremium;
+                                const valuation = profit * multiple;
+                                const investmentAmount = Math.round((valuation * 0.20) / 50000) * 50000;
+
+                                let result = `<p>Robert accepts the investment. The investors value Anderson Packaging based on its profits and growth trajectory, investing $${formatNumber(investmentAmount)} for a 20% stake.</p>`;
+
+                                result += `<p>Fresh capital flows into the business, and the family's ownership is diluted to make room for the new investors.</p>`;
 
                                 result += `<p>The investors are professional and hands-off in daily operations, but they expect quarterly updates, audited financials, and a seat on the board. The informal family decision-making style must adapt.</p>`;
 
