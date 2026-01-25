@@ -215,8 +215,89 @@ const EVENTS = [
                         }
                     ]
                 },
-                
-                // Event 5: 2009 - Michael's Performance Problem
+
+                // Event 5: 2008 - Sarah's Marriage
+                {
+                    date: "2008",
+                    title: "Sarah's Wedding",
+                    description: function() {
+                        let baseDesc = "Sarah has been working at Anderson Packaging for a year now, proving herself as a capable operations manager. But today the family is gathered for a different reason: Sarah is getting married.\n\n";
+
+                        baseDesc += "Mark Thompson is 27, charismatic, and ambitious. He has an MBA from a top program and works in management consulting. He's smart, driven, and clearly adores Sarah.\n\n";
+
+                        baseDesc += "Over champagne at the engagement party, Mark pulls Robert aside. \"I want you to know how much I admire what you've built, Robert. Anderson Packaging is impressive. Sarah talks about it constantly.\"\n\n";
+
+                        baseDesc += "Robert smiles. \"She's doing great work. We're lucky to have her.\"\n\n";
+
+                        baseDesc += "Mark hesitates, then continues: \"I've actually been thinking... my consulting work is interesting, but there's something special about building a real business. A family business. If there's ever an opportunity—\"\n\n";
+
+                        if (familyMembers.patricia.ownership > 0) {
+                            baseDesc += "Patricia appears at Robert's elbow. She's heard enough. \"Mark, let's not talk business tonight. This is a celebration!\"\n\n";
+                            baseDesc += "Later, Patricia whispers to Robert: \"We need to think about this carefully. If Mark joins the business, it changes everything. Sarah's husband working alongside her, with her brother, under her parents? That's complicated.\"\n\n";
+                        } else {
+                            baseDesc += "Robert feels a flash of discomfort. His future son-in-law wants into the family business? That's... complicated.\n\n";
+                        }
+
+                        baseDesc += "The wedding is beautiful. Sarah and Mark are clearly happy together. But Robert can't stop thinking about that conversation.\n\n";
+
+                        baseDesc += "Does the Anderson family welcome in-laws into the business? Mark has real skills—his consulting background could be valuable. But once you open that door, where does it end? What about Michael's future spouse? What about spouses who aren't qualified?\n\n";
+
+                        baseDesc += "This is the first time the family must consider: What's the policy on in-laws?";
+
+                        return baseDesc;
+                    },
+                    options: [
+                        {
+                            text: "Welcome Mark's interest—in-laws can be valuable additions to the business",
+                            effects: {
+                                sarahHappiness: 15,
+                                robertHappiness: 5,
+                                patriciaHappiness: -5,
+                                managementQuality: 3,
+                                markInterestedInBusiness: true,
+                                openToInLaws: true
+                            },
+                            impact: `<h4>Decision Impact</h4><p>Robert tells Mark that he appreciates his interest and the door is open if he ever wants to discuss joining Anderson Packaging.</p><p><span class='impact-highlight'>Sarah</span> is thrilled. <span class='impact-positive'>Her happiness increases significantly.</span> She loves the idea of building the business alongside her husband.</p><p><span class='impact-highlight'>Patricia</span> is worried. "You've just created an expectation, Robert. Mark will remember that 'open door.' What happens when he wants to walk through it?"</p><p>The wedding goes beautifully. Mark mentions Robert's encouraging words in his toast, calling the Andersons "the family I'm proud to join—in every sense."</p><p><span class='impact-highlight'>This sets a precedent</span>: in-laws may be welcomed into Anderson Packaging. Future spouses will hear about this.</p>`
+                        },
+                        {
+                            text: "Keep boundaries clear—the business is for blood Andersons only",
+                            effects: {
+                                sarahHappiness: -10,
+                                robertHappiness: -5,
+                                patriciaHappiness: 10,
+                                managementQuality: 2,
+                                markInterestedInBusiness: true,
+                                openToInLaws: false
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Robert gently but firmly redirects the conversation. "Mark, I'm glad you appreciate what we're building. But Anderson Packaging is a family business—Anderson family. I hope you understand."</p>`;
+
+                                result += `<p>Mark's smile freezes slightly. "Of course. I wasn't suggesting... I just meant..." He recovers quickly, but the message is clear.</p>`;
+
+                                result += `<p><span class='impact-highlight'>Sarah</span> notices the awkward exchange and is hurt on Mark's behalf. <span class='impact-negative'>Her happiness decreases.</span> "Dad, that was harsh. Mark was just being enthusiastic."</p>`;
+
+                                if (familyMembers.patricia.ownership > 0) {
+                                    result += `<p><span class='impact-highlight'>Patricia</span> quietly approves. "You did the right thing. Clear boundaries now prevent complicated situations later."</p>`;
+                                }
+
+                                result += `<p>The wedding is still beautiful, but there's a slight coolness between Robert and Mark that never fully thaws.</p><p><span class='impact-highlight'>This sets a precedent</span>: the business is for Andersons by blood, not marriage. Future in-laws will know where they stand.</p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Defer the conversation—we'll figure out in-law policy later",
+                            effects: {
+                                sarahHappiness: 5,
+                                robertHappiness: -5,
+                                markInterestedInBusiness: true
+                            },
+                            impact: `<h4>Decision Impact</h4><p>Robert smiles warmly but changes the subject. "Tonight's about celebrating you and Sarah, Mark. Let's save business talk for another time."</p><p>Mark accepts the deflection gracefully, but Robert sees a flicker of calculation in his eyes. The question hasn't gone away—it's just been postponed.</p><p><span class='impact-highlight'>Sarah</span> is content with the non-answer. "Dad's right, we can figure that out later," she tells Mark.</p><p><span class='impact-highlight'>Robert</span> feels uneasy. He's avoided making a decision, but Mark's interest in the business is now a known quantity. Eventually, this conversation will need to happen.</p><p><span class='impact-negative'>No policy on in-laws has been established.</span> This ambiguity may cause problems when the question inevitably resurfaces.</p>`
+                        }
+                    ]
+                },
+
+                // Event 6: 2009 - Michael's Performance Problem
                 {
                     date: "2009",
                     title: "The Family Competence Question",
@@ -297,7 +378,7 @@ const EVENTS = [
                     ]
                 },
 
-                // Event 6: 2010 - Michael Joins & Ownership Question
+                // Event 7: 2010 - Michael Joins & Ownership Question
                 {
                     date: "2010",
                     title: "Michael Joins & The Ownership Question",
@@ -402,7 +483,127 @@ const EVENTS = [
                     ]
                 },
 
-                // Event 7: 2012 - Succession Discussion
+                // Event 8: 2011 - Michael's Marriage
+                {
+                    date: "2011",
+                    title: "Michael's Wedding",
+                    description: function() {
+                        let baseDesc = "Michael is getting married to Lisa Chen. They met through mutual friends two years ago, and the relationship has moved quickly.\n\n";
+
+                        baseDesc += "Lisa is 26, ambitious, and whip-smart. She has a background in marketing and currently works at a tech startup. She's outspoken, confident, and not afraid to challenge people—including the Andersons.\n\n";
+
+                        baseDesc += "At the rehearsal dinner, the families mingle. Lisa's parents are successful small business owners themselves, which creates an instant connection with Robert.\n\n";
+
+                        baseDesc += "\"Your company is impressive,\" Lisa tells Robert directly. \"Michael talks about it all the time. The packaging industry is ripe for disruption—have you thought about digital marketing? Social media? Your brand positioning could be so much stronger.\"\n\n";
+
+                        baseDesc += "Robert blinks. He's not used to being given business advice by someone he just met. Before he can respond, Lisa continues: \"I actually have some ideas. Maybe Michael and I could present them to you sometime?\"\n\n";
+
+                        if (gameState.openToInLaws) {
+                            baseDesc += "Robert remembers his conversation with Mark at Sarah's wedding. He'd left that door open for in-laws. Now here's another one, already pushing through it.\n\n";
+                        } else if (gameState.openToInLaws === false) {
+                            baseDesc += "Robert remembers firmly telling Mark that the business is for Andersons only. But Lisa is... different. More aggressive. She doesn't seem like someone who will accept 'no' easily.\n\n";
+                        }
+
+                        baseDesc += "Sarah watches the exchange with interest. She whispers to Mark: \"Looks like we might have competition for the 'ambitious spouse' title.\"\n\n";
+
+                        if (familyMembers.patricia.ownership > 0) {
+                            baseDesc += "Patricia pulls Robert aside later. \"Lisa is... intense. Very capable, but intense. She's not going to be content watching from the sidelines like most spouses.\"\n\n";
+                        }
+
+                        baseDesc += "The wedding is lovely—Lisa's taste is impeccable—but Robert can't shake the feeling that he's gained not just a daughter-in-law, but a business proposition waiting to happen.\n\n";
+
+                        baseDesc += "Both Sarah and Michael are now married to ambitious spouses with business interests. This changes the family dynamic significantly.";
+
+                        return baseDesc;
+                    },
+                    options: [
+                        {
+                            text: "Engage with Lisa's ideas—she might bring valuable outside perspective",
+                            effects: {
+                                michaelHappiness: 15,
+                                sarahHappiness: -5,
+                                robertHappiness: 5,
+                                managementQuality: 3,
+                                lisaInterestedInBusiness: true,
+                                lisaEngaged: true
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Robert invites Lisa to present her marketing ideas to the leadership team. "Fresh perspective is always valuable," he says.</p>`;
+
+                                result += `<p><span class='impact-highlight'>Lisa</span> is thrilled. She spends weeks preparing a comprehensive presentation on Anderson Packaging's brand strategy, complete with market research and competitor analysis.</p>`;
+
+                                result += `<p><span class='impact-highlight'>Michael</span> is proud and grateful. <span class='impact-positive'>His happiness increases significantly.</span> "Thanks for giving Lisa a chance, Dad. She's really talented."</p>`;
+
+                                result += `<p><span class='impact-highlight'>Sarah</span> is uneasy. <span class='impact-negative'>Her happiness decreases slightly.</span> "Dad, you turned Mark away at my wedding, but you're rolling out the red carpet for Lisa?"</p>`;
+
+                                if (gameState.openToInLaws) {
+                                    result += `<p>Mark overhears and asks Sarah: "Wait, I thought your dad was open to in-laws joining? That's what he told me."</p>`;
+                                }
+
+                                result += `<p>The family now has two ambitious in-laws circling the business. Expectations are being created. <span class='impact-highlight'>The question of in-law involvement has become unavoidable.</span></p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Politely deflect—appreciate her energy but maintain boundaries",
+                            effects: {
+                                michaelHappiness: -10,
+                                sarahHappiness: 5,
+                                robertHappiness: -5,
+                                lisaInterestedInBusiness: true,
+                                lisaEngaged: false
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Robert smiles politely but deflects. "That's very kind, Lisa. We're always evolving our approach. Let's focus on the celebration tonight."</p>`;
+
+                                result += `<p>Lisa's eyes narrow almost imperceptibly. She's been dismissed, and she knows it. "Of course. Another time."</p>`;
+
+                                result += `<p><span class='impact-highlight'>Michael</span> is disappointed. <span class='impact-negative'>His happiness decreases.</span> He sees how much effort Lisa put into those ideas. "Dad, would it have killed you to at least listen?"</p>`;
+
+                                result += `<p><span class='impact-highlight'>Sarah</span> feels validated. <span class='impact-positive'>At least Dad is being consistent.</span> The business isn't a playground for spouses' ambitions.</p>`;
+
+                                result += `<p>Lisa remains gracious throughout the wedding, but there's a new coolness in her interactions with Robert. She's not someone who forgets being shut down.</p>`;
+
+                                result += `<p><span class='impact-highlight'>The family has two ambitious in-laws now.</span> Neither has been given a clear path into the business. That tension will simmer.</p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Suggest she and Mark both present ideas—treat all in-laws equally",
+                            effects: {
+                                michaelHappiness: 10,
+                                sarahHappiness: 10,
+                                robertHappiness: 5,
+                                patriciaHappiness: -10,
+                                managementQuality: 4,
+                                lisaInterestedInBusiness: true,
+                                lisaEngaged: true,
+                                markEngaged: true
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Robert has an idea. "Lisa, Mark has also expressed interest in the business. Why don't you both put together presentations? We could have an 'in-law innovation day.'"</p>`;
+
+                                result += `<p><span class='impact-highlight'>Lisa</span> likes the idea of a competition—she's confident she'll outshine anyone. "That sounds perfect."</p>`;
+
+                                result += `<p><span class='impact-highlight'>Michael and Sarah</span> are both pleased that their spouses are being treated equally. <span class='impact-positive'>Their happiness increases.</span></p>`;
+
+                                if (familyMembers.patricia.ownership > 0) {
+                                    result += `<p><span class='impact-highlight'>Patricia</span> is alarmed. <span class='impact-negative'>Her happiness decreases significantly.</span> "Robert, what are you doing? You've just invited both of them in. Now they'll both expect opportunities."</p>`;
+                                }
+
+                                result += `<p>The "in-law innovation day" goes well—both Mark and Lisa present thoughtful ideas. But now there's an expectation that the family will act on them.</p>`;
+
+                                result += `<p><span class='impact-highlight'>The in-law question has become urgent.</span> With two capable spouses eager to contribute, the family needs a clear policy.</p>`;
+
+                                return result;
+                            }
+                        }
+                    ]
+                },
+
+                // Event 9: 2012 - Succession Discussion
                 {
                     date: "2012",
                     title: "The Sunday Dinner Discussion",
@@ -444,8 +645,149 @@ const EVENTS = [
                         }
                     ]
                 },
-                
-                // Event 8: 2014 - Growth Opportunity
+
+                // Event 10: 2013 - In-Law Employment Dilemma
+                {
+                    date: "2013",
+                    title: "The In-Law Question",
+                    description: function() {
+                        let baseDesc = "The moment Robert has been dreading has arrived. Mark and Lisa have both formally asked about joining Anderson Packaging.\n\n";
+
+                        baseDesc += "Mark's pitch: \"Robert, I've been in consulting for six years. I've helped companies three times your size optimize operations. I could be your VP of Strategy. Sarah and I would make an incredible team.\"\n\n";
+
+                        baseDesc += "Lisa's pitch: \"My startup just got acquired. I'm looking for my next chapter. Anderson's marketing is stuck in 1995—no offense. Give me a year as Marketing Director and I'll double your brand awareness.\"\n\n";
+
+                        // Reference previous decisions about in-laws
+                        if (gameState.openToInLaws === true) {
+                            baseDesc += "Robert remembers leaving the door open at Sarah's wedding. Well, both in-laws have now walked through it.\n\n";
+                        } else if (gameState.openToInLaws === false) {
+                            baseDesc += "Robert remembers firmly setting boundaries. But both Mark and Lisa have persisted, and their credentials are undeniably strong.\n\n";
+                        } else {
+                            baseDesc += "Robert had hoped to defer this question indefinitely. That's no longer possible.\n\n";
+                        }
+
+                        if (gameState.lisaEngaged && gameState.markEngaged) {
+                            baseDesc += "After the \"in-law innovation day,\" both spouses are convinced they've proven themselves. They're not asking anymore—they're expecting.\n\n";
+                        }
+
+                        baseDesc += "Sarah and Michael watch nervously. If their spouses join, family dinners become business meetings. If they're rejected, marital tensions seem inevitable.\n\n";
+
+                        if (familyMembers.patricia.ownership > 0) {
+                            baseDesc += "Patricia is deeply conflicted. \"They're both talented. But hiring your children's spouses? We'll have four adult children of the founder working here—two by blood, two by marriage. The dynamics will be impossible.\"\n\n";
+                        }
+
+                        baseDesc += "Robert needs to decide: How does Anderson Packaging handle in-laws who want to join the business?";
+
+                        return baseDesc;
+                    },
+                    options: [
+                        {
+                            text: "Hire both Mark and Lisa—embrace in-laws as full members of the business family",
+                            effects: {
+                                revenue: 500000,
+                                profit: -100000,
+                                employees: 2,
+                                sarahHappiness: 15,
+                                michaelHappiness: 15,
+                                robertHappiness: -10,
+                                patriciaHappiness: -15,
+                                managementQuality: 8,
+                                markInBusiness: true,
+                                lisaInBusiness: true,
+                                hasInLawsInBusiness: true
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Robert makes a bold decision: both Mark and Lisa will join Anderson Packaging. Mark as VP of Strategy, Lisa as Marketing Director.</p>`;
+
+                                result += `<p><span class='impact-positive'>Revenue increases</span> from Lisa's marketing initiatives and Mark's strategic planning. <span class='impact-positive'>Management quality improves significantly.</span></p>`;
+
+                                result += `<p>However, <span class='impact-negative'>profit decreases</span> from two executive salaries. And the complexity multiplies.</p>`;
+
+                                result += `<p><span class='impact-highlight'>Sarah and Michael</span> are thrilled. <span class='impact-positive'>Their happiness increases dramatically.</span> Working alongside their spouses feels like a dream.</p>`;
+
+                                result += `<p><span class='impact-highlight'>Robert</span> is exhausted by the family dynamics. <span class='impact-negative'>His happiness decreases.</span> Every meeting is now a family affair. Every disagreement has marital and sibling undertones.</p>`;
+
+                                if (familyMembers.patricia.ownership > 0) {
+                                    result += `<p><span class='impact-highlight'>Patricia</span> shakes her head. <span class='impact-negative'>Her happiness drops significantly.</span> "Robert, you've turned our business into a family reunion. When this blows up—and it will—don't say I didn't warn you."</p>`;
+                                }
+
+                                result += `<p>Anderson Packaging now has four members of the next generation working together. The potential for conflict has quadrupled, but so has the talent pool.</p>`;
+
+                                result += `<p><span class='impact-highlight'>This decision will require clear governance structures to manage.</span></p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Hire one in-law (the more qualified one) but not both—be selective",
+                            effects: {
+                                revenue: 300000,
+                                profit: -50000,
+                                employees: 1,
+                                sarahHappiness: -8,
+                                michaelHappiness: -8,
+                                robertHappiness: 5,
+                                managementQuality: 5,
+                                selectiveInLawPolicy: true,
+                                hasInLawsInBusiness: true
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Robert decides to be selective. After careful evaluation, he offers a position to the candidate with stronger, more relevant credentials.</p>`;
+
+                                // Determine who gets hired based on whether Lisa was engaged with earlier
+                                if (gameState.lisaEngaged && !gameState.markEngaged) {
+                                    result += `<p><span class='impact-highlight'>Lisa</span> joins as Marketing Director. Her ideas have been impressive, and marketing is a clear gap in the company.</p>`;
+                                    result += `<p><span class='impact-highlight'>Mark</span> is politely declined. Sarah is hurt on his behalf. "Dad, you're going to create problems in my marriage."</p>`;
+                                } else {
+                                    result += `<p><span class='impact-highlight'>Mark</span> joins as VP of Strategy. His consulting background provides skills the company lacks.</p>`;
+                                    result += `<p><span class='impact-highlight'>Lisa</span> is politely declined. Michael is furious. "You picked Sarah's husband over my wife? How is that fair?"</p>`;
+                                }
+
+                                result += `<p><span class='impact-highlight'>Both Sarah and Michael</span> are disappointed by the inconsistency. <span class='impact-negative'>Their happiness decreases.</span> One couple wins, one loses. Family dinners become awkward.</p>`;
+
+                                result += `<p><span class='impact-positive'>Revenue increases and management quality improves</span> from the new hire, but the family dynamic is strained.</p>`;
+
+                                result += `<p>The rejected spouse remains polite but never quite forgives the decision. This tension will persist for years.</p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Decline both—establish that in-laws cannot work in the family business",
+                            effects: {
+                                sarahHappiness: -15,
+                                michaelHappiness: -15,
+                                robertHappiness: 10,
+                                patriciaHappiness: 15,
+                                managementQuality: -3,
+                                noInLawsPolicy: true
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Robert makes a firm decision. "After a lot of thought, Patricia and I have decided that Anderson Packaging will remain a blood-family business. We value both of you, but we believe in-laws working here creates too much complexity."</p>`;
+
+                                result += `<p>Mark accepts the decision gracefully. "I understand. Family businesses have to make these calls."</p>`;
+
+                                result += `<p>Lisa is less diplomatic. "So you'll hire your own children regardless of qualifications, but spouses who are actually qualified get turned away? Interesting priorities."</p>`;
+
+                                result += `<p><span class='impact-highlight'>Sarah and Michael</span> are both disappointed. <span class='impact-negative'>Their happiness decreases significantly.</span> They'll have to explain to their spouses why the family business is closed to them.</p>`;
+
+                                if (familyMembers.patricia.ownership > 0) {
+                                    result += `<p><span class='impact-highlight'>Patricia</span> is relieved. <span class='impact-positive'>Her happiness increases.</span> "This is the right call. Clear boundaries prevent messy situations."</p>`;
+                                }
+
+                                result += `<p><span class='impact-highlight'>Robert</span> feels a weight lifted. The business will remain simpler to manage.</p>`;
+
+                                result += `<p>However, <span class='impact-negative'>management quality suffers slightly</span> from losing access to talented in-laws who could have contributed.</p>`;
+
+                                result += `<p><span class='impact-highlight'>A clear policy has been established</span>: In-laws are family, but they're not business family. This precedent will govern all future generations.</p>`;
+
+                                return result;
+                            }
+                        }
+                    ]
+                },
+
+                // Event 11: 2014 - Growth Opportunity
                 {
                     date: "2014",
                     title: "The Major Contract",
@@ -549,7 +891,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 9: 2016 - Michael's Compensation Conflict
+                // Event 12: 2016 - Michael's Compensation Conflict
                 {
                     date: "2016",
                     title: "The Compensation Debate",
@@ -576,8 +918,143 @@ const EVENTS = [
                         }
                     ]
                 },
-                
-                // Event 10: 2018 - Professionalization & Governance
+
+                // Event 13: 2017 - Spouse & In-Law Governance Policy
+                {
+                    date: "2017",
+                    title: "Family Boundaries",
+                    description: function() {
+                        let baseDesc = "The family business has grown—and so has the family itself. Sarah and Michael are both married with children. The grandchildren are starting to show their personalities. And tensions around who belongs in the business have been simmering for years.\n\n";
+
+                        if (gameState.hasInLawsInBusiness) {
+                            baseDesc += "Since Mark and/or Lisa joined the company, family dynamics have become more complex. Decisions that used to be sibling discussions now involve spouses with their own interests and opinions.\n\n";
+
+                            baseDesc += "At a recent leadership meeting, Lisa challenged one of Sarah's operational decisions. \"I'm just asking questions,\" Lisa said. Sarah's response was icy: \"And I'm just running operations.\"\n\n";
+
+                            baseDesc += "Later, Michael defended his wife: \"Lisa has valid points.\" Sarah snapped back: \"Of course you'd say that.\"\n\n";
+
+                            baseDesc += "Robert watched the exchange with a sinking feeling. This is exactly what he'd feared.\n\n";
+                        } else {
+                            baseDesc += "Mark and Lisa remain outside the business, but they haven't stopped having opinions about it. At family dinners, business discussions now include spouses who critique decisions they have no role in making.\n\n";
+
+                            baseDesc += "\"I'm just saying, if I were running marketing...\" Lisa begins.\n\n\"But you're not,\" Sarah interrupts. \"Remember?\"\n\n";
+
+                            baseDesc += "The table goes silent. Michael looks between his wife and his sister. Mark stares at his plate.\n\n";
+                        }
+
+                        baseDesc += "Jennifer—who has watched these dynamics from the outside—finally speaks up: \"Can we just agree on some rules? Who's in the business, who's not, who gets to have opinions at Sunday dinner, who doesn't? I'm exhausted by the constant tension.\"\n\n";
+
+                        if (familyMembers.patricia.ownership > 0) {
+                            baseDesc += "Patricia nods vigorously. \"Jennifer's right. We need formal policies. Who qualifies as 'family' for business purposes? What rights do spouses have? What about future grandchildren's spouses?\"\n\n";
+                        }
+
+                        baseDesc += "Robert realizes this conversation is long overdue. The family has grown beyond informal understandings. They need a Spouse and In-Law Policy.\n\n";
+
+                        baseDesc += "This is a fundamental governance decision that will define the Anderson family business for generations.";
+
+                        return baseDesc;
+                    },
+                    options: [
+                        {
+                            text: "Implement comprehensive Spouse & In-Law Policy (formal governance)",
+                            effects: {
+                                sarahHappiness: 15,
+                                michaelHappiness: function() { return gameState.hasInLawsInBusiness ? -5 : 10; },
+                                jenniferHappiness: 20,
+                                patriciaHappiness: 15,
+                                robertHappiness: 15,
+                                managementQuality: 12,
+                                hasSpousePolicy: true,
+                                hasFormalSpouseGovernance: true
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>The Anderson family adopts a comprehensive Spouse & In-Law Policy with these key provisions:</p>`;
+
+                                result += `<p><strong>Employment:</strong> Spouses may be considered for employment only if they meet the same external experience requirements as blood family members. Positions must be justified by business need, not family connection.</p>`;
+
+                                result += `<p><strong>Governance Rights:</strong> Spouses do not automatically gain voting rights on family business matters. They may attend Family Council meetings as observers but cannot vote unless granted ownership.</p>`;
+
+                                result += `<p><strong>Ownership:</strong> Ownership remains with blood Andersons unless transferred through formal board approval. Marital property laws are addressed through prenuptial agreements for future marriages.</p>`;
+
+                                result += `<p><strong>Divorce Protocol:</strong> In case of divorce, business interests remain with the blood Anderson. Buyout provisions protect the company from contentious property divisions.</p>`;
+
+                                result += `<p><span class='impact-positive'>Management quality improves significantly</span> as roles and boundaries become clear. <span class='impact-highlight'>Everyone's happiness increases</span> (except perhaps in-laws who feel newly constrained).</p>`;
+
+                                if (gameState.hasInLawsInBusiness) {
+                                    result += `<p><span class='impact-highlight'>Mark and/or Lisa</span> accept the new rules but feel somewhat diminished. They went from informal influence to clearly defined limitations.</p>`;
+                                }
+
+                                result += `<p><span class='impact-positive'>This governance structure will protect the family business for generations.</span> Future spouses will know exactly where they stand from day one.</p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Create advisory roles for spouses—involvement without formal power",
+                            effects: {
+                                sarahHappiness: 5,
+                                michaelHappiness: 10,
+                                jenniferHappiness: 5,
+                                patriciaHappiness: 5,
+                                robertHappiness: 5,
+                                managementQuality: 5,
+                                hasSpousePolicy: true,
+                                spouseAdvisoryRoles: true
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>The family creates a compromise: formal \"Spouse Advisory\" roles that give in-laws a voice without voting power.</p>`;
+
+                                result += `<p>Spouses can attend Family Council meetings, offer input on decisions, and even take on project-based consulting work—but they cannot vote on business matters or hold executive positions.</p>`;
+
+                                result += `<p><span class='impact-positive'>Everyone is moderately satisfied.</span> Spouses feel included without threatening the blood-family control structure.</p>`;
+
+                                if (gameState.hasInLawsInBusiness) {
+                                    result += `<p><span class='impact-highlight'>Mark and/or Lisa</span> retain their current roles but understand that future advancement may be limited.</p>`;
+                                } else {
+                                    result += `<p><span class='impact-highlight'>Mark and Lisa</span> appreciate having a defined way to contribute, even without full membership.</p>`;
+                                }
+
+                                result += `<p>However, the advisory structure is somewhat ambiguous. What happens when a spouse's \"advice\" is ignored? How much influence do they really have?</p>`;
+
+                                result += `<p><span class='impact-highlight'>The policy provides structure but leaves room for future conflict.</span></p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Maintain current approach—keep spouse involvement informal and case-by-case",
+                            effects: {
+                                sarahHappiness: -10,
+                                michaelHappiness: function() { return gameState.hasInLawsInBusiness ? 5 : -5; },
+                                jenniferHappiness: -15,
+                                patriciaHappiness: -10,
+                                robertHappiness: -10,
+                                managementQuality: -8
+                            },
+                            impact: function() {
+                                let result = `<h4>Decision Impact</h4><p>Robert decides not to create formal policies. \"We're family. We'll work things out as they come.\"</p>`;
+
+                                result += `<p><span class='impact-highlight'>Jennifer</span> is frustrated. <span class='impact-negative'>Her happiness drops.</span> \"We just spent an hour discussing this and decided... nothing? The same tensions will continue.\"</p>`;
+
+                                result += `<p><span class='impact-highlight'>Patricia</span> is disappointed. She saw this as an opportunity to bring order to chaos. <span class='impact-negative'>Her happiness decreases.</span></p>`;
+
+                                result += `<p><span class='impact-highlight'>Sarah</span> worries about the lack of structure. What happens when her daughter Emily grows up and marries someone who wants into the business?</p>`;
+
+                                if (gameState.hasInLawsInBusiness) {
+                                    result += `<p><span class='impact-highlight'>Mark and/or Lisa</span> are relieved not to have their roles formally constrained, but the ambiguity creates ongoing friction.</p>`;
+                                }
+
+                                result += `<p><span class='impact-negative'>Management quality suffers</span> as role ambiguity continues. Family meetings remain contentious.</p>`;
+
+                                result += `<p>The lack of clear governance will create ongoing problems. <span class='impact-negative'>Every future marriage, divorce, or family expansion will require ad-hoc negotiation.</span></p>`;
+
+                                return result;
+                            }
+                        }
+                    ]
+                },
+
+                // Event 14: 2018 - Professionalization & Governance
                 {
                     date: "2018",
                     title: "Professionalization Decisions",
@@ -651,7 +1128,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 11: 2020 - Family Governance Formalization
+                // Event 15: 2020 - Family Governance Formalization
                 {
                     date: "2020",
                     title: "Formalizing Family Governance",
@@ -750,7 +1227,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 12: 2022 - Robert's Health Scare
+                // Event 16: 2022 - Robert's Health Scare
                 {
                     date: "2022",
                     title: "A Wake-Up Call",
@@ -785,7 +1262,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 13: 2024 - Michael's External Offer
+                // Event 17: 2024 - Michael's External Offer
                 {
                     date: "2024",
                     title: "Michael's Crossroads",
@@ -793,7 +1270,7 @@ const EVENTS = [
                         var baseDesc = "Michael has received an offer from a competitor: $200K salary plus substantial equity and a VP title. It's a clear path to eventual CEO.\n\n";
 
                         // Check if compensation conflict was resolved in his favor
-                        var compensationEvent = gameState.decisions.find(function(d) { return d.event === 9; });
+                        var compensationEvent = gameState.decisions.find(function(d) { return d.event === 12; });
                         if (compensationEvent && compensationEvent.choice === 0) {
                             baseDesc += "\"Dad, I appreciate that you increased my salary a few years ago,\" Michael says. \"But even at $160K, I'm still watching Sarah make more strategic decisions while I'm stuck in sales.\"\n\n";
                         } else if (compensationEvent && compensationEvent.choice === 1) {
@@ -849,7 +1326,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 14: 2026 - The Acquisition Offer
+                // Event 18: 2026 - The Acquisition Offer
                 {
                     date: "2026",
                     title: "The Temptation",
@@ -911,7 +1388,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 15: 2028 - Quality Crisis & Family Accountability
+                // Event 19: 2028 - Quality Crisis & Family Accountability
                 {
                     date: "2028",
                     title: "The Quality Crisis",
@@ -923,7 +1400,7 @@ const EVENTS = [
                         const robertRetired = gameState.robertRetired;
 
                         // Determine root cause narrative
-                        var growthEvent = gameState.decisions.find(function(d) { return d.event === 8; });
+                        var growthEvent = gameState.decisions.find(function(d) { return d.event === 11; });
                         if (growthEvent && growthEvent.choice === 0) {
                             baseDesc += "Sarah's investigation reveals the root cause: the aggressive growth from that major contract years ago. The team was stretched too thin, and quality control protocols were compromised.\n\n";
                         } else if (gameState.hasDebt && gameState.debt > 500000) {
@@ -1011,7 +1488,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 16: 2030 - Third Generation
+                // Event 20: 2030 - Third Generation
                 {
                     date: "2030",
                     title: "The Next Generation",
@@ -1038,7 +1515,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 17: 2032 - Jennifer's Buyout Request (only if she has ownership)
+                // Event 21: 2032 - Jennifer's Buyout Request
                 {
                     date: "2032",
                     title: function() {
@@ -1129,7 +1606,7 @@ const EVENTS = [
                     }
                 },
                 
-                // Event 18: 2034 - Robert's Death
+                // Event 22: 2034 - The Founder's Passing
                 {
                     date: "2034",
                     title: "The Founder's Passing",
@@ -1166,7 +1643,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 19: 2036 - Cousins Enter Business
+                // Event 23: 2036 - Third Generation Arrives
                 {
                     date: "2036",
                     title: "The Third Generation Arrives",
@@ -1194,7 +1671,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 20: 2040 - Legacy vs. Modernization
+                // Event 24: 2040 - The Crossroads
                 {
                     date: "2040",
                     title: "The Crossroads",
@@ -1341,7 +1818,7 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 21: 2044 - Final Decision
+                // Event 25: 2044 - Fifty Years
                 {
                     date: "2044",
                     title: "Fifty Years",
@@ -1373,7 +1850,7 @@ const EVENTS = [
                         baseDesc += "A private equity firm has made another offer: $" + offerAmount + "M.\n\n";
 
                         // Reference if they declined a previous offer
-                        var prevOffer = gameState.decisions.find(function(d) { return d.event === 13; });
+                        var prevOffer = gameState.decisions.find(function(d) { return d.event === 18; });
                         if (prevOffer && prevOffer.choice === 1) {
                             baseDesc += "The family declined a $28M offer back in 2026. This new offer is ";
                             if (offerAmount > 35) {

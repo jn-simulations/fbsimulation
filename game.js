@@ -35,6 +35,21 @@ function init() {
         sarahCEO: false,
         michaelLeft: false,
 
+        // Spouse & In-Law state flags
+        openToInLaws: null,              // null = undecided, true = open, false = closed
+        markInterestedInBusiness: false,
+        lisaInterestedInBusiness: false,
+        markEngaged: false,              // Mark participated in "in-law innovation day"
+        lisaEngaged: false,              // Lisa participated in "in-law innovation day"
+        markInBusiness: false,           // Mark working at Anderson Packaging
+        lisaInBusiness: false,           // Lisa working at Anderson Packaging
+        hasInLawsInBusiness: false,      // Any in-laws working in business
+        selectiveInLawPolicy: false,     // Only some in-laws allowed
+        noInLawsPolicy: false,           // No in-laws allowed policy
+        hasSpousePolicy: false,          // Formal spouse governance policy exists
+        hasFormalSpouseGovernance: false,// Full spouse governance structure
+        spouseAdvisoryRoles: false,      // Advisory roles for spouses
+
         // Risk factors
         hasQualityIssues: false,
         hasDebt: false
@@ -71,8 +86,9 @@ function loadEvent() {
     let description = typeof event.description === 'function' ? event.description() : event.description;
     
     // Add state-dependent context for specific events
-    if (gameState.eventIndex === 11) {
-        // COVID event - add context about financial state
+    // Note: Event indices updated after adding 4 new events (Sarah's Wedding, Michael's Wedding, In-Law Question, Family Boundaries)
+    if (gameState.eventIndex === 15) {
+        // Family Governance Formalization event - add context about financial state
         if (gameState.cash > 1000000) {
             description = description.replace(
                 "Robert faces brutal choices:",
@@ -84,25 +100,25 @@ function loadEvent() {
                 `Robert is 61. The company is carrying $${formatNumber(gameState.debt)} in debt, making this crisis even more dangerous.`
             );
         }
-    } else if (gameState.eventIndex === 13) {
-        // Michael's offer - reference compensation conflict
-        const compensationEvent = gameState.decisions.find(d => d.event === 9);
+    } else if (gameState.eventIndex === 17) {
+        // Michael's Crossroads - reference compensation conflict
+        const compensationEvent = gameState.decisions.find(d => d.event === 12);
         if (compensationEvent && compensationEvent.choice === 0) {
             description = description.replace(
                 "He comes to Robert:",
                 "\"Dad, I appreciate that you increased my salary, but even at $160K, I'm still watching Sarah make all the strategic decisions.\" He continues:"
             );
         }
-    } else if (gameState.eventIndex === 14) {
-        // Acquisition - adjust offer based on performance
+    } else if (gameState.eventIndex === 18) {
+        // The Temptation (Acquisition) - adjust offer based on performance
         if (gameState.revenue > 10000000) {
             description = description.replace("$28M", "$35M");
         }
         if (gameState.michaelLeft) {
             description += "\n\nMichael left the business years ago. The remaining family wonders what he would think of this offer.";
         }
-    } else if (gameState.eventIndex === 20) {
-        // Strategic decision - reference current state
+    } else if (gameState.eventIndex === 24) {
+        // The Crossroads (2040) - reference current state
         if (gameState.revenue > 15000000) {
             description = description.replace(
                 "The company is stable and profitable.",
@@ -112,15 +128,15 @@ function loadEvent() {
         if (gameState.hasDebt && gameState.debt > 2000000) {
             description += `\n\nThe company still carries $${formatNumber(gameState.debt)} in debt. Taking on more is risky.`;
         }
-    } else if (gameState.eventIndex === 21) {
-        // Final decision - personalize based on journey
+    } else if (gameState.eventIndex === 25) {
+        // Fifty Years (Final decision) - personalize based on journey
         if (gameState.revenue > 20000000) {
             description = description.replace("$45M", "$55M");
         } else if (gameState.revenue < 10000000) {
             description = description.replace("$45M", "$30M");
         }
 
-        const prevOffer = gameState.decisions.find(d => d.event === 14);
+        const prevOffer = gameState.decisions.find(d => d.event === 18);
         if (prevOffer && prevOffer.choice === 1) {
             description += "\n\nThe family declined an offer back in 2026. Some wonder if they should have sold then.";
         }
@@ -268,6 +284,33 @@ function applyEffects(effects) {
     }
     if (effects.hasQualityIssues) gameState.hasQualityIssues = true;
     if (effects.hasDebt) gameState.hasDebt = true;
+
+    // Apply spouse & in-law effects
+    if (effects.openToInLaws !== undefined) gameState.openToInLaws = effects.openToInLaws;
+    if (effects.markInterestedInBusiness) gameState.markInterestedInBusiness = true;
+    if (effects.lisaInterestedInBusiness) gameState.lisaInterestedInBusiness = true;
+    if (effects.markEngaged) gameState.markEngaged = true;
+    if (effects.lisaEngaged) gameState.lisaEngaged = true;
+    if (effects.markInBusiness) {
+        gameState.markInBusiness = true;
+        if (familyMembers.mark) {
+            familyMembers.mark.inBusiness = true;
+            familyMembers.mark.role = "VP of Strategy";
+        }
+    }
+    if (effects.lisaInBusiness) {
+        gameState.lisaInBusiness = true;
+        if (familyMembers.lisa) {
+            familyMembers.lisa.inBusiness = true;
+            familyMembers.lisa.role = "Marketing Director";
+        }
+    }
+    if (effects.hasInLawsInBusiness) gameState.hasInLawsInBusiness = true;
+    if (effects.selectiveInLawPolicy) gameState.selectiveInLawPolicy = true;
+    if (effects.noInLawsPolicy) gameState.noInLawsPolicy = true;
+    if (effects.hasSpousePolicy) gameState.hasSpousePolicy = true;
+    if (effects.hasFormalSpouseGovernance) gameState.hasFormalSpouseGovernance = true;
+    if (effects.spouseAdvisoryRoles) gameState.spouseAdvisoryRoles = true;
 }
 
 function advanceGame() {
