@@ -198,12 +198,18 @@ function applyEffects(effects) {
     // Apply family effects
     Object.keys(familyMembers).forEach(key => {
         const member = familyMembers[key];
+
+        // Skip effects for Michael if he has left the business
+        if (key === 'michael' && gameState.michaelLeft) {
+            return;
+        }
+
         const happinessChange = effects[key + 'Happiness'];
         if (happinessChange !== undefined) {
             member.happiness += happinessChange;
             member.happiness = Math.max(0, Math.min(100, member.happiness));
         }
-        
+
         const ownershipChange = effects[key + 'Ownership'];
         if (ownershipChange !== undefined) {
             member.ownership += ownershipChange;
