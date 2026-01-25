@@ -11,7 +11,6 @@ function init() {
         year: 1994,
         eventIndex: 0,
         revenue: 0,
-        profitMargin: 0.06,  // Base profit margin (will be modified)
         profit: 0,
         cash: 50000,
         assets: 50000, // Total assets (cash + equipment + inventory + property)
@@ -20,37 +19,8 @@ function init() {
         previousRevenue: 0,
         previousProfit: 0,
 
-        // Management quality (0-100, affected by monitoring, governance, conflicts)
+        // Management quality (0-100, affects profit margins, growth, efficiency)
         managementQuality: 50, // Start at average
-
-        // Family cohesion (0-100, conflicts reduce this)
-        familyCohesion: 80,  // Start high - founder era
-
-        // Shareholder monitoring effectiveness (0-100)
-        shareholderMonitoring: 30,  // Low initially - founder controls everything
-
-        // Board effectiveness (0-100)
-        boardEffectiveness: 0,  // No board initially
-
-        // Profit allocation (must sum to 100)
-        // How annual profits are distributed
-        allocation: {
-            growth: 60,       // Reinvested for revenue growth
-            efficiency: 20,   // Invested in margin improvements
-            cash: 15,         // Retained as cash reserves
-            dividends: 5      // Distributed to shareholders
-        },
-
-        // Cumulative investment effects
-        cumulativeEfficiencyInvestment: 0,  // Builds up margin over time
-
-        // Capital structure
-        externalEquity: 0,           // % owned by external investors (dilutes family control)
-        debtCapacity: 500000,        // Maximum comfortable debt level
-
-        // Growth constraints tracking
-        capitalConstrained: false,   // Was growth limited by capital?
-        fundingGap: 0,               // How much capital was needed but unavailable?
 
         // Decision tracking
         decisions: [],
@@ -82,8 +52,7 @@ function init() {
 
         // Risk factors
         hasQualityIssues: false,
-        hasDebt: false,
-        hasExternalInvestors: false   // Outside equity investors
+        hasDebt: false
     };
     
     // Initialize family members
@@ -256,55 +225,6 @@ function applyEffects(effects) {
         gameState.managementQuality += effects.managementQuality;
         gameState.managementQuality = Math.max(0, Math.min(100, gameState.managementQuality));
     }
-
-    // Apply family cohesion changes (clamped 0-100)
-    if (effects.familyCohesion !== undefined) {
-        gameState.familyCohesion += effects.familyCohesion;
-        gameState.familyCohesion = Math.max(0, Math.min(100, gameState.familyCohesion));
-    }
-
-    // Apply shareholder monitoring changes (clamped 0-100)
-    if (effects.shareholderMonitoring !== undefined) {
-        gameState.shareholderMonitoring += effects.shareholderMonitoring;
-        gameState.shareholderMonitoring = Math.max(0, Math.min(100, gameState.shareholderMonitoring));
-    }
-
-    // Apply board effectiveness changes (clamped 0-100)
-    if (effects.boardEffectiveness !== undefined) {
-        gameState.boardEffectiveness += effects.boardEffectiveness;
-        gameState.boardEffectiveness = Math.max(0, Math.min(100, gameState.boardEffectiveness));
-    }
-
-    // Apply profit margin changes
-    if (effects.profitMargin !== undefined) {
-        gameState.profitMargin += effects.profitMargin;
-        gameState.profitMargin = Math.max(0.01, Math.min(0.15, gameState.profitMargin));
-    }
-
-    // Apply allocation changes (ensure they sum to 100)
-    if (effects.allocation !== undefined) {
-        const alloc = gameState.allocation;
-        if (effects.allocation.growth !== undefined) alloc.growth += effects.allocation.growth;
-        if (effects.allocation.efficiency !== undefined) alloc.efficiency += effects.allocation.efficiency;
-        if (effects.allocation.cash !== undefined) alloc.cash += effects.allocation.cash;
-        if (effects.allocation.dividends !== undefined) alloc.dividends += effects.allocation.dividends;
-
-        // Clamp each to valid range
-        alloc.growth = Math.max(0, Math.min(100, alloc.growth));
-        alloc.efficiency = Math.max(0, Math.min(100, alloc.efficiency));
-        alloc.cash = Math.max(0, Math.min(100, alloc.cash));
-        alloc.dividends = Math.max(0, Math.min(100, alloc.dividends));
-
-        // Normalize to sum to 100
-        const total = alloc.growth + alloc.efficiency + alloc.cash + alloc.dividends;
-        if (total > 0 && total !== 100) {
-            const factor = 100 / total;
-            alloc.growth *= factor;
-            alloc.efficiency *= factor;
-            alloc.cash *= factor;
-            alloc.dividends *= factor;
-        }
-    }
     
     // Apply family effects
     Object.keys(familyMembers).forEach(key => {
@@ -362,13 +282,6 @@ function applyEffects(effects) {
     }
     if (effects.hasQualityIssues) gameState.hasQualityIssues = true;
     if (effects.hasDebt) gameState.hasDebt = true;
-    if (effects.hasExternalInvestors) gameState.hasExternalInvestors = true;
-    if (effects.capitalConstrained) gameState.capitalConstrained = true;
-
-    // Apply external equity effects (dilutes family ownership)
-    if (effects.externalEquity !== undefined) {
-        gameState.externalEquity += effects.externalEquity;
-    }
 
     // Apply spouse & in-law effects
     if (effects.openToInLaws !== undefined) gameState.openToInLaws = effects.openToInLaws;
@@ -396,26 +309,6 @@ function applyEffects(effects) {
     if (effects.hasSpousePolicy) gameState.hasSpousePolicy = true;
     if (effects.hasFormalSpouseGovernance) gameState.hasFormalSpouseGovernance = true;
     if (effects.spouseAdvisoryRoles) gameState.spouseAdvisoryRoles = true;
-
-    // Apply family member attribute changes
-    Object.keys(familyMembers).forEach(key => {
-        const member = familyMembers[key];
-
-        // Business training updates
-        if (effects[key + 'BusinessTraining'] !== undefined) {
-            member.hasBusinessTraining = effects[key + 'BusinessTraining'];
-        }
-
-        // Liquidity needs updates
-        if (effects[key + 'LiquidityNeeds'] !== undefined) {
-            member.liquidityNeeds = effects[key + 'LiquidityNeeds'];
-        }
-
-        // Other income updates
-        if (effects[key + 'OtherIncome'] !== undefined) {
-            member.otherIncome = effects[key + 'OtherIncome'];
-        }
-    });
 }
 
 function advanceGame() {
@@ -432,181 +325,35 @@ function advanceGame() {
     // Check for life events
     checkLifeEvents();
 
-    // ============================================
-    // CONFLICT EFFECTS
-    // Unresolved shareholder conflicts hurt performance
-    // ============================================
-    const conflictPenalty = calculateConflictPenalty();
-    if (conflictPenalty > 0) {
-        // Conflicts reduce effective management quality
-        gameState.familyCohesion = Math.max(0, gameState.familyCohesion - conflictPenalty * 0.5);
-    }
-
-    // Effective management quality considers monitoring and conflicts
-    const effectiveManagement = calculateEffectiveManagement();
-
-    // ============================================
-    // SHAREHOLDER PREFERENCE INFLUENCE
-    // Aggregate preferences affect growth/margin tradeoffs
-    // ============================================
-    const shareholderPrefs = getShareholderPreferences();
-
-    // ============================================
-    // PROFIT ALLOCATION & GROWTH MODEL
-    // ============================================
+    // Natural business growth (influenced by management quality)
     if (gameState.revenue > 0) {
-        // Calculate this period's profit
-        const currentProfit = gameState.revenue * gameState.profitMargin;
+        // Growth rate based on management quality (3-7% annual)
+        // Poor management (0-30): 3%, Average (50): 5%, Excellent (100): 7%
+        const baseGrowth = 0.03;
+        const managementBonus = (gameState.managementQuality / 100) * 0.04;
+        const growthRate = baseGrowth + managementBonus;
 
-        // Allocate profit according to current allocation percentages
-        const allocated = {
-            growth: currentProfit * (gameState.allocation.growth / 100),
-            efficiency: currentProfit * (gameState.allocation.efficiency / 100),
-            cash: currentProfit * (gameState.allocation.cash / 100),
-            dividends: currentProfit * (gameState.allocation.dividends / 100)
-        };
+        gameState.revenue *= Math.pow(1 + growthRate, yearsToAdvance);
 
-        // ============================================
-        // GROWTH RATE & CAPITAL CONSTRAINTS
-        // Growth requires capital - if internal profits insufficient,
-        // need external financing (debt or equity) with tradeoffs
-        // ============================================
-        const baseGrowth = 0.02;  // 2% baseline
+        // Profit margin based on management quality (4-8%)
+        // Cardboard/packaging industry has thin margins
+        // Poor management (0): 4%, Average (50): 6%, Excellent (100): 8%
+        const baseMargin = 0.04;
+        const marginBonus = (gameState.managementQuality / 100) * 0.04;
+        const profitMargin = baseMargin + marginBonus;
 
-        // Risk preference bonus (from shareholders): 0-3%
-        const riskBonus = (shareholderPrefs.riskTolerance / 100) * 0.03;
+        gameState.profit = gameState.revenue * profitMargin;
 
-        // Management execution bonus: 0-2%
-        const managementBonus = (effectiveManagement / 100) * 0.02;
-
-        // Desired growth rate based on preferences and management
-        const desiredGrowthRate = baseGrowth + riskBonus + managementBonus;
-
-        // Capital required to achieve desired growth
-        // Rule of thumb: need ~0.5x of revenue growth in capital investment
-        const desiredRevenueIncrease = gameState.revenue * (Math.pow(1 + desiredGrowthRate, yearsToAdvance) - 1);
-        const capitalRequired = desiredRevenueIncrease * 0.5;
-
-        // Available capital sources
-        const internalCapital = allocated.growth;  // From profit allocation
-        const availableCash = Math.max(0, gameState.cash - 50000);  // Keep minimum reserve
-        const availableDebtCapacity = Math.max(0, gameState.debtCapacity - gameState.debt);
-
-        // Calculate funding gap
-        let fundingGap = capitalRequired - internalCapital;
-        let actualGrowthCapital = internalCapital;
-        gameState.capitalConstrained = false;
-        gameState.fundingGap = 0;
-
-        if (fundingGap > 0) {
-            // Need external capital - check sources in order of preference
-
-            // 1. Use excess cash first (no cost, no control loss)
-            if (fundingGap > 0 && availableCash > 0) {
-                const cashUsed = Math.min(fundingGap, availableCash);
-                actualGrowthCapital += cashUsed;
-                gameState.cash -= cashUsed;
-                fundingGap -= cashUsed;
-            }
-
-            // 2. Take on debt (increases risk, no control loss)
-            // Only if shareholders have moderate-high risk tolerance
-            if (fundingGap > 0 && availableDebtCapacity > 0 && shareholderPrefs.riskTolerance > 40) {
-                const debtUsed = Math.min(fundingGap, availableDebtCapacity);
-                actualGrowthCapital += debtUsed;
-                gameState.debt += debtUsed;
-                gameState.hasDebt = true;
-                fundingGap -= debtUsed;
-
-                // Debt increases risk - reduce debt capacity going forward
-                gameState.debtCapacity = Math.max(gameState.debtCapacity, gameState.debt * 1.2);
-            }
-
-            // 3. If still short, growth is constrained (or would need equity dilution)
-            if (fundingGap > 0) {
-                gameState.capitalConstrained = true;
-                gameState.fundingGap = fundingGap;
-
-                // Aggressive growth shareholders might accept equity dilution
-                // But this is a major decision that should be an event, not automatic
-                // For now, just constrain growth
-            }
-        }
-
-        // Actual growth rate based on capital actually deployed
-        const growthInvestmentRatio = actualGrowthCapital / Math.max(1, gameState.revenue);
-        const investmentBonus = Math.min(0.04, growthInvestmentRatio * 0.5);  // Cap at 4%
-
-        const actualGrowthRate = baseGrowth + (fundingGap > 0 ?
-            investmentBonus * (actualGrowthCapital / capitalRequired) :  // Reduced if constrained
-            investmentBonus + (riskBonus * 0.5));  // Full if funded
-
-        // Apply growth over the period
-        gameState.revenue *= Math.pow(1 + actualGrowthRate, yearsToAdvance);
-
-        // Debt service reduces profit
-        if (gameState.debt > 0) {
-            const interestExpense = gameState.debt * 0.06 * yearsToAdvance;  // 6% interest rate
-            gameState.cash -= interestExpense;
-        }
-
-        // ============================================
-        // PROFIT MARGIN
-        // Driven by: efficiency investment, management quality, focus preference
-        // ============================================
-        const baseMargin = 0.03;  // 3% baseline for cardboard industry
-
-        // Cumulative efficiency investment improves margins over time
-        gameState.cumulativeEfficiencyInvestment += allocated.efficiency;
-        const efficiencyBonus = Math.min(0.03, (gameState.cumulativeEfficiencyInvestment / gameState.revenue) * 0.1);
-
-        // Management quality bonus: 0-2%
-        const marginManagementBonus = (effectiveManagement / 100) * 0.02;
-
-        // Focus preference: growth-focused sacrifices some margin
-        // If shareholders strongly prefer growth over profit, margin suffers slightly
-        const focusPenalty = ((shareholderPrefs.growthPreference - 50) / 100) * 0.01;
-
-        gameState.profitMargin = Math.max(0.02, Math.min(0.10,
-            baseMargin + efficiencyBonus + marginManagementBonus - focusPenalty
-        ));
-
-        // Calculate new profit
-        gameState.profit = gameState.revenue * gameState.profitMargin;
-
-        // ============================================
-        // CASH RETENTION
-        // ============================================
-        gameState.cash += allocated.cash;
-
-        // ============================================
-        // DIVIDEND DISTRIBUTION
-        // Track per-shareholder (affects happiness)
-        // ============================================
-        if (allocated.dividends > 0) {
-            distributeDividends(allocated.dividends);
-        }
-
-        // ============================================
-        // ASSETS
+        // Assets grow with revenue (equipment, inventory, facilities)
         // Asset efficiency improves with management quality
-        // ============================================
-        const assetRatio = 0.7 - (effectiveManagement / 100) * 0.2;
+        // Poor management needs 0.7x revenue in assets, excellent needs 0.5x
+        const assetRatio = 0.7 - (gameState.managementQuality / 100) * 0.2;
         gameState.assets = gameState.cash + (gameState.revenue * assetRatio);
 
-        // ============================================
-        // DEBT CAPACITY
-        // Grows with business size but limited by risk tolerance
-        // ============================================
-        const baseDebtCapacity = gameState.revenue * 0.3;  // 30% of revenue as baseline
-        const riskAdjustment = 1 + (shareholderPrefs.riskTolerance - 50) / 100;  // ±50%
-        gameState.debtCapacity = Math.max(500000, baseDebtCapacity * riskAdjustment);
-
-        // ============================================
-        // EMPLOYEES
-        // Better management = higher productivity
-        // ============================================
-        const revenuePerEmployee = 80000 + (effectiveManagement / 100) * 50000;
+        // Employees grow with revenue
+        // Better management = higher productivity (revenue per employee)
+        // Poor: $80K/employee, Average: $100K/employee, Excellent: $130K/employee
+        const revenuePerEmployee = 80000 + (gameState.managementQuality / 100) * 50000;
         gameState.employees = Math.max(1, Math.round(gameState.revenue / revenuePerEmployee));
     }
 
@@ -620,62 +367,6 @@ function advanceGame() {
     } else {
         showEnding();
     }
-}
-
-// ============================================
-// EFFECTIVE MANAGEMENT CALCULATION
-// Management quality modified by monitoring and cohesion
-// ============================================
-function calculateEffectiveManagement() {
-    let effective = gameState.managementQuality;
-
-    // Shareholder monitoring improves management accountability
-    // But only if there's something to monitor (board, governance)
-    const monitoringBonus = (gameState.shareholderMonitoring / 100) * 10;
-    effective += monitoringBonus;
-
-    // Board effectiveness adds oversight value
-    const boardBonus = (gameState.boardEffectiveness / 100) * 10;
-    effective += boardBonus;
-
-    // Family conflict reduces effective management (distraction, poor decisions)
-    const cohesionPenalty = ((100 - gameState.familyCohesion) / 100) * 15;
-    effective -= cohesionPenalty;
-
-    // Unresolved shareholder conflicts create further drag
-    const conflictPenalty = calculateConflictPenalty();
-    effective -= conflictPenalty;
-
-    return Math.max(0, Math.min(100, effective));
-}
-
-// ============================================
-// DIVIDEND DISTRIBUTION
-// Allocates dividends to shareholders, affects happiness
-// ============================================
-function distributeDividends(totalDividends) {
-    Object.keys(familyMembers).forEach(key => {
-        const member = familyMembers[key];
-        if (member.isDead || member.ownership <= 0) return;
-
-        const share = totalDividends * (member.ownership / 100);
-        const prefs = getMemberPreferences(member);
-
-        // Happiness effect depends on dividend preference
-        // High dividend preference + receiving dividends = happiness
-        // But amount matters relative to expectations
-        const expectedDividend = gameState.revenue * 0.05 * (member.ownership / 100);  // 5% of revenue share as baseline
-        const satisfactionRatio = share / Math.max(1, expectedDividend);
-
-        if (prefs.dividendPreference > 50) {
-            // This shareholder cares about dividends
-            if (satisfactionRatio >= 1) {
-                member.happiness = Math.min(100, member.happiness + 3);
-            } else if (satisfactionRatio < 0.5) {
-                member.happiness = Math.max(0, member.happiness - 2);
-            }
-        }
-    });
 }
 
 function calculateROA() {

@@ -45,28 +45,29 @@ const EVENTS = [
                         {
                             text: "Bring Patricia in as CFO with 50/50 ownership",
                             effects: {
-                                // Intermediate parameters instead of direct financials
-                                managementQuality: 12,          // Professional financial management
-                                shareholderMonitoring: 15,      // Second owner provides oversight
-                                familyCohesion: -5,             // Work-life boundary dissolved
+                                revenue: 280000,
+                                profit: 16000,
+                                cash: -30000,
+                                assets: 90000,
+                                robertHappiness: 5,
                                 robertOwnership: -50,
                                 patriciaOwnership: 50,
-                                robertHappiness: 5,
                                 patriciaHappiness: 20,
                                 patriciaCFO: true,
-                                patriciaBusinessTraining: true
+                                managementQuality: 8
                             },
                             impact: `<p>Patricia joins Anderson Packaging as CFO with equal ownership. The business becomes more professionally managed with clear financial systems.</p><p>The company Robert started alone is now jointly owned. Patricia brings real expertise and dedication, though now their marriage and business are bound together.</p><p>Disagreements about vendor contracts continue at the dinner table. The children watch their parents discuss inventory management over breakfast.</p><p>"We never stop working," Patricia admits after a month. "Even date night becomes a strategy session."</p><p>The boundary between marriage and business has dissolved. Whether that's a strength or a vulnerability, only time will tell.</p>`
                         },
                         {
                             text: "Keep business and family separate—hire professional staff instead",
                             effects: {
-                                // Intermediate parameters - professional but less oversight
-                                managementQuality: 5,           // Some professional help
-                                shareholderMonitoring: 0,       // Robert still sole decision-maker
-                                familyCohesion: 5,              // Clear work-life boundaries
+                                revenue: 250000,
+                                profit: 15000,
+                                cash: 40000,
+                                assets: 85000,
                                 robertHappiness: 5,
-                                patriciaHappiness: -10          // Feels excluded
+                                patriciaHappiness: -10,
+                                managementQuality: 5
                             },
                             impact: `<p>Robert hires a professional bookkeeper and keeps Patricia separate from the business. Clear boundaries between work and family are maintained.</p><p>Patricia is hurt. "I've been doing this work for free. Now you'd rather pay a stranger than make me a partner?"</p><p>Home remains separate from work stress. When Robert has a bad day at the office, Patricia can provide perspective as a spouse, not a co-owner with her own stake in the outcome.</p><p>Robert retains 100% ownership. The professional bookkeeper brings fresh expertise without family complications.</p><p>The children see their father as sole owner of "his" business—which may shape how they view their own future roles.</p>`
                         }
@@ -184,15 +185,14 @@ const EVENTS = [
                         {
                             text: "Continue",
                             effects: {
-                                // Intermediate parameters - Sarah adds capability, not direct revenue
-                                managementQuality: 6,           // MBA brings professional skills
-                                shareholderMonitoring: 5,       // Second generation starts engaging
+                                profit: 10000,
+                                revenue: 220000,
                                 sarahHappiness: 10,
                                 robertHappiness: 8,
-                                sarahBusinessTraining: true,    // MBA graduate
+                                managementQuality: 4,
                                 employees: 1
                             },
-                            impact: `<p>Sarah begins her career at Anderson Packaging as Operations Manager. She's eager to prove herself and quickly becomes a valuable contributor.</p><p>Her MBA training brings new analytical rigor to operations. The company's management capabilities improve.</p><p>The ownership question remains open—Robert will revisit it once Sarah has established her track record.</p>`
+                            impact: `<p>Sarah begins her career at Anderson Packaging as Operations Manager. She's eager to prove herself and quickly becomes a valuable contributor.</p><p>Revenue increases as Sarah brings fresh ideas and energy to operations.</p><p>The ownership question remains open—Robert will revisit it once Sarah has established her track record.</p>`
                         }
                     ]
                 },
@@ -258,12 +258,12 @@ const EVENTS = [
                         {
                             text: "Move Michael to a different role that suits his strengths better",
                             effects: {
-                                // Intermediate parameters - addresses issue but creates tension
-                                managementQuality: 5,           // Role better suited to skills
-                                familyCohesion: -8,             // Michael feels demoted
+                                revenue: 200000,
+                                profit: 30000,
                                 michaelHappiness: -12,
                                 robertHappiness: -5,
-                                sarahHappiness: 10
+                                sarahHappiness: 10,
+                                managementQuality: 5
                             },
                             impact: function() {
                                 return `<p>Robert creates a "Business Development" role for Michael, focusing on relationship-building rather than sales execution. Sarah manages the technical sales process.</p><p>Performance and profitability improve as Michael's deals are now properly vetted.</p><p>Michael feels demoted and embarrassed—everyone knows he was moved because he couldn't handle sales.</p><p>Sarah is relieved but feels guilty. Robert wonders if he's been too easy on family members.</p><p>Non-family employees notice: family gets second chances and special roles, not termination. The precedent is set.</p>`;
@@ -272,13 +272,11 @@ const EVENTS = [
                         {
                             text: "Require Michael to undergo performance improvement with clear metrics (treat like any employee)",
                             effects: {
-                                // Intermediate parameters - professional standards, family tension
-                                managementQuality: 12,          // Clear performance standards
-                                shareholderMonitoring: 5,       // Accountability mechanisms
-                                familyCohesion: -12,            // Michael feels targeted
+                                revenue: 100000,
                                 michaelHappiness: -20,
                                 robertHappiness: 10,
                                 sarahHappiness: 15,
+                                managementQuality: 10,
                                 michaelPerformanceImprovement: true
                             },
                             impact: function() {
@@ -288,12 +286,12 @@ const EVENTS = [
                         {
                             text: "Give Michael more time and coaching—family deserves patience and support",
                             effects: {
-                                // Intermediate parameters - loyalty over performance
-                                managementQuality: -8,          // Standards compromised
-                                familyCohesion: 5,              // Family loyalty demonstrated
+                                revenue: -100000,
+                                profit: -25000,
                                 michaelHappiness: 15,
                                 robertHappiness: 5,
-                                sarahHappiness: -10             // Feels double standard
+                                sarahHappiness: -10,
+                                managementQuality: -5
                             },
                             impact: function() {
                                 let result = `<p>Robert decides Michael needs more support and coaching. "He's 24 years old. We can't expect perfection. Family means giving people room to grow."</p>`;
@@ -473,24 +471,23 @@ const EVENTS = [
                         {
                             text: "Commit to Sarah as next CEO within 5 years",
                             effects: {
-                                // Intermediate parameters - clarity helps execution
-                                managementQuality: 10,          // Clear succession = better planning
-                                familyCohesion: -10,            // Michael feels passed over
                                 sarahHappiness: 20,
                                 michaelHappiness: -15,
-                                robertHappiness: 5
+                                robertHappiness: 5,
+                                revenue: 300000,
+                                profit: 50000,
+                                managementQuality: 8
                             },
                             impact: `<p>Robert announces that Sarah will become CEO when he steps down, likely within five years.</p><p>Sarah is energized and relieved. She works even harder. Business performance improves under her clear leadership path.</p><p>Michael is disappointed and hurt—he feels his contributions are undervalued.</p><p>Robert appreciates the clarity, though he worries about Michael's reaction.</p>`
                         },
                         {
                             text: "Keep options open—evaluate both Sarah and Michael over time",
                             effects: {
-                                // Intermediate parameters - ambiguity hurts everyone
-                                managementQuality: -6,          // Unclear leadership
-                                familyCohesion: -5,             // Sibling competition
                                 sarahHappiness: -12,
                                 michaelHappiness: 8,
-                                robertHappiness: -8
+                                robertHappiness: -8,
+                                profit: -30000,
+                                managementQuality: -4
                             },
                             impact: `<p>Robert decides not to commit to anyone yet, saying both Sarah and Michael will be evaluated over the next several years.</p><p>Sarah is frustrated. After years of hard work and clear qualification, she wonders if she should look for CEO opportunities elsewhere.</p><p>Michael feels he still has a shot.</p><p>The ambiguity creates tension between the siblings. The uncertainty affects day-to-day operations as both compete for position.</p>`
                         }
@@ -535,15 +532,14 @@ const EVENTS = [
                         {
                             text: "Hire both Mark and Lisa—embrace in-laws as full members of the business family",
                             effects: {
-                                // Intermediate parameters - talent but complexity
-                                managementQuality: 10,          // External expertise
-                                familyCohesion: -15,            // Complex family dynamics
-                                shareholderMonitoring: 5,       // More voices in discussions
+                                revenue: 500000,
+                                profit: -100000,
                                 employees: 2,
                                 sarahHappiness: 15,
                                 michaelHappiness: 15,
                                 robertHappiness: -10,
                                 patriciaHappiness: -15,
+                                managementQuality: 8,
                                 markInBusiness: true,
                                 lisaInBusiness: true,
                                 hasInLawsInBusiness: true
@@ -573,13 +569,13 @@ const EVENTS = [
                         {
                             text: "Hire one in-law (the more qualified one) but not both—be selective",
                             effects: {
-                                // Intermediate parameters - some talent, some conflict
-                                managementQuality: 6,           // Some external expertise
-                                familyCohesion: -12,            // Creates winners and losers
+                                revenue: 300000,
+                                profit: -50000,
                                 employees: 1,
                                 sarahHappiness: -8,
                                 michaelHappiness: -8,
                                 robertHappiness: 5,
+                                managementQuality: 5,
                                 selectiveInLawPolicy: true,
                                 hasInLawsInBusiness: true
                             },
@@ -607,14 +603,11 @@ const EVENTS = [
                         {
                             text: "Decline both—establish that in-laws cannot work in the family business",
                             effects: {
-                                // Intermediate parameters - clear policy but loses talent
-                                managementQuality: -5,          // Miss out on expertise
-                                familyCohesion: -8,             // Spouses feel rejected
-                                shareholderMonitoring: 5,       // Clear governance boundary
                                 sarahHappiness: -15,
                                 michaelHappiness: -15,
                                 robertHappiness: 10,
                                 patriciaHappiness: 15,
+                                managementQuality: -3,
                                 noInLawsPolicy: true
                             },
                             impact: function() {
@@ -745,148 +738,8 @@ const EVENTS = [
                         }
                     ]
                 },
-
-                // Event 12: 2015 - External Investment Opportunity
-                {
-                    date: "2015",
-                    title: "The Outside Investor",
-                    description: function() {
-                        let baseDesc = "Anderson Packaging has been growing steadily, but growth requires capital. The business generates solid profits, yet reinvesting everything still leaves the company short of what's needed to fully capitalize on market opportunities.\n\n";
-
-                        baseDesc += "A regional investment firm has approached Robert. They've been watching Anderson Packaging and are impressed by its trajectory.\n\n";
-
-                        baseDesc += "\"We'd like to invest in your company,\" the managing partner explains. \"We're not looking to take over—we want a minority stake. You'd retain control, but you'd have growth capital and a partner who's invested in your success.\"\n\n";
-
-                        if (familyMembers.patricia.ownership > 0) {
-                            baseDesc += "Patricia is cautious: \"Outside investors means outside opinions. They'll want board seats, quarterly reports, and a say in major decisions. Are we ready to answer to someone other than ourselves?\"\n\n";
-                        }
-
-                        baseDesc += "Sarah sees the opportunity: \"With their capital, we could expand faster, invest in automation, maybe even acquire a competitor. We'd grow the pie even if our slice is smaller.\"\n\n";
-
-                        const jenOwn = familyMembers.jennifer.ownership;
-                        if (jenOwn > 0) {
-                            baseDesc += "Jennifer is worried: \"If we dilute the family's ownership, does that mean smaller dividends for me? I'm already not getting much from this business.\"\n\n";
-                        }
-
-                        if (!gameState.michaelLeft) {
-                            baseDesc += "Michael is conflicted: \"I like the growth potential, but do we really want outsiders looking over our shoulders? This has always been a family business.\"\n\n";
-                        }
-
-                        baseDesc += "This is a fundamental question about the nature of Anderson Packaging: Is it a family business that happens to make money, or a business that happens to be owned by a family?\n\n";
-
-                        baseDesc += "Taking outside investment means faster growth but diluted ownership and new stakeholders to satisfy. Staying fully family-owned preserves control but may limit growth potential.";
-
-                        return baseDesc;
-                    },
-                    options: [
-                        {
-                            text: "Accept the investment—growth requires capital we don't have",
-                            effects: {
-                                // External equity: growth capital but diluted control
-                                externalEquity: 20,             // 20% to outside investors
-                                robertOwnership: -10,
-                                patriciaOwnership: function() { return familyMembers.patricia.ownership > 0 ? -5 : 0; },
-                                sarahOwnership: function() { return familyMembers.sarah.ownership > 0 ? -2 : 0; },
-                                michaelOwnership: function() { return familyMembers.michael.ownership > 0 ? -2 : 0; },
-                                jenniferOwnership: function() { return familyMembers.jennifer.ownership > 0 ? -1 : 0; },
-                                // Cash from investment = 20% of valuation
-                                // Valuation = profit × multiple (4-7x based on growth)
-                                cash: function() {
-                                    const profit = gameState.profit || 100000;
-                                    // Calculate growth rate from previous period
-                                    const growthRate = gameState.previousRevenue > 0 ?
-                                        (gameState.revenue - gameState.previousRevenue) / gameState.previousRevenue : 0.05;
-                                    // Base multiple 4x, up to 7x for high growth (>15% annual)
-                                    const baseMultiple = 4;
-                                    const growthPremium = Math.min(3, Math.max(0, growthRate * 20));
-                                    const multiple = baseMultiple + growthPremium;
-                                    // Valuation and 20% stake
-                                    const valuation = profit * multiple;
-                                    const investmentAmount = valuation * 0.20;
-                                    // Round to nearest 50K
-                                    return Math.round(investmentAmount / 50000) * 50000;
-                                },
-                                managementQuality: 5,           // Investor oversight helps
-                                shareholderMonitoring: 15,      // External accountability
-                                boardEffectiveness: 10,         // Investor wants board seat
-                                familyCohesion: -10,            // Tension over "selling out"
-                                sarahHappiness: 10,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -5; },
-                                jenniferHappiness: -10,
-                                robertHappiness: -5,
-                                hasExternalInvestors: true
-                            },
-                            impact: function() {
-                                // Calculate the investment amount for display
-                                const profit = gameState.profit || 100000;
-                                const growthRate = gameState.previousRevenue > 0 ?
-                                    (gameState.revenue - gameState.previousRevenue) / gameState.previousRevenue : 0.05;
-                                const baseMultiple = 4;
-                                const growthPremium = Math.min(3, Math.max(0, growthRate * 20));
-                                const multiple = baseMultiple + growthPremium;
-                                const valuation = profit * multiple;
-                                const investmentAmount = Math.round((valuation * 0.20) / 50000) * 50000;
-
-                                let result = `<p>Robert accepts the investment. The investors value Anderson Packaging based on its profits and growth trajectory, investing $${formatNumber(investmentAmount)} for a 20% stake.</p>`;
-
-                                result += `<p>Fresh capital flows into the business, and the family's ownership is diluted to make room for the new investors.</p>`;
-
-                                result += `<p>The investors are professional and hands-off in daily operations, but they expect quarterly updates, audited financials, and a seat on the board. The informal family decision-making style must adapt.</p>`;
-
-                                result += `<p>Sarah is energized by the growth possibilities. "Now we can actually compete," she says.</p>`;
-
-                                if (!gameState.michaelLeft) {
-                                    result += `<p>Michael feels the business has lost something. "We used to make decisions at the dinner table. Now we have board meetings and investor calls."</p>`;
-                                }
-
-                                const jenOwn = familyMembers.jennifer.ownership;
-                                if (jenOwn > 0) {
-                                    result += `<p>Jennifer watches her ownership stake shrink. "I had ${jenOwn.toFixed(0)}% of a family business. Now I have less of a... what? A portfolio company?"</p>`;
-                                }
-
-                                result += `<p>Anderson Packaging is no longer 100% family-owned. The investors are minority shareholders, but their presence changes the culture. Every major decision now considers: "What will the investors think?"</p>`;
-
-                                result += `<p>The family has traded some control for capital. Whether that trade pays off depends on what they do with the opportunity.</p>`;
-
-                                return result;
-                            }
-                        },
-                        {
-                            text: "Decline the investment—this is a family business",
-                            effects: {
-                                // Preserve control, accept constraints
-                                familyCohesion: 5,              // United in keeping it family
-                                managementQuality: -3,          // Miss out on external discipline
-                                sarahHappiness: -10,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 8; },
-                                jenniferHappiness: 5,
-                                robertHappiness: 10,
-                                capitalConstrained: true        // Growth will be limited
-                            },
-                            impact: function() {
-                                let result = `<p>Robert declines the investment. "Thank you for your interest, but Anderson Packaging is a family business. We're not looking for outside partners."</p>`;
-
-                                result += `<p>The investors are disappointed but understanding. "The offer stands if you change your mind," they say.</p>`;
-
-                                result += `<p>Sarah is frustrated. "We're leaving growth on the table because of pride. How is that good business?"</p>`;
-
-                                if (!gameState.michaelLeft) {
-                                    result += `<p>Michael supports the decision. "Dad's right. Once you let outsiders in, you can never get them out. This is our business, our legacy."</p>`;
-                                }
-
-                                result += `<p>The family retains 100% ownership and complete control. But growth will be constrained by the capital they can generate internally or borrow.</p>`;
-
-                                result += `<p>Competitors who take outside investment may grow faster. Anderson Packaging will need to compete on operational excellence rather than capital deployment.</p>`;
-
-                                result += `<p>Robert feels at peace with the decision. The business remains fully in family hands. That's worth something—even if it's hard to put a number on it.</p>`;
-
-                                return result;
-                            }
-                        }
-                    ]
-                },
-
-                // Event 13: 2016 - Michael's Compensation Conflict
+                
+                // Event 12: 2016 - Michael's Compensation Conflict
                 {
                     date: "2016",
                     title: "The Compensation Debate",
@@ -895,35 +748,34 @@ const EVENTS = [
                         {
                             text: "Increase Michael's salary to $160K to recognize his sales success",
                             effects: {
-                                // Intermediate parameters - appeasement hurts standards
-                                managementQuality: -5,          // Compensation not merit-based
-                                familyCohesion: -8,             // Sarah feels unfair treatment
+                                profit: -40000,
+                                revenue: 300000,
                                 michaelHappiness: 15,
-                                sarahHappiness: -15
+                                sarahHappiness: -15,
+                                managementQuality: -3
                             },
                             impact: `<p>Robert raises Michael's salary to $160K, substantially narrowing the gap with Sarah.</p><p>Michael feels valued and recognized.</p><p>Sarah is frustrated. "I work 60-hour weeks managing the entire operation. Michael schmoozes clients and now makes almost what I make? How is that fair?"</p><p>The decision signals that sales results matter more than operational responsibility. Other employees notice the shift.</p>`
                         },
                         {
                             text: "Maintain the differential—different roles have different compensation",
                             effects: {
-                                // Intermediate parameters - fair but creates resentment
-                                managementQuality: 5,           // Clear role-based comp
-                                familyCohesion: -10,            // Michael feels undervalued
                                 michaelHappiness: -15,
                                 sarahHappiness: 10,
-                                robertHappiness: -5
+                                robertHappiness: -5,
+                                revenue: -200000,
+                                managementQuality: 5
                             },
                             impact: `<p>Robert explains that compensation reflects responsibility level, not just results. Sarah's role as COO justifies higher pay.</p><p>Michael feels unappreciated. "So my sales numbers don't matter? I bring in millions and get treated like support staff."</p><p>Sarah feels validated. "Thank you for recognizing that my job is harder."</p><p>Michael's sales motivation suffers. He starts putting in less effort. Why hustle when it doesn't pay?</p><p>Compensation now reflects role complexity. But family tension grows.</p>`
                         },
                         {
                             text: "Create a performance bonus structure—base salary stays, but Michael can earn more through commissions",
                             effects: {
-                                // Intermediate parameters - compromise with structure
-                                managementQuality: 5,           // Performance-based pay
-                                familyCohesion: -3,             // Modest tension
+                                profit: -20000,
+                                revenue: 200000,
                                 michaelHappiness: 8,
                                 sarahHappiness: -5,
-                                robertHappiness: 10
+                                robertHappiness: 10,
+                                managementQuality: 3
                             },
                             impact: `<p>Robert implements a performance bonus system. Michael's base salary stays the same, but he can earn substantial commissions on new business.</p><p>Michael is moderately satisfied. It's not the raise he wanted, but at least his efforts can be rewarded.</p><p>Sarah is uneasy. "Now Michael could out-earn me in a good year. And there's no bonus for keeping operations running smoothly."</p><p>The compromise is fair in principle but creates new questions. Sarah starts asking about her own bonus structure.</p><p>Robert is relieved to have avoided direct conflict, but he's opened a can of worms about performance incentives for everyone.</p>`
                         }
@@ -1092,15 +944,13 @@ const EVENTS = [
                         {
                             text: "Add 3 independent directors to board—keep family management intact",
                             effects: {
-                                // Governance parameters - oversight without management change
-                                boardEffectiveness: 25,         // Professional board oversight
-                                shareholderMonitoring: 20,      // External accountability
-                                managementQuality: 8,           // Better strategic guidance
-                                familyCohesion: -5,             // Family feels scrutinized
-                                cash: -50000,                   // Director fees
+                                revenue: 500000,
+                                profit: 80000,
+                                cash: -50000,
                                 robertHappiness: 5,
                                 sarahHappiness: -5,
                                 michaelHappiness: function() { return gameState.michaelLeft ? 0 : -8; },
+                                managementQuality: 10,
                                 hasIndependentBoard: true
                             },
                             impact: function() {
@@ -1110,11 +960,9 @@ const EVENTS = [
                         {
                             text: "Hire Amanda as COO + add 2 independent directors—full professionalization",
                             effects: {
-                                // Major governance transformation
-                                boardEffectiveness: 35,         // Strong professional board
-                                shareholderMonitoring: 30,      // High accountability
-                                managementQuality: 25,          // Professional management
-                                familyCohesion: -20,            // Sarah demoted, family tension
+                                revenue: 1800000,
+                                profit: 200000,
+                                assets: 1200000,
                                 robertOwnership: -2,
                                 sarahOwnership: -2,
                                 michaelOwnership: -1,
@@ -1123,7 +971,8 @@ const EVENTS = [
                                 michaelHappiness: function() { return gameState.michaelLeft ? 0 : -12; },
                                 robertHappiness: 12,
                                 hasOutsideCOO: true,
-                                hasIndependentBoard: true
+                                hasIndependentBoard: true,
+                                managementQuality: 20
                             },
                             impact: function() {
                                 return `<p>Robert makes a bold move: hire Amanda Chen as COO (Sarah moves to VP of Operations) AND add two independent directors to provide governance oversight.</p><p>The transformation is dramatic. Revenue and profit surge under professional management and board oversight. Management quality reaches new heights.</p><p>Sarah is devastated by the demotion. After years of leadership, she's been displaced by a non-family executive. She questions her future in the company.</p><p>The independent directors support the decision: "This is what's best for the business." But they also note the family pain it causes.</p><p>The company is now highly professionalized—but at significant cost to family relationships and Sarah's commitment.</p>`;
@@ -1132,14 +981,11 @@ const EVENTS = [
                         {
                             text: "Keep it family-only—preserve independence and culture",
                             effects: {
-                                // No governance improvement
-                                boardEffectiveness: 0,          // No board change
-                                shareholderMonitoring: -5,      // Insularity increases
-                                managementQuality: -5,          // Miss out on expertise
-                                familyCohesion: 10,             // Family stays unified
+                                profit: -30000,
                                 sarahHappiness: 15,
                                 michaelHappiness: function() { return gameState.michaelLeft ? 0 : 12; },
-                                robertHappiness: 5
+                                robertHappiness: 5,
+                                managementQuality: -3
                             },
                             impact: function() {
                                 return `<p>Robert declines both opportunities. Anderson Packaging will remain fully family-controlled.</p><p>"This is a family business," Robert explains. "Our culture, our values, our way of doing things—that's what makes us special. Outsiders would change that."</p><p>` + (gameState.michaelLeft ? "Sarah is" : "Sarah and Michael are") + ` relieved. No outsiders will second-guess ` + (gameState.michaelLeft ? "her" : "their") + ` decisions or threaten ` + (gameState.michaelLeft ? "her" : "their") + ` future.</p><p>The company continues with its distinctive family culture intact. Employees appreciate that the Andersons haven't "sold out" to corporate thinking.</p><p>However, growth may be limited. Without outside perspective, the family risks blind spots. Competitors with professional boards may gain advantages.</p><p>The family retains complete control—but complete responsibility too. There are no outside experts to blame if things go wrong.</p>`;
@@ -1196,16 +1042,12 @@ const EVENTS = [
                         {
                             text: "Implement full governance structure (Family Council + Constitution + Voting Rules)",
                             effects: {
-                                // Comprehensive governance improvement
-                                shareholderMonitoring: 25,      // Clear decision rights
-                                boardEffectiveness: 10,         // Better governance foundation
-                                managementQuality: 12,          // Clearer accountability
-                                familyCohesion: 15,             // Everyone has voice
                                 robertHappiness: 10,
                                 sarahHappiness: 15,
                                 michaelHappiness: function() { return gameState.michaelLeft ? 0 : 12; },
                                 jenniferHappiness: 20,
                                 patriciaHappiness: 15,
+                                managementQuality: 15,
                                 hasFamilyCouncil: true,
                                 hasFamilyConstitution: true
                             },
@@ -1217,13 +1059,10 @@ const EVENTS = [
                         {
                             text: "Implement Family Council only—keep constitution and voting informal",
                             effects: {
-                                // Partial governance improvement
-                                shareholderMonitoring: 10,      // Some structure
-                                familyCohesion: 8,              // Better communication
-                                managementQuality: 4,           // Modest improvement
                                 robertHappiness: 5,
                                 sarahHappiness: 8,
                                 jenniferHappiness: 10,
+                                managementQuality: 5,
                                 hasFamilyCouncil: true
                             },
                             impact: `<p>The family establishes quarterly Family Council meetings where everyone can voice concerns and discuss family matters.</p><p>Communication improves as family members have a regular forum. Tensions decrease from better dialogue.</p><p>However, without a written constitution or formal voting rules, many governance questions remain ambiguous. The Council can discuss issues, but decision authority is still unclear.</p><p>"Who actually decides?" becomes a recurring question. Some family members feel heard but not empowered.</p><p>The moderate approach provides some structure without full commitment to formal governance.</p>`
@@ -1231,13 +1070,10 @@ const EVENTS = [
                         {
                             text: "Keep governance informal—maintain flexibility and family discretion",
                             effects: {
-                                // Governance failure
-                                shareholderMonitoring: -10,     // No oversight structure
-                                familyCohesion: -15,            // Conflicts fester
-                                managementQuality: -8,          // Unclear authority
                                 robertHappiness: -5,
                                 sarahHappiness: -10,
-                                jenniferHappiness: -25
+                                jenniferHappiness: -25,
+                                managementQuality: -8
                             },
                             impact: function() {
                                 const jenOwn = familyMembers.jennifer.ownership;

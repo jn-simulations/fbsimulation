@@ -1,6 +1,5 @@
 // Family member data and management
 // Tracks ownership, happiness, roles, and life events for each family member
-// Implements Three Circle Model: Family, Ownership, Business segments
 
 let familyMembers = {};
 
@@ -14,12 +13,7 @@ function initializeFamily() {
             happiness: 70,
             isActive: true,
             inBusiness: true,
-            isDead: false,
-            // Three Circle Model attributes
-            generation: 1,  // Founder
-            hasBusinessTraining: false,  // Self-taught entrepreneur
-            otherIncome: "none",  // Business is sole income
-            liquidityNeeds: "low"  // Focused on building
+            isDead: false
         },
         patricia: {
             name: "Patricia Anderson",
@@ -29,12 +23,7 @@ function initializeFamily() {
             happiness: 70,
             isActive: false,
             inBusiness: false,
-            isDead: false,
-            // Three Circle Model attributes
-            generation: 1,  // Founder generation (spouse)
-            hasBusinessTraining: true,  // Has accounting background
-            otherIncome: "low",  // Some independent income
-            liquidityNeeds: "low"
+            isDead: false
         },
         sarah: {
             name: "Sarah Anderson",
@@ -44,12 +33,7 @@ function initializeFamily() {
             happiness: 75,
             isActive: false,
             inBusiness: false,
-            isDead: false,
-            // Three Circle Model attributes
-            generation: 2,
-            hasBusinessTraining: false,  // Will get MBA later
-            otherIncome: "none",
-            liquidityNeeds: "low"
+            isDead: false
         },
         michael: {
             name: "Michael Anderson",
@@ -59,12 +43,7 @@ function initializeFamily() {
             happiness: 75,
             isActive: false,
             inBusiness: false,
-            isDead: false,
-            // Three Circle Model attributes
-            generation: 2,
-            hasBusinessTraining: false,
-            otherIncome: "none",
-            liquidityNeeds: "low"
+            isDead: false
         },
         jennifer: {
             name: "Jennifer Anderson",
@@ -74,303 +53,9 @@ function initializeFamily() {
             happiness: 75,
             isActive: false,
             inBusiness: false,
-            isDead: false,
-            // Three Circle Model attributes
-            generation: 2,
-            hasBusinessTraining: false,
-            otherIncome: "medium",  // Will have teaching career
-            liquidityNeeds: "medium"
+            isDead: false
         }
     };
-}
-
-// ============================================
-// THREE CIRCLE MODEL - Segment Classification
-// ============================================
-
-function getMemberSegment(member) {
-    // Returns segment based on Three Circle Model position
-    // F = Family, O = Ownership, B = Business
-    const inFamily = true;  // All familyMembers are family
-    const hasOwnership = member.ownership > 0;
-    const inBusiness = member.inBusiness;
-
-    if (hasOwnership && inBusiness) return "FOB";      // Center: Family + Ownership + Business
-    if (hasOwnership && !inBusiness) return "FO";      // Family + Ownership (passive shareholder)
-    if (!hasOwnership && inBusiness) return "FB";      // Family + Business (working, no shares)
-    return "F";                                         // Family only
-}
-
-// ============================================
-// PREFERENCE DERIVATION
-// Based on segment, generation, age, and context
-// ============================================
-
-function getSegmentBaselinePreferences(segment) {
-    // Base preferences by segment (0-100 scale)
-    const baselines = {
-        "FOB": {  // Center - active owner-managers
-            riskTolerance: 55,
-            dividendPreference: 25,  // Has salary, less need
-            growthPreference: 70,
-            professionalizationSupport: 50
-        },
-        "FO": {  // Passive shareholders
-            riskTolerance: 35,       // No control = risk averse
-            dividendPreference: 70,  // Main way to get returns
-            growthPreference: 30,
-            professionalizationSupport: 60  // Want accountability
-        },
-        "FB": {  // Working but no ownership
-            riskTolerance: 45,
-            dividendPreference: 0,   // N/A - no shares
-            growthPreference: 55,    // Job security through growth
-            professionalizationSupport: 65  // Want merit-based advancement
-        },
-        "F": {  // Family only
-            riskTolerance: 30,       // Uninformed, cautious
-            dividendPreference: 0,   // N/A - no shares
-            growthPreference: 40,    // Prefers stability
-            professionalizationSupport: 40
-        }
-    };
-    return { ...baselines[segment] };
-}
-
-function applyGenerationModifiers(prefs, generation, age) {
-    // Generation affects preferences differently than age
-    switch(generation) {
-        case 1:  // Founder
-            if (age < 50) {
-                // Young founder: high risk, reinvest everything
-                prefs.riskTolerance += 20;
-                prefs.dividendPreference -= 30;
-                prefs.growthPreference += 15;
-            } else if (age < 65) {
-                // Mature founder: more balanced
-                prefs.riskTolerance -= 5;
-                prefs.dividendPreference += 10;
-            } else {
-                // Late founder: conservative, legacy-focused
-                prefs.riskTolerance -= 15;
-                prefs.dividendPreference += 20;
-                prefs.professionalizationSupport -= 10;  // "Built it my way"
-            }
-            break;
-        case 2:  // Second generation
-            // "Don't be the one who lost it" mentality
-            prefs.riskTolerance -= 10;
-            prefs.professionalizationSupport += 10;  // Implement governance
-            break;
-        case 3:  // Third+ generation
-            // Want to make their mark, need liquidity options
-            prefs.riskTolerance += 10;
-            prefs.dividendPreference += 10;  // Many passive owners by now
-            prefs.professionalizationSupport += 15;
-            break;
-    }
-    return prefs;
-}
-
-function applyAgeModifiers(prefs, age) {
-    // Age-specific adjustments (separate from generation)
-    if (age < 35) {
-        prefs.riskTolerance += 15;
-        prefs.dividendPreference -= 10;  // Can wait for returns
-    } else if (age >= 35 && age < 55) {
-        // Peak earning years - neutral adjustments
-    } else if (age >= 55 && age < 70) {
-        prefs.riskTolerance -= 15;
-        prefs.dividendPreference += 20;  // Need income
-        prefs.growthPreference -= 10;
-    } else if (age >= 70) {
-        prefs.riskTolerance -= 25;
-        prefs.dividendPreference += 30;
-        prefs.growthPreference -= 15;
-        prefs.professionalizationSupport -= 5;  // Resist change
-    }
-    return prefs;
-}
-
-function applyContextualModifiers(prefs, member) {
-    // Contextual factors
-
-    // Liquidity needs
-    if (member.liquidityNeeds === "high") {
-        prefs.dividendPreference += 25;
-        prefs.riskTolerance -= 10;
-    } else if (member.liquidityNeeds === "medium") {
-        prefs.dividendPreference += 10;
-    }
-
-    // Other income sources
-    if (member.otherIncome === "high") {
-        prefs.dividendPreference -= 15;  // Less dependent
-        prefs.riskTolerance += 10;       // Can afford to wait
-    } else if (member.otherIncome === "none") {
-        prefs.dividendPreference += 10;  // More dependent on business
-    }
-
-    // Business training
-    if (member.hasBusinessTraining) {
-        prefs.professionalizationSupport += 15;
-        prefs.riskTolerance += 5;  // Better at evaluating risk
-    }
-
-    return prefs;
-}
-
-function getMemberPreferences(member) {
-    // Get full preference profile for a family member
-    const segment = getMemberSegment(member);
-    let prefs = getSegmentBaselinePreferences(segment);
-
-    prefs = applyGenerationModifiers(prefs, member.generation, member.age);
-    prefs = applyAgeModifiers(prefs, member.age);
-    prefs = applyContextualModifiers(prefs, member);
-
-    // Clamp all values to 0-100
-    Object.keys(prefs).forEach(key => {
-        prefs[key] = Math.max(0, Math.min(100, prefs[key]));
-    });
-
-    prefs.segment = segment;
-    return prefs;
-}
-
-// ============================================
-// SHAREHOLDER PREFERENCE AGGREGATION
-// Weighted by ownership percentage
-// ============================================
-
-function getShareholderPreferences() {
-    // Aggregate preferences weighted by ownership
-    let aggregated = {
-        riskTolerance: 0,
-        dividendPreference: 0,
-        growthPreference: 0,
-        professionalizationSupport: 0
-    };
-
-    let totalOwnership = 0;
-
-    Object.keys(familyMembers).forEach(key => {
-        const member = familyMembers[key];
-        if (member.isDead || member.ownership <= 0) return;
-
-        const prefs = getMemberPreferences(member);
-        const weight = member.ownership / 100;
-
-        aggregated.riskTolerance += prefs.riskTolerance * weight;
-        aggregated.dividendPreference += prefs.dividendPreference * weight;
-        aggregated.growthPreference += prefs.growthPreference * weight;
-        aggregated.professionalizationSupport += prefs.professionalizationSupport * weight;
-
-        totalOwnership += member.ownership;
-    });
-
-    // Normalize if ownership doesn't sum to 100
-    if (totalOwnership > 0 && totalOwnership !== 100) {
-        const normalizer = 100 / totalOwnership;
-        Object.keys(aggregated).forEach(key => {
-            aggregated[key] *= normalizer;
-        });
-    }
-
-    return aggregated;
-}
-
-// ============================================
-// CONFLICT DETECTION
-// Based on preference divergence among shareholders
-// ============================================
-
-function detectShareholderConflicts() {
-    const conflicts = [];
-    const owners = Object.keys(familyMembers)
-        .filter(key => !familyMembers[key].isDead && familyMembers[key].ownership > 0)
-        .map(key => ({
-            key,
-            member: familyMembers[key],
-            prefs: getMemberPreferences(familyMembers[key])
-        }));
-
-    if (owners.length < 2) return conflicts;
-
-    // Calculate preference variance for each dimension
-    const dimensions = ['riskTolerance', 'dividendPreference', 'growthPreference'];
-
-    dimensions.forEach(dim => {
-        const values = owners.map(o => o.prefs[dim]);
-        const mean = values.reduce((a, b) => a + b, 0) / values.length;
-        const variance = values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
-        const stdDev = Math.sqrt(variance);
-
-        // High standard deviation = conflict
-        if (stdDev > 20) {
-            const highSide = owners.filter(o => o.prefs[dim] > mean + 10);
-            const lowSide = owners.filter(o => o.prefs[dim] < mean - 10);
-
-            if (highSide.length > 0 && lowSide.length > 0) {
-                conflicts.push({
-                    type: dim,
-                    severity: Math.min(1, stdDev / 30),  // 0-1 scale
-                    highSide: highSide.map(o => o.member.name),
-                    lowSide: lowSide.map(o => o.member.name),
-                    description: getConflictDescription(dim, highSide, lowSide)
-                });
-            }
-        }
-    });
-
-    // Active vs Passive conflict
-    const activeOwners = owners.filter(o => o.member.inBusiness);
-    const passiveOwners = owners.filter(o => !o.member.inBusiness);
-
-    if (activeOwners.length > 0 && passiveOwners.length > 0) {
-        const activeAvgDiv = activeOwners.reduce((sum, o) => sum + o.prefs.dividendPreference, 0) / activeOwners.length;
-        const passiveAvgDiv = passiveOwners.reduce((sum, o) => sum + o.prefs.dividendPreference, 0) / passiveOwners.length;
-
-        if (passiveAvgDiv - activeAvgDiv > 25) {
-            conflicts.push({
-                type: "activeVsPassive",
-                severity: Math.min(1, (passiveAvgDiv - activeAvgDiv) / 50),
-                highSide: passiveOwners.map(o => o.member.name),
-                lowSide: activeOwners.map(o => o.member.name),
-                description: "Passive shareholders want higher dividends while active managers prefer reinvestment"
-            });
-        }
-    }
-
-    return conflicts;
-}
-
-function getConflictDescription(dimension, highSide, lowSide) {
-    const highNames = highSide.map(o => o.member.name.split(' ')[0]).join(' and ');
-    const lowNames = lowSide.map(o => o.member.name.split(' ')[0]).join(' and ');
-
-    switch(dimension) {
-        case 'riskTolerance':
-            return `${highNames} want aggressive growth while ${lowNames} prefer conservative stability`;
-        case 'dividendPreference':
-            return `${highNames} want higher dividends while ${lowNames} prefer reinvestment`;
-        case 'growthPreference':
-            return `${highNames} prioritize growth while ${lowNames} focus on profitability`;
-        default:
-            return "Shareholders have diverging preferences";
-    }
-}
-
-function calculateConflictPenalty() {
-    // Returns negative impact on management quality from unresolved conflicts
-    const conflicts = detectShareholderConflicts();
-    let penalty = 0;
-
-    conflicts.forEach(conflict => {
-        penalty += conflict.severity * 8;  // Each conflict can reduce managementQuality by up to 8
-    });
-
-    return Math.min(25, penalty);  // Cap at 25 point penalty
 }
 
 function updateFamilyDisplay() {
@@ -466,14 +151,13 @@ function updateFamilyDisplay() {
 }
 
 function checkLifeEvents() {
-    // Update roles and Three Circle attributes based on age and game state
+    // Update roles based on age and game state
 
     // Sarah becomes adult and enters business around age 22
     if (familyMembers.sarah.age >= 22 && !familyMembers.sarah.isActive) {
         familyMembers.sarah.isActive = true;
         if (familyMembers.sarah.age >= 25) {
             familyMembers.sarah.role = "MBA Graduate";
-            familyMembers.sarah.hasBusinessTraining = true;  // MBA = business training
         } else {
             familyMembers.sarah.role = "College Student";
         }
@@ -494,7 +178,6 @@ function checkLifeEvents() {
         familyMembers.jennifer.isActive = true;
         if (familyMembers.jennifer.age >= 25) {
             familyMembers.jennifer.role = "Teacher";
-            familyMembers.jennifer.otherIncome = "medium";  // Teaching income
         } else {
             familyMembers.jennifer.role = "College Student";
         }
@@ -507,17 +190,11 @@ function checkLifeEvents() {
 
     if (gameState.robertRetired && familyMembers.robert.role !== "Executive Chairman") {
         familyMembers.robert.role = "Executive Chairman";
-        // Retired founder may have higher liquidity needs
-        if (familyMembers.robert.age >= 65) {
-            familyMembers.robert.liquidityNeeds = "medium";
-        }
     }
 
     if (gameState.michaelLeft && familyMembers.michael.inBusiness) {
         familyMembers.michael.inBusiness = false;
         familyMembers.michael.role = "Former Employee";
-        // Left business but may still have ownership = passive shareholder tension
-        familyMembers.michael.otherIncome = "medium";  // Has other career now
     }
 
     // Update business involvement based on event outcomes
@@ -533,24 +210,6 @@ function checkLifeEvents() {
             familyMembers.michael.role = "Sales Director";
         }
     }
-
-    // Age-based liquidity need changes
-    Object.keys(familyMembers).forEach(key => {
-        const member = familyMembers[key];
-        if (member.isDead) return;
-
-        // Life stage affects liquidity needs
-        if (member.age >= 28 && member.age <= 40 && member.liquidityNeeds === "low") {
-            // Family formation years - may need cash for house, kids
-            if (!member.inBusiness || member.otherIncome === "none") {
-                member.liquidityNeeds = "medium";
-            }
-        }
-        if (member.age >= 65 && !member.inBusiness) {
-            // Retirement - need income
-            member.liquidityNeeds = "high";
-        }
-    });
 }
 
 function getHappinessEmoji(happiness) {
