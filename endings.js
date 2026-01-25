@@ -313,11 +313,12 @@ function generateLessons() {
     const lessons = [];
 
     // Analyze key decision patterns
-    const protectedEmployees2009 = gameState.decisions.find(d => d.event === 5 && d.choice === 2);
-    const protectedEmployees2020 = gameState.decisions.find(d => d.event === 10 && d.choice === 1);
-    const qualityDecision = gameState.decisions.find(d => d.event === 14);
-    const michaelCompensation = gameState.decisions.find(d => d.event === 8);
-    const successionClarity = gameState.decisions.find(d => d.event === 6);
+    // Note: Event indices updated after adding 4 new events (Sarah's Wedding, Michael's Wedding, In-Law Question, Family Boundaries)
+    const protectedEmployees2009 = gameState.decisions.find(d => d.event === 6 && d.choice === 2);
+    const protectedEmployees2020 = gameState.decisions.find(d => d.event === 14 && d.choice === 1);
+    const qualityDecision = gameState.decisions.find(d => d.event === 18);
+    const michaelCompensation = gameState.decisions.find(d => d.event === 11);
+    const successionClarity = gameState.decisions.find(d => d.event === 7);
 
     // Lesson 1: Values vs Profits
     if (protectedEmployees2009 || protectedEmployees2020) {
@@ -362,8 +363,8 @@ function generateLessons() {
 
     // Lesson 4: Growth vs Family
     const majorInvestments = gameState.decisions.filter(d =>
-        (d.event === 7 && d.choice === 0) ||
-        (d.event === 19 && d.choice === 0)
+        (d.event === 9 && d.choice === 0) ||
+        (d.event === 23 && d.choice === 0)
     );
     if (majorInvestments.length >= 2) {
         lessons.push(`
@@ -374,7 +375,7 @@ function generateLessons() {
     }
 
     // Lesson 5: Exit timing
-    const acquisitionOffers = gameState.decisions.filter(d => d.event === 13 || d.event === 20);
+    const acquisitionOffers = gameState.decisions.filter(d => d.event === 17 || d.event === 24);
     const declined = acquisitionOffers.filter(d => d.choice === 1);
     if (declined.length >= 2) {
         lessons.push(`
