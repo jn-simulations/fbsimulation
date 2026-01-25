@@ -144,14 +144,24 @@ function loadEvent() {
     
     // Update event display
     document.getElementById('eventDate').textContent = event.date;
-    document.getElementById('eventTitle').textContent = event.title;
-    document.getElementById('eventDescription').textContent = description;
-    
-    // Clear previous options and impact
+    document.getElementById('eventTitle').textContent = typeof event.title === 'function' ? event.title() : event.title;
+
+    // Check if there's pending impact from previous decision to show as lead-in
+    const eventDescriptionEl = document.getElementById('eventDescription');
+    if (gameState.pendingImpact) {
+        // Show impact as narrative lead-in, then the new event description
+        const impactHtml = `<div class="impact-narrative">${gameState.pendingImpact}</div><hr class="narrative-divider"><div class="event-text">${description.replace(/\n/g, '<br>')}</div>`;
+        eventDescriptionEl.innerHTML = impactHtml;
+        gameState.pendingImpact = null; // Clear the pending impact
+    } else {
+        eventDescriptionEl.innerHTML = description.replace(/\n/g, '<br>');
+    }
+
+    // Clear previous options
     const optionsContainer = document.getElementById('optionsContainer');
     optionsContainer.innerHTML = '';
     document.getElementById('impactDisplay').classList.add('hidden');
-    
+
     // Show options container
     optionsContainer.classList.remove('hidden');
     
@@ -169,39 +179,27 @@ function loadEvent() {
 
 function makeDecision(choiceIndex, option) {
     console.log("Making decision", choiceIndex);
-    
+
     // Store decision
     gameState.decisions.push({
         event: gameState.eventIndex,
         choice: choiceIndex,
         year: gameState.year
     });
-    
+
     // Apply effects
     applyEffects(option.effects);
-    
-    // Show impact
-    const impactDisplay = document.getElementById('impactDisplay');
+
+    // Get impact text to carry forward to next event
     const impactText = typeof option.impact === 'function' ? option.impact() : option.impact;
-    impactDisplay.innerHTML = impactText;
-    impactDisplay.classList.remove('hidden');
-    
+    gameState.pendingImpact = impactText;
+
     // Update UI
     updateUI();
     updateFamilyDisplay();
-    
-    // Add continue button
-    const continueBtn = document.createElement('button');
-    continueBtn.className = 'btn';
-    continueBtn.textContent = 'Continue';
-    continueBtn.style.marginTop = '20px';
-    continueBtn.addEventListener('click', () => {
-        advanceGame();
-    });
-    impactDisplay.appendChild(continueBtn);
-    
-    // Hide options
-    document.getElementById('optionsContainer').classList.add('hidden');
+
+    // Advance directly to next event (impact will be shown with it)
+    advanceGame();
 }
 
 function applyEffects(effects) {
