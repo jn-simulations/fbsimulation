@@ -745,8 +745,120 @@ const EVENTS = [
                         }
                     ]
                 },
-                
-                // Event 12: 2016 - Michael's Compensation Conflict
+
+                // Event 12: 2015 - External Investment Opportunity
+                {
+                    date: "2015",
+                    title: "The Outside Investor",
+                    description: function() {
+                        let baseDesc = "Anderson Packaging has been growing steadily, but growth requires capital. The business generates solid profits, yet reinvesting everything still leaves the company short of what's needed to fully capitalize on market opportunities.\n\n";
+
+                        baseDesc += "A regional investment firm has approached Robert. They've been watching Anderson Packaging and are impressed by its trajectory.\n\n";
+
+                        baseDesc += "\"We'd like to invest in your company,\" the managing partner explains. \"We're not looking to take over—we want a minority stake. You'd retain control, but you'd have growth capital and a partner who's invested in your success.\"\n\n";
+
+                        if (familyMembers.patricia.ownership > 0) {
+                            baseDesc += "Patricia is cautious: \"Outside investors means outside opinions. They'll want board seats, quarterly reports, and a say in major decisions. Are we ready to answer to someone other than ourselves?\"\n\n";
+                        }
+
+                        baseDesc += "Sarah sees the opportunity: \"With their capital, we could expand faster, invest in automation, maybe even acquire a competitor. We'd grow the pie even if our slice is smaller.\"\n\n";
+
+                        const jenOwn = familyMembers.jennifer.ownership;
+                        if (jenOwn > 0) {
+                            baseDesc += "Jennifer is worried: \"If we dilute the family's ownership, does that mean smaller dividends for me? I'm already not getting much from this business.\"\n\n";
+                        }
+
+                        if (!gameState.michaelLeft) {
+                            baseDesc += "Michael is conflicted: \"I like the growth potential, but do we really want outsiders looking over our shoulders? This has always been a family business.\"\n\n";
+                        }
+
+                        baseDesc += "This is a fundamental question about the nature of Anderson Packaging: Is it a family business that happens to make money, or a business that happens to be owned by a family?\n\n";
+
+                        baseDesc += "Taking outside investment means faster growth but diluted ownership and new stakeholders to satisfy. Staying fully family-owned preserves control but may limit growth potential.";
+
+                        return baseDesc;
+                    },
+                    options: [
+                        {
+                            text: "Accept the investment—growth requires capital we don't have",
+                            effects: {
+                                // External equity: growth capital but diluted control
+                                externalEquity: 20,             // 20% to outside investors
+                                robertOwnership: -10,
+                                patriciaOwnership: function() { return familyMembers.patricia.ownership > 0 ? -5 : 0; },
+                                sarahOwnership: function() { return familyMembers.sarah.ownership > 0 ? -2 : 0; },
+                                michaelOwnership: function() { return familyMembers.michael.ownership > 0 ? -2 : 0; },
+                                jenniferOwnership: function() { return familyMembers.jennifer.ownership > 0 ? -1 : 0; },
+                                cash: 2000000,                  // Investment capital
+                                managementQuality: 5,           // Investor oversight helps
+                                shareholderMonitoring: 15,      // External accountability
+                                boardEffectiveness: 10,         // Investor wants board seat
+                                familyCohesion: -10,            // Tension over "selling out"
+                                sarahHappiness: 10,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -5; },
+                                jenniferHappiness: -10,
+                                robertHappiness: -5,
+                                hasExternalInvestors: true
+                            },
+                            impact: function() {
+                                let result = `<p>Robert accepts the investment. Fresh capital flows into Anderson Packaging, and the family's ownership is diluted to make room for the new investors.</p>`;
+
+                                result += `<p>The investors are professional and hands-off in daily operations, but they expect quarterly updates, audited financials, and a seat on the board. The informal family decision-making style must adapt.</p>`;
+
+                                result += `<p>Sarah is energized by the growth possibilities. "Now we can actually compete," she says.</p>`;
+
+                                if (!gameState.michaelLeft) {
+                                    result += `<p>Michael feels the business has lost something. "We used to make decisions at the dinner table. Now we have board meetings and investor calls."</p>`;
+                                }
+
+                                const jenOwn = familyMembers.jennifer.ownership;
+                                if (jenOwn > 0) {
+                                    result += `<p>Jennifer watches her ownership stake shrink. "I had ${jenOwn.toFixed(0)}% of a family business. Now I have less of a... what? A portfolio company?"</p>`;
+                                }
+
+                                result += `<p>Anderson Packaging is no longer 100% family-owned. The investors are minority shareholders, but their presence changes the culture. Every major decision now considers: "What will the investors think?"</p>`;
+
+                                result += `<p>The family has traded some control for capital. Whether that trade pays off depends on what they do with the opportunity.</p>`;
+
+                                return result;
+                            }
+                        },
+                        {
+                            text: "Decline the investment—this is a family business",
+                            effects: {
+                                // Preserve control, accept constraints
+                                familyCohesion: 5,              // United in keeping it family
+                                managementQuality: -3,          // Miss out on external discipline
+                                sarahHappiness: -10,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 8; },
+                                jenniferHappiness: 5,
+                                robertHappiness: 10,
+                                capitalConstrained: true        // Growth will be limited
+                            },
+                            impact: function() {
+                                let result = `<p>Robert declines the investment. "Thank you for your interest, but Anderson Packaging is a family business. We're not looking for outside partners."</p>`;
+
+                                result += `<p>The investors are disappointed but understanding. "The offer stands if you change your mind," they say.</p>`;
+
+                                result += `<p>Sarah is frustrated. "We're leaving growth on the table because of pride. How is that good business?"</p>`;
+
+                                if (!gameState.michaelLeft) {
+                                    result += `<p>Michael supports the decision. "Dad's right. Once you let outsiders in, you can never get them out. This is our business, our legacy."</p>`;
+                                }
+
+                                result += `<p>The family retains 100% ownership and complete control. But growth will be constrained by the capital they can generate internally or borrow.</p>`;
+
+                                result += `<p>Competitors who take outside investment may grow faster. Anderson Packaging will need to compete on operational excellence rather than capital deployment.</p>`;
+
+                                result += `<p>Robert feels at peace with the decision. The business remains fully in family hands. That's worth something—even if it's hard to put a number on it.</p>`;
+
+                                return result;
+                            }
+                        }
+                    ]
+                },
+
+                // Event 13: 2016 - Michael's Compensation Conflict
                 {
                     date: "2016",
                     title: "The Compensation Debate",

@@ -82,7 +82,8 @@ function init() {
 
         // Risk factors
         hasQualityIssues: false,
-        hasDebt: false
+        hasDebt: false,
+        hasExternalInvestors: false   // Outside equity investors
     };
     
     // Initialize family members
@@ -361,6 +362,13 @@ function applyEffects(effects) {
     }
     if (effects.hasQualityIssues) gameState.hasQualityIssues = true;
     if (effects.hasDebt) gameState.hasDebt = true;
+    if (effects.hasExternalInvestors) gameState.hasExternalInvestors = true;
+    if (effects.capitalConstrained) gameState.capitalConstrained = true;
+
+    // Apply external equity effects (dilutes family ownership)
+    if (effects.externalEquity !== undefined) {
+        gameState.externalEquity += effects.externalEquity;
+    }
 
     // Apply spouse & in-law effects
     if (effects.openToInLaws !== undefined) gameState.openToInLaws = effects.openToInLaws;
