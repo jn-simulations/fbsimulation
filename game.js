@@ -44,6 +44,14 @@ function init() {
         // Cumulative investment effects
         cumulativeEfficiencyInvestment: 0,  // Builds up margin over time
 
+        // Capital structure
+        externalEquity: 0,           // % owned by external investors (dilutes family control)
+        debtCapacity: 500000,        // Maximum comfortable debt level
+
+        // Growth constraints tracking
+        capitalConstrained: false,   // Was growth limited by capital?
+        fundingGap: 0,               // How much capital was needed but unavailable?
+
         // Decision tracking
         decisions: [],
 
@@ -451,26 +459,88 @@ function advanceGame() {
         };
 
         // ============================================
-        // GROWTH RATE
-        // Driven by: risk preference, growth investment, management quality
+        // GROWTH RATE & CAPITAL CONSTRAINTS
+        // Growth requires capital - if internal profits insufficient,
+        // need external financing (debt or equity) with tradeoffs
         // ============================================
         const baseGrowth = 0.02;  // 2% baseline
 
         // Risk preference bonus (from shareholders): 0-3%
         const riskBonus = (shareholderPrefs.riskTolerance / 100) * 0.03;
 
-        // Growth investment bonus: ROI on reinvested profits
-        // Higher investment = higher growth, but diminishing returns
-        const growthInvestmentRatio = allocated.growth / gameState.revenue;
-        const investmentBonus = Math.min(0.04, growthInvestmentRatio * 0.5);  // Cap at 4%
-
         // Management execution bonus: 0-2%
         const managementBonus = (effectiveManagement / 100) * 0.02;
 
-        const growthRate = baseGrowth + riskBonus + investmentBonus + managementBonus;
+        // Desired growth rate based on preferences and management
+        const desiredGrowthRate = baseGrowth + riskBonus + managementBonus;
+
+        // Capital required to achieve desired growth
+        // Rule of thumb: need ~0.5x of revenue growth in capital investment
+        const desiredRevenueIncrease = gameState.revenue * (Math.pow(1 + desiredGrowthRate, yearsToAdvance) - 1);
+        const capitalRequired = desiredRevenueIncrease * 0.5;
+
+        // Available capital sources
+        const internalCapital = allocated.growth;  // From profit allocation
+        const availableCash = Math.max(0, gameState.cash - 50000);  // Keep minimum reserve
+        const availableDebtCapacity = Math.max(0, gameState.debtCapacity - gameState.debt);
+
+        // Calculate funding gap
+        let fundingGap = capitalRequired - internalCapital;
+        let actualGrowthCapital = internalCapital;
+        gameState.capitalConstrained = false;
+        gameState.fundingGap = 0;
+
+        if (fundingGap > 0) {
+            // Need external capital - check sources in order of preference
+
+            // 1. Use excess cash first (no cost, no control loss)
+            if (fundingGap > 0 && availableCash > 0) {
+                const cashUsed = Math.min(fundingGap, availableCash);
+                actualGrowthCapital += cashUsed;
+                gameState.cash -= cashUsed;
+                fundingGap -= cashUsed;
+            }
+
+            // 2. Take on debt (increases risk, no control loss)
+            // Only if shareholders have moderate-high risk tolerance
+            if (fundingGap > 0 && availableDebtCapacity > 0 && shareholderPrefs.riskTolerance > 40) {
+                const debtUsed = Math.min(fundingGap, availableDebtCapacity);
+                actualGrowthCapital += debtUsed;
+                gameState.debt += debtUsed;
+                gameState.hasDebt = true;
+                fundingGap -= debtUsed;
+
+                // Debt increases risk - reduce debt capacity going forward
+                gameState.debtCapacity = Math.max(gameState.debtCapacity, gameState.debt * 1.2);
+            }
+
+            // 3. If still short, growth is constrained (or would need equity dilution)
+            if (fundingGap > 0) {
+                gameState.capitalConstrained = true;
+                gameState.fundingGap = fundingGap;
+
+                // Aggressive growth shareholders might accept equity dilution
+                // But this is a major decision that should be an event, not automatic
+                // For now, just constrain growth
+            }
+        }
+
+        // Actual growth rate based on capital actually deployed
+        const growthInvestmentRatio = actualGrowthCapital / Math.max(1, gameState.revenue);
+        const investmentBonus = Math.min(0.04, growthInvestmentRatio * 0.5);  // Cap at 4%
+
+        const actualGrowthRate = baseGrowth + (fundingGap > 0 ?
+            investmentBonus * (actualGrowthCapital / capitalRequired) :  // Reduced if constrained
+            investmentBonus + (riskBonus * 0.5));  // Full if funded
 
         // Apply growth over the period
-        gameState.revenue *= Math.pow(1 + growthRate, yearsToAdvance);
+        gameState.revenue *= Math.pow(1 + actualGrowthRate, yearsToAdvance);
+
+        // Debt service reduces profit
+        if (gameState.debt > 0) {
+            const interestExpense = gameState.debt * 0.06 * yearsToAdvance;  // 6% interest rate
+            gameState.cash -= interestExpense;
+        }
 
         // ============================================
         // PROFIT MARGIN
@@ -515,6 +585,14 @@ function advanceGame() {
         // ============================================
         const assetRatio = 0.7 - (effectiveManagement / 100) * 0.2;
         gameState.assets = gameState.cash + (gameState.revenue * assetRatio);
+
+        // ============================================
+        // DEBT CAPACITY
+        // Grows with business size but limited by risk tolerance
+        // ============================================
+        const baseDebtCapacity = gameState.revenue * 0.3;  // 30% of revenue as baseline
+        const riskAdjustment = 1 + (shareholderPrefs.riskTolerance - 50) / 100;  // ±50%
+        gameState.debtCapacity = Math.max(500000, baseDebtCapacity * riskAdjustment);
 
         // ============================================
         // EMPLOYEES
