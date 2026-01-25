@@ -167,56 +167,28 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 4: 2007 - Sarah Joins
+                // Event 4: 2007 - Sarah Joins (Narrative)
                 {
                     date: "2007",
                     title: "The Next Generation Enters",
-                    description: `Sarah has graduated with her MBA and wants to join Anderson Packaging. She's 21, smart, ambitious, and has real business skills.\n\nMichael is 18 and just starting college. He's shown interest in sales but won't be ready to join for a few years.\n\nRobert faces an important decision about HOW to bring Sarah into the business:\n\n"Should I start her at entry-level to earn her way up?" he asks Patricia. "Or recognize her credentials with an immediate leadership role?"\n\n"What about ownership?" Patricia asks. "Are you thinking of giving her shares now?"\n\n"I don't know," Robert admits.`,
+                    description: `Sarah has graduated with her MBA and is eager to join Anderson Packaging. She's 21, smart, ambitious, and has real business skills.\n\nAfter much discussion with Patricia, Robert decides on a balanced approach: Sarah will join as Operations Manager at a competitive salary, with ownership to be discussed after she proves herself over the next few years.\n\n"I want to earn my place here," Sarah tells her parents. "I don't want anyone saying I got special treatment."\n\nRobert is proud of his daughter's attitude. Michael, now 18 and starting college, watches his sister's entry with interest—knowing his turn will come eventually.\n\nSarah throws herself into the work, learning every aspect of the business. Within months, she's made herself indispensable.`,
                     options: [
                         {
-                            text: "Entry-level role, earn her way up, no immediate ownership",
+                            text: "Continue",
                             effects: {
-                                profit: 12000,  // 6% margin on cardboard
-                                revenue: 200000,
-                                sarahHappiness: 5,
-                                robertHappiness: 10,
-                                managementQuality: 5,
-                                employees: 1
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Sarah starts as a junior operations manager at $55K—market rate for her experience. No ownership stake.</p><p>"I appreciate you treating me like any other employee," Sarah says, though she wonders when ownership might come.</p><p><span class='impact-positive'>Revenue increases as Sarah contributes to operations.</span> She generates more value than she costs, so <span class='impact-positive'>profit increases modestly</span>.</p><p>Non-family employees respect that Sarah is earning her position. <span class='impact-positive'>Management quality improves.</span></p><p><span class='impact-highlight'>Robert</span> feels proud of setting a meritocratic precedent. The ownership question remains open for the future.</p>`
-                        },
-                        {
-                            text: "Manager role with 10% ownership stake (recognizes credentials & commitment)",
-                            effects: {
-                                profit: -15000,
-                                revenue: 250000,
-                                sarahOwnership: 10,
-                                robertOwnership: -5,
-                                patriciaOwnership: -5,  // If Patricia is partner, she gives up 5% too
-                                sarahHappiness: 20,
-                                robertHappiness: 5,
-                                managementQuality: 3,
-                                employees: 1
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Sarah joins as Operations Manager at $75K with an immediate 10% ownership stake.</p><p>"Thank you for showing confidence in me, Dad," Sarah says, clearly touched by the gesture.</p><p><span class='impact-highlight'>Sarah</span> feels deeply committed to the business. <span class='impact-positive'>Her happiness increases significantly.</span></p><p><span class='impact-negative'>Profit decreases</span> from the higher compensation, but Sarah's ownership creates strong alignment.</p><p>The decision sets a precedent: joining the family business comes with ownership. This will affect how Michael and Jennifer are treated later.</p><p>Non-family employees notice the preferential treatment. Some wonder if they'll ever get equity.</p>`
-                        },
-                        {
-                            text: "Senior role BUT ownership deferred until she proves herself (2-3 years)",
-                            effects: {
-                                profit: -5000,
-                                revenue: 225000,
-                                sarahHappiness: 12,
+                                profit: 10000,
+                                revenue: 220000,
+                                sarahHappiness: 10,
                                 robertHappiness: 8,
                                 managementQuality: 4,
-                                employees: 1,
-                                sarahOwnershipPending: true  // Flag for future ownership decision
+                                employees: 1
                             },
-                            impact: `<h4>Decision Impact</h4><p>Sarah joins as Operations Manager at $70K, with the understanding that ownership will be discussed after she proves herself over 2-3 years.</p><p>"I get it," Sarah says. "I want to earn it anyway."</p><p><span class='impact-positive'>Revenue increases</span> as Sarah takes on real responsibility immediately. Her MBA and fresh perspective bring value.</p><p><span class='impact-highlight'>Sarah</span> feels respected by the approach—challenged to prove herself but with a clear path to ownership.</p><p>This hybrid approach balances meritocracy with family commitment. The ownership conversation will happen later, once Sarah has established her value.</p>`
+                            impact: `<h4>Sarah Joins the Business</h4><p>Sarah begins her career at Anderson Packaging as Operations Manager. She's eager to prove herself and quickly becomes a valuable contributor.</p><p><span class='impact-positive'>Revenue increases</span> as Sarah brings fresh ideas and energy to operations.</p><p>The ownership question remains open—Robert will revisit it once Sarah has established her track record.</p>`
                         }
                     ]
                 },
 
-                // Event 5: 2008 - Sarah's Marriage
+                // Event 5: 2008 - Sarah's Marriage (Narrative)
                 {
                     date: "2008",
                     title: "Sarah's Wedding",
@@ -225,74 +197,29 @@ const EVENTS = [
 
                         baseDesc += "Mark Thompson is 27, charismatic, and ambitious. He has an MBA from a top program and works in management consulting. He's smart, driven, and clearly adores Sarah.\n\n";
 
-                        baseDesc += "Over champagne at the engagement party, Mark pulls Robert aside. \"I want you to know how much I admire what you've built, Robert. Anderson Packaging is impressive. Sarah talks about it constantly.\"\n\n";
+                        baseDesc += "The wedding is beautiful—a perfect spring day with family and friends celebrating the happy couple. During the reception, Mark pulls Robert aside for a moment.\n\n";
 
-                        baseDesc += "Robert smiles. \"She's doing great work. We're lucky to have her.\"\n\n";
+                        baseDesc += "\"I want you to know how much I admire what you've built, Robert. Anderson Packaging is impressive. If there's ever an opportunity to be involved...\" Mark trails off with a hopeful look.\n\n";
 
-                        baseDesc += "Mark hesitates, then continues: \"I've actually been thinking... my consulting work is interesting, but there's something special about building a real business. A family business. If there's ever an opportunity—\"\n\n";
+                        baseDesc += "Robert smiles noncommittally. \"Tonight's about you and Sarah. We can talk about business another time.\"\n\n";
 
-                        if (familyMembers.patricia.ownership > 0) {
-                            baseDesc += "Patricia appears at Robert's elbow. She's heard enough. \"Mark, let's not talk business tonight. This is a celebration!\"\n\n";
-                            baseDesc += "Later, Patricia whispers to Robert: \"We need to think about this carefully. If Mark joins the business, it changes everything. Sarah's husband working alongside her, with her brother, under her parents? That's complicated.\"\n\n";
-                        } else {
-                            baseDesc += "Robert feels a flash of discomfort. His future son-in-law wants into the family business? That's... complicated.\n\n";
-                        }
+                        baseDesc += "Mark nods, accepting the deflection, but Robert notices how intently his new son-in-law watches the family business discussions at dinner.\n\n";
 
-                        baseDesc += "The wedding is beautiful. Sarah and Mark are clearly happy together. But Robert can't stop thinking about that conversation.\n\n";
+                        baseDesc += "Later, Patricia comments: \"Mark's ambitious. He's not going to stay on the sidelines forever. We'll need to think about how we handle in-laws eventually.\"\n\n";
 
-                        baseDesc += "Does the Anderson family welcome in-laws into the business? Mark has real skills—his consulting background could be valuable. But once you open that door, where does it end? What about Michael's future spouse? What about spouses who aren't qualified?\n\n";
-
-                        baseDesc += "This is the first time the family must consider: What's the policy on in-laws?";
+                        baseDesc += "The question of whether spouses can join the family business has been raised for the first time. It won't be the last.";
 
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Welcome Mark's interest—in-laws can be valuable additions to the business",
+                            text: "Continue",
                             effects: {
-                                sarahHappiness: 15,
+                                sarahHappiness: 10,
                                 robertHappiness: 5,
-                                patriciaHappiness: -5,
-                                managementQuality: 3,
-                                markInterestedInBusiness: true,
-                                openToInLaws: true
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Robert tells Mark that he appreciates his interest and the door is open if he ever wants to discuss joining Anderson Packaging.</p><p><span class='impact-highlight'>Sarah</span> is thrilled. <span class='impact-positive'>Her happiness increases significantly.</span> She loves the idea of building the business alongside her husband.</p><p><span class='impact-highlight'>Patricia</span> is worried. "You've just created an expectation, Robert. Mark will remember that 'open door.' What happens when he wants to walk through it?"</p><p>The wedding goes beautifully. Mark mentions Robert's encouraging words in his toast, calling the Andersons "the family I'm proud to join—in every sense."</p><p><span class='impact-highlight'>This sets a precedent</span>: in-laws may be welcomed into Anderson Packaging. Future spouses will hear about this.</p>`
-                        },
-                        {
-                            text: "Keep boundaries clear—the business is for blood Andersons only",
-                            effects: {
-                                sarahHappiness: -10,
-                                robertHappiness: -5,
-                                patriciaHappiness: 10,
-                                managementQuality: 2,
-                                markInterestedInBusiness: true,
-                                openToInLaws: false
-                            },
-                            impact: function() {
-                                let result = `<h4>Decision Impact</h4><p>Robert gently but firmly redirects the conversation. "Mark, I'm glad you appreciate what we're building. But Anderson Packaging is a family business—Anderson family. I hope you understand."</p>`;
-
-                                result += `<p>Mark's smile freezes slightly. "Of course. I wasn't suggesting... I just meant..." He recovers quickly, but the message is clear.</p>`;
-
-                                result += `<p><span class='impact-highlight'>Sarah</span> notices the awkward exchange and is hurt on Mark's behalf. <span class='impact-negative'>Her happiness decreases.</span> "Dad, that was harsh. Mark was just being enthusiastic."</p>`;
-
-                                if (familyMembers.patricia.ownership > 0) {
-                                    result += `<p><span class='impact-highlight'>Patricia</span> quietly approves. "You did the right thing. Clear boundaries now prevent complicated situations later."</p>`;
-                                }
-
-                                result += `<p>The wedding is still beautiful, but there's a slight coolness between Robert and Mark that never fully thaws.</p><p><span class='impact-highlight'>This sets a precedent</span>: the business is for Andersons by blood, not marriage. Future in-laws will know where they stand.</p>`;
-
-                                return result;
-                            }
-                        },
-                        {
-                            text: "Defer the conversation—we'll figure out in-law policy later",
-                            effects: {
-                                sarahHappiness: 5,
-                                robertHappiness: -5,
                                 markInterestedInBusiness: true
                             },
-                            impact: `<h4>Decision Impact</h4><p>Robert smiles warmly but changes the subject. "Tonight's about celebrating you and Sarah, Mark. Let's save business talk for another time."</p><p>Mark accepts the deflection gracefully, but Robert sees a flicker of calculation in his eyes. The question hasn't gone away—it's just been postponed.</p><p><span class='impact-highlight'>Sarah</span> is content with the non-answer. "Dad's right, we can figure that out later," she tells Mark.</p><p><span class='impact-highlight'>Robert</span> feels uneasy. He's avoided making a decision, but Mark's interest in the business is now a known quantity. Eventually, this conversation will need to happen.</p><p><span class='impact-negative'>No policy on in-laws has been established.</span> This ambiguity may cause problems when the question inevitably resurfaces.</p>`
+                            impact: `<h4>A Beautiful Wedding</h4><p>Sarah and Mark begin their life together. The wedding is joyful, though Robert can't help noticing Mark's interest in the family business.</p><p>The question of in-law involvement has been planted. It will resurface as the family grows.</p>`
                         }
                     ]
                 },
@@ -483,7 +410,7 @@ const EVENTS = [
                     ]
                 },
 
-                // Event 8: 2011 - Michael's Marriage
+                // Event 8: 2011 - Michael's Marriage (Narrative)
                 {
                     date: "2011",
                     title: "Michael's Wedding",
@@ -492,113 +419,27 @@ const EVENTS = [
 
                         baseDesc += "Lisa is 26, ambitious, and whip-smart. She has a background in marketing and currently works at a tech startup. She's outspoken, confident, and not afraid to challenge people—including the Andersons.\n\n";
 
-                        baseDesc += "At the rehearsal dinner, the families mingle. Lisa's parents are successful small business owners themselves, which creates an instant connection with Robert.\n\n";
+                        baseDesc += "At the rehearsal dinner, Lisa wastes no time sharing her observations about Anderson Packaging with Robert. \"The packaging industry is ripe for disruption—have you thought about digital marketing? Social media?\"\n\n";
 
-                        baseDesc += "\"Your company is impressive,\" Lisa tells Robert directly. \"Michael talks about it all the time. The packaging industry is ripe for disruption—have you thought about digital marketing? Social media? Your brand positioning could be so much stronger.\"\n\n";
+                        baseDesc += "Robert is taken aback by her directness. Before he can respond, Lisa continues: \"I have some ideas. Maybe Michael and I could present them sometime?\"\n\n";
 
-                        baseDesc += "Robert blinks. He's not used to being given business advice by someone he just met. Before he can respond, Lisa continues: \"I actually have some ideas. Maybe Michael and I could present them to you sometime?\"\n\n";
+                        baseDesc += "Sarah whispers to Mark: \"Looks like we might have competition for the 'ambitious spouse' title.\"\n\n";
 
-                        if (gameState.openToInLaws) {
-                            baseDesc += "Robert remembers his conversation with Mark at Sarah's wedding. He'd left that door open for in-laws. Now here's another one, already pushing through it.\n\n";
-                        } else if (gameState.openToInLaws === false) {
-                            baseDesc += "Robert remembers firmly telling Mark that the business is for Andersons only. But Lisa is... different. More aggressive. She doesn't seem like someone who will accept 'no' easily.\n\n";
-                        }
+                        baseDesc += "The wedding is lovely—Lisa's taste is impeccable. But Robert can't shake the feeling that he's gained not just a daughter-in-law, but a business proposition waiting to happen.\n\n";
 
-                        baseDesc += "Sarah watches the exchange with interest. She whispers to Mark: \"Looks like we might have competition for the 'ambitious spouse' title.\"\n\n";
-
-                        if (familyMembers.patricia.ownership > 0) {
-                            baseDesc += "Patricia pulls Robert aside later. \"Lisa is... intense. Very capable, but intense. She's not going to be content watching from the sidelines like most spouses.\"\n\n";
-                        }
-
-                        baseDesc += "The wedding is lovely—Lisa's taste is impeccable—but Robert can't shake the feeling that he's gained not just a daughter-in-law, but a business proposition waiting to happen.\n\n";
-
-                        baseDesc += "Both Sarah and Michael are now married to ambitious spouses with business interests. This changes the family dynamic significantly.";
+                        baseDesc += "Both Sarah and Michael are now married to ambitious spouses with business interests. The family dynamic has become more complex. Eventually, the Andersons will need to decide how to handle in-laws who want to join the business.";
 
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Engage with Lisa's ideas—she might bring valuable outside perspective",
-                            effects: {
-                                michaelHappiness: 15,
-                                sarahHappiness: -5,
-                                robertHappiness: 5,
-                                managementQuality: 3,
-                                lisaInterestedInBusiness: true,
-                                lisaEngaged: true
-                            },
-                            impact: function() {
-                                let result = `<h4>Decision Impact</h4><p>Robert invites Lisa to present her marketing ideas to the leadership team. "Fresh perspective is always valuable," he says.</p>`;
-
-                                result += `<p><span class='impact-highlight'>Lisa</span> is thrilled. She spends weeks preparing a comprehensive presentation on Anderson Packaging's brand strategy, complete with market research and competitor analysis.</p>`;
-
-                                result += `<p><span class='impact-highlight'>Michael</span> is proud and grateful. <span class='impact-positive'>His happiness increases significantly.</span> "Thanks for giving Lisa a chance, Dad. She's really talented."</p>`;
-
-                                result += `<p><span class='impact-highlight'>Sarah</span> is uneasy. <span class='impact-negative'>Her happiness decreases slightly.</span> "Dad, you turned Mark away at my wedding, but you're rolling out the red carpet for Lisa?"</p>`;
-
-                                if (gameState.openToInLaws) {
-                                    result += `<p>Mark overhears and asks Sarah: "Wait, I thought your dad was open to in-laws joining? That's what he told me."</p>`;
-                                }
-
-                                result += `<p>The family now has two ambitious in-laws circling the business. Expectations are being created. <span class='impact-highlight'>The question of in-law involvement has become unavoidable.</span></p>`;
-
-                                return result;
-                            }
-                        },
-                        {
-                            text: "Politely deflect—appreciate her energy but maintain boundaries",
-                            effects: {
-                                michaelHappiness: -10,
-                                sarahHappiness: 5,
-                                robertHappiness: -5,
-                                lisaInterestedInBusiness: true,
-                                lisaEngaged: false
-                            },
-                            impact: function() {
-                                let result = `<h4>Decision Impact</h4><p>Robert smiles politely but deflects. "That's very kind, Lisa. We're always evolving our approach. Let's focus on the celebration tonight."</p>`;
-
-                                result += `<p>Lisa's eyes narrow almost imperceptibly. She's been dismissed, and she knows it. "Of course. Another time."</p>`;
-
-                                result += `<p><span class='impact-highlight'>Michael</span> is disappointed. <span class='impact-negative'>His happiness decreases.</span> He sees how much effort Lisa put into those ideas. "Dad, would it have killed you to at least listen?"</p>`;
-
-                                result += `<p><span class='impact-highlight'>Sarah</span> feels validated. <span class='impact-positive'>At least Dad is being consistent.</span> The business isn't a playground for spouses' ambitions.</p>`;
-
-                                result += `<p>Lisa remains gracious throughout the wedding, but there's a new coolness in her interactions with Robert. She's not someone who forgets being shut down.</p>`;
-
-                                result += `<p><span class='impact-highlight'>The family has two ambitious in-laws now.</span> Neither has been given a clear path into the business. That tension will simmer.</p>`;
-
-                                return result;
-                            }
-                        },
-                        {
-                            text: "Suggest she and Mark both present ideas—treat all in-laws equally",
+                            text: "Continue",
                             effects: {
                                 michaelHappiness: 10,
-                                sarahHappiness: 10,
                                 robertHappiness: 5,
-                                patriciaHappiness: -10,
-                                managementQuality: 4,
-                                lisaInterestedInBusiness: true,
-                                lisaEngaged: true,
-                                markEngaged: true
+                                lisaInterestedInBusiness: true
                             },
-                            impact: function() {
-                                let result = `<h4>Decision Impact</h4><p>Robert has an idea. "Lisa, Mark has also expressed interest in the business. Why don't you both put together presentations? We could have an 'in-law innovation day.'"</p>`;
-
-                                result += `<p><span class='impact-highlight'>Lisa</span> likes the idea of a competition—she's confident she'll outshine anyone. "That sounds perfect."</p>`;
-
-                                result += `<p><span class='impact-highlight'>Michael and Sarah</span> are both pleased that their spouses are being treated equally. <span class='impact-positive'>Their happiness increases.</span></p>`;
-
-                                if (familyMembers.patricia.ownership > 0) {
-                                    result += `<p><span class='impact-highlight'>Patricia</span> is alarmed. <span class='impact-negative'>Her happiness decreases significantly.</span> "Robert, what are you doing? You've just invited both of them in. Now they'll both expect opportunities."</p>`;
-                                }
-
-                                result += `<p>The "in-law innovation day" goes well—both Mark and Lisa present thoughtful ideas. But now there's an expectation that the family will act on them.</p>`;
-
-                                result += `<p><span class='impact-highlight'>The in-law question has become urgent.</span> With two capable spouses eager to contribute, the family needs a clear policy.</p>`;
-
-                                return result;
-                            }
+                            impact: `<h4>Another Wedding</h4><p>Michael and Lisa begin their life together. The wedding is joyful, and the family welcomes Lisa warmly.</p><p>Like Mark before her, Lisa has made her interest in the family business known. With two ambitious in-laws now, the question of spouse involvement will need to be addressed.</p>`
                         }
                     ]
                 },
@@ -1488,29 +1329,39 @@ const EVENTS = [
                     ]
                 },
                 
-                // Event 20: 2030 - Third Generation
+                // Event 20: 2030 - Third Generation (Narrative)
                 {
                     date: "2030",
                     title: "The Next Generation",
-                    description: `Sarah's daughter Emily is now 16 and brilliant—she's already talking about studying engineering and joining the family business.\n\nMichael's son David is 14 and entrepreneurial, always starting small businesses.\n\nBut the family hasn't discussed how the third generation will enter the business. Should there be requirements? Standards? Or should all grandchildren have a guaranteed place?\n\nRobert remembers bringing Sarah and Michael into the business without clear policies. Sometimes it worked, sometimes it created problems.\n\nSarah wants to professionalize the entry process. Jennifer worries about her son Lucas (10) being disadvantaged if he doesn't show business interest.`,
+                    description: function() {
+                        let baseDesc = "The third generation is growing up. Sarah's daughter Emily is now 16 and brilliant—she's already talking about studying engineering and joining the family business someday. Michael's son David is 14 and entrepreneurial, always starting small ventures.\n\n";
+
+                        baseDesc += "Over Sunday dinner, the conversation naturally turns to the grandchildren's futures.\n\n";
+
+                        baseDesc += "\"Emily keeps asking me about operations,\" Sarah says proudly. \"She wants to do an internship next summer.\"\n\n";
+
+                        if (!gameState.michaelLeft) {
+                            baseDesc += "\"David's the same way,\" Michael adds. \"He's already pitching me business ideas.\"\n\n";
+                        }
+
+                        baseDesc += "Jennifer watches quietly. Her son Lucas, 10, shows no particular interest in business. She wonders if he'll be left behind.\n\n";
+
+                        baseDesc += "Robert smiles at his grandchildren's enthusiasm, but he also remembers the challenges of bringing the second generation into the business. He hopes the family has learned from those experiences.\n\n";
+
+                        baseDesc += "\"When the time comes,\" Sarah says, \"we should require them to work elsewhere first. Get outside experience. We made that mistake with ourselves.\"\n\n";
+
+                        baseDesc += "The family agrees this makes sense. The third generation will need to prove themselves before joining Anderson Packaging—a lesson learned from the second generation's growing pains.";
+
+                        return baseDesc;
+                    },
                     options: [
                         {
-                            text: "Institute formal policy: Gen 3 must work elsewhere for 3+ years first",
+                            text: "Continue",
                             effects: {
-                                sarahHappiness: 15,
-                                robertHappiness: 15,
-                                jenniferHappiness: -10
+                                sarahHappiness: 10,
+                                robertHappiness: 10
                             },
-                            impact: `<h4>Decision Impact</h4><p>The family creates a formal policy: all third-generation members must work elsewhere for at least three years and demonstrate relevant skills before joining Anderson Packaging.</p><p><span class='impact-highlight'>Sarah and Robert</span> believe this professionalizes the business and ensures competence over family privilege.</p><p><span class='impact-highlight'>Jennifer</span> worries this policy disadvantages her son Lucas, who is younger and less obviously business-oriented than Emily and David.</p><p>The policy sets important precedents for the future, though it may create resentment.</p>`
-                        },
-                        {
-                            text: "Keep it informal—evaluate each grandchild individually when the time comes",
-                            effects: {
-                                sarahHappiness: -5,
-                                jenniferHappiness: 10,
-                                robertHappiness: -5
-                            },
-                            impact: `<h4>Decision Impact</h4><p>The family decides not to create formal policies, preferring to evaluate each situation individually.</p><p><span class='impact-highlight'>Jennifer</span> is relieved—flexibility means Lucas won't be automatically excluded.</p><p><span class='impact-highlight'>Sarah</span> worries this approach will lead to the same conflicts the second generation faced. Lack of clear standards could breed resentment and nepotism.</p><p>The family has deferred difficult decisions that will likely resurface later.</p>`
+                            impact: `<h4>The Third Generation Grows</h4><p>Emily and David show promise for the future of Anderson Packaging. The family informally agrees that the grandchildren should gain outside experience before joining the business.</p><p>The third generation is still years away from entering the workforce, but the seeds of the next transition are being planted.</p>`
                         }
                     ]
                 },
@@ -1606,67 +1457,91 @@ const EVENTS = [
                     }
                 },
                 
-                // Event 22: 2034 - The Founder's Passing
+                // Event 22: 2034 - The Founder's Passing (Narrative)
                 {
                     date: "2034",
                     title: "The Founder's Passing",
-                    description: `Robert Anderson passed away peacefully at age 75. The man who started with $50,000 in 1994 built a thriving company that employs over a hundred people and serves clients nationwide.\n\nHis funeral draws hundreds—employees past and present, clients, competitors, community members. The tributes speak of his integrity, vision, and loyalty.\n\nNow the family must navigate grief while managing succession. Robert's will transfers his ownership to Sarah (60%) and equally to any other active family members (40% if Michael still there, 0% if he left).\n\nSarah is now fully in control. But leading without her father's guidance—and wisdom—will be different.\n\nThe company must decide how to honor Robert's legacy while moving forward.`,
+                    description: function() {
+                        let baseDesc = "Robert Anderson passed away peacefully at age 75. The man who started with $50,000 in 1994 built a thriving company that employs over a hundred people and serves clients nationwide.\n\n";
+
+                        baseDesc += "His funeral draws hundreds—employees past and present, clients, competitors, community members. The tributes speak of his integrity, vision, and loyalty.\n\n";
+
+                        baseDesc += "At the reception, stories flow: the time Robert personally delivered an order when a truck broke down, the way he remembered every employee's name, his insistence on quality over shortcuts.\n\n";
+
+                        baseDesc += "\"He built something real,\" one longtime client says. \"Not just a business—a legacy.\"\n\n";
+
+                        baseDesc += "Robert's will transfers his ownership to Sarah";
+                        if (!gameState.michaelLeft) {
+                            baseDesc += " (60%) and Michael (40%)";
+                        }
+                        baseDesc += ". The transition he planned for years has finally arrived.\n\n";
+
+                        baseDesc += "Sarah stands at her father's grave as the crowd disperses. She makes a silent promise: to honor his values while building on his foundation. The company will evolve, but its soul will remain.";
+
+                        return baseDesc;
+                    },
                     options: [
                         {
-                            text: "Maintain Robert's vision and conservative approach",
+                            text: "Continue",
                             effects: {
                                 robertDeceased: true,
-                                robertOwnershipTransfer: true, // Special flag to handle ownership transfer
+                                robertOwnershipTransfer: true,
                                 sarahHappiness: 5,
-                                robertHappiness: 0,
-                                revenue: -300000
+                                revenue: 500000,
+                                profit: 30000
                             },
                             impact: function() {
-                                return `<h4>Decision Impact</h4><p>Sarah commits to maintaining Robert's conservative, values-driven approach to the business.</p><p>The company continues steadily, but <span class='impact-negative'>growth slows</span> as opportunities are passed up to stay true to the founder's vision.</p><p>Some employees appreciate the continuity. Others feel the company is stuck in the past.</p><p>Sarah receives ` + (gameState.michaelLeft ? "85%" : "70%") + `% ownership. ` + (gameState.michaelLeft ? "She is now the overwhelming majority owner." : "Michael receives 30%.") + `</p>`;
-                            }
-                        },
-                        {
-                            text: "Honor his values but modernize the strategy",
-                            effects: {
-                                robertDeceased: true,
-                                robertOwnershipTransfer: true, // Special flag to handle ownership transfer
-                                sarahHappiness: 15,
-                                robertHappiness: 0,
-                                revenue: 1200000,
-                                profit: 72000,  // 6% margin on cardboard
-                                assets: 800000
-                            },
-                            impact: function() {
-                                return `<h4>Decision Impact</h4><p>Sarah decides to honor Robert's core values—integrity, employee welfare, quality—while modernizing strategy for the next generation.</p><p><span class='impact-positive'>Revenue, profit, and valuation all increase</span> as Sarah implements changes she's been planning.</p><p>The company evolves while maintaining its soul. Employees embrace the changes.</p><p>Sarah receives ` + (gameState.michaelLeft ? "85%" : "70%") + `% ownership. ` + (gameState.michaelLeft ? "She is now the overwhelming majority owner." : "Michael receives 30%.") + ` The business enters its third decade under new leadership.</p>`;
+                                let result = `<h4>Farewell to the Founder</h4><p>Robert Anderson's legacy lives on in the company he built and the values he instilled.</p>`;
+                                result += `<p>Sarah inherits ` + (gameState.michaelLeft ? "all" : "60%") + ` of Robert's ownership. `;
+                                if (!gameState.michaelLeft) {
+                                    result += `Michael receives 40%. `;
+                                }
+                                result += `</p><p>The second generation now leads Anderson Packaging into its next chapter, carrying forward Robert's vision while adapting to the future.</p>`;
+                                return result;
                             }
                         }
                     ]
                 },
                 
-                // Event 23: 2036 - Third Generation Arrives
+                // Event 23: 2036 - Third Generation Arrives (Narrative)
                 {
                     date: "2036",
                     title: "The Third Generation Arrives",
-                    description: `Emily (22) has graduated with an engineering degree from MIT. She wants to join Anderson Packaging.\n\nDavid (20) is finishing business school. He's charismatic and entrepreneurial, already talking about expanding into new markets.\n\nBut this is delicate. If the family implemented the "work elsewhere first" policy, Emily and David need to follow it. If they didn't, Sarah needs to decide whether to hire her daughter and nephew without external experience.\n\nThe third generation brings energy and ideas—but also the risk of repeating the conflicts that challenged the second generation.`,
+                    description: function() {
+                        let baseDesc = "Emily (22) has graduated with an engineering degree from MIT. After working for two years at a major packaging competitor—honoring the family's commitment to outside experience—she's ready to join Anderson Packaging.\n\n";
+
+                        baseDesc += "\"I learned so much out there,\" Emily tells Sarah. \"But I always knew I'd come back. This is our family's legacy.\"\n\n";
+
+                        if (!gameState.michaelLeft) {
+                            baseDesc += "David (20), Michael's son, is finishing business school. He's been interning at a tech startup, learning modern marketing and e-commerce. He'll join next year.\n\n";
+                        }
+
+                        baseDesc += "Sarah watches her daughter settle into her new office—the same office Sarah herself occupied when she first joined the company nearly 30 years ago.\n\n";
+
+                        baseDesc += "\"Grandpa would be proud,\" Emily says, looking at Robert's photo on the wall.\n\n";
+
+                        baseDesc += "\"He would,\" Sarah agrees, feeling the weight of three generations of Anderson ambition and responsibility. The third generation has arrived.";
+
+                        return baseDesc;
+                    },
                     options: [
                         {
-                            text: "Hire both immediately in entry-level roles",
+                            text: "Continue",
                             effects: {
-                                profit: -150000,
-                                revenue: 600000,
+                                profit: -75000,
+                                revenue: 400000,
                                 sarahHappiness: 15,
-                                michaelHappiness: 10,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 10; },
                                 hasGen3: true
                             },
-                            impact: `<h4>Decision Impact</h4><p>Emily joins as a junior engineer, David in business development. Both at entry-level salaries.</p><p><span class='impact-positive'>Revenue increases</span> as the young generation brings fresh energy and ideas.</p><p><span class='impact-negative'>Profit decreases</span> from additional payroll.</p><p>The third generation is now in the business. Emily and David are eager to prove themselves, but also bring the natural confidence of family privilege.</p><p>Some long-time employees question whether they earned their positions or received them due to family connections.</p>`
-                        },
-                        {
-                            text: "Require them to work elsewhere for 3 years first",
-                            effects: {
-                                sarahHappiness: 10,
-                                michaelHappiness: 5
-                            },
-                            impact: `<h4>Decision Impact</h4><p>Sarah implements the professional standard: Emily and David must work elsewhere first.</p><p>Emily is disappointed but accepts it. She joins a major packaging firm. David takes a sales role at a tech startup.</p><p>The policy ensures they'll bring outside experience and perspective. It also signals that Anderson Packaging values competence over family privilege.</p><p>However, three years is a long time. Will they still want to join the family business after building careers elsewhere?</p>`
+                            impact: function() {
+                                let result = `<h4>The Third Generation Begins</h4><p>Emily joins Anderson Packaging as a junior engineer, bringing fresh ideas and outside experience.</p>`;
+                                if (!gameState.michaelLeft) {
+                                    result += `<p>David will join next year in business development.</p>`;
+                                }
+                                result += `<p><span class='impact-positive'>Revenue increases</span> as the young generation brings new energy.</p><p>The third generation is now part of the family business, carrying forward Robert's legacy into a new era.</p>`;
+                                return result;
+                            }
                         }
                     ]
                 },
