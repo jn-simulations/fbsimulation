@@ -19,7 +19,12 @@ function initializeFamily() {
             generation: 1,  // Founder
             hasBusinessTraining: false,  // Self-taught entrepreneur
             otherIncome: "none",  // Business is sole income
-            liquidityNeeds: "low"  // Focused on building
+            liquidityNeeds: "low",  // Focused on building
+            // Enhanced attributes
+            yearsInBusiness: 0,           // Will track tenure
+            isSpouseOfFounder: false,
+            leftBusiness: false,
+            hasSiblings: false             // Only child or N/A for founder
         },
         patricia: {
             name: "Patricia Anderson",
@@ -34,7 +39,12 @@ function initializeFamily() {
             generation: 1,  // Founder generation (spouse)
             hasBusinessTraining: true,  // Has accounting background
             otherIncome: "low",  // Some independent income
-            liquidityNeeds: "low"
+            liquidityNeeds: "low",
+            // Enhanced attributes
+            yearsInBusiness: 0,
+            isSpouseOfFounder: true,       // Married to founder
+            leftBusiness: false,
+            hasSiblings: false
         },
         sarah: {
             name: "Sarah Anderson",
@@ -49,7 +59,12 @@ function initializeFamily() {
             generation: 2,
             hasBusinessTraining: false,  // Will get MBA later
             otherIncome: "none",
-            liquidityNeeds: "low"
+            liquidityNeeds: "low",
+            // Enhanced attributes
+            yearsInBusiness: 0,
+            isSpouseOfFounder: false,
+            leftBusiness: false,
+            hasSiblings: true              // Has Michael and Jennifer
         },
         michael: {
             name: "Michael Anderson",
@@ -64,7 +79,12 @@ function initializeFamily() {
             generation: 2,
             hasBusinessTraining: false,
             otherIncome: "none",
-            liquidityNeeds: "low"
+            liquidityNeeds: "low",
+            // Enhanced attributes
+            yearsInBusiness: 0,
+            isSpouseOfFounder: false,
+            leftBusiness: false,
+            hasSiblings: true
         },
         jennifer: {
             name: "Jennifer Anderson",
@@ -79,7 +99,12 @@ function initializeFamily() {
             generation: 2,
             hasBusinessTraining: false,
             otherIncome: "medium",  // Will have teaching career
-            liquidityNeeds: "medium"
+            liquidityNeeds: "medium",
+            // Enhanced attributes
+            yearsInBusiness: 0,
+            isSpouseOfFounder: false,
+            leftBusiness: false,
+            hasSiblings: true
         }
     };
 }
@@ -102,119 +127,370 @@ function getMemberSegment(member) {
 }
 
 // ============================================
-// PREFERENCE DERIVATION
-// Based on segment, generation, age, and context
+// ENHANCED PREFERENCE DERIVATION
+// Based on: Three-Circle position, generation, age, tenure, context
 // ============================================
 
-function getSegmentBaselinePreferences(segment) {
-    // Base preferences by segment (0-100 scale)
+function getSegmentBaselinePreferences(segment, member) {
+    // Enhanced base preferences by segment (0-100 scale)
+    // Now considers ownership percentage and role importance
+
+    const ownershipLevel = member.ownership || 0;
+    const isExecutive = member.role && (
+        member.role.includes('CEO') ||
+        member.role.includes('CFO') ||
+        member.role.includes('COO') ||
+        member.role.includes('President')
+    );
+
     const baselines = {
         "FOB": {  // Center - active owner-managers
             riskTolerance: 55,
-            dividendPreference: 25,  // Has salary, less need
-            growthPreference: 70,
-            professionalizationSupport: 50
+            dividendPreference: 20,      // Has salary, less need for dividends
+            growthPreference: 70,        // Growth increases their equity value AND salary
+            professionalizationSupport: 45,
+            controlPreference: 80,       // Want to maintain control
+            successionUrgency: 30,       // Not urgent if they're running it
+            liquidityInterest: 20        // Illiquid but in control
         },
-        "FO": {  // Passive shareholders
-            riskTolerance: 35,       // No control = risk averse
-            dividendPreference: 70,  // Main way to get returns
-            growthPreference: 30,
-            professionalizationSupport: 60  // Want accountability
+        "FO": {  // Passive shareholders - Family + Ownership
+            riskTolerance: 35,           // No control = risk averse
+            dividendPreference: 75,      // Main way to get returns
+            growthPreference: 25,        // Growth may mean less dividends
+            professionalizationSupport: 65, // Want accountability for their investment
+            controlPreference: 40,       // Want voice but can't control day-to-day
+            successionUrgency: 50,       // Concerned about who runs their investment
+            liquidityInterest: 70        // Often want exit options
         },
-        "FB": {  // Working but no ownership
-            riskTolerance: 45,
-            dividendPreference: 0,   // N/A - no shares
-            growthPreference: 55,    // Job security through growth
-            professionalizationSupport: 65  // Want merit-based advancement
+        "FB": {  // Working but no ownership - Family + Business
+            riskTolerance: 50,
+            dividendPreference: 0,       // N/A - no shares
+            growthPreference: 60,        // Job security through growth
+            professionalizationSupport: 70, // Want merit-based advancement
+            controlPreference: 30,       // Want operational autonomy
+            successionUrgency: 40,       // Their job depends on succession clarity
+            liquidityInterest: 0         // No equity to liquidate
         },
-        "F": {  // Family only
-            riskTolerance: 30,       // Uninformed, cautious
-            dividendPreference: 0,   // N/A - no shares
-            growthPreference: 40,    // Prefers stability
-            professionalizationSupport: 40
+        "F": {  // Family only - no ownership, no work
+            riskTolerance: 30,           // Uninformed, cautious
+            dividendPreference: 0,       // N/A - no shares
+            growthPreference: 40,        // Prefers family stability
+            professionalizationSupport: 35,
+            controlPreference: 20,       // Want family harmony
+            successionUrgency: 25,       // Distant concern
+            liquidityInterest: 0         // No equity
         }
     };
-    return { ...baselines[segment] };
+
+    let prefs = { ...baselines[segment] };
+
+    // Adjust based on ownership concentration (for FOB and FO)
+    if (segment === "FOB" || segment === "FO") {
+        if (ownershipLevel >= 50) {
+            // Majority owner
+            prefs.controlPreference += 15;
+            prefs.riskTolerance += 10;      // Can afford to take risks
+            prefs.dividendPreference -= 10; // Can wait for returns
+        } else if (ownershipLevel >= 20) {
+            // Significant minority
+            prefs.controlPreference += 5;
+            prefs.professionalizationSupport += 10; // Want governance protection
+        } else if (ownershipLevel < 10) {
+            // Small minority
+            prefs.liquidityInterest += 20;   // May want to sell
+            prefs.dividendPreference += 15;  // Need some return on trapped capital
+            prefs.controlPreference -= 10;
+        }
+    }
+
+    // Adjust based on executive role
+    if (isExecutive && segment === "FOB") {
+        prefs.growthPreference += 10;        // Empire building tendency
+        prefs.professionalizationSupport -= 10; // May resist oversight
+        prefs.controlPreference += 10;
+    }
+
+    return prefs;
 }
 
-function applyGenerationModifiers(prefs, generation, age) {
-    // Generation affects preferences differently than age
+function applyGenerationModifiers(prefs, generation, age, segment, member) {
+    // Enhanced generation effects that interact with position and age
+
+    const isInBusiness = segment === "FOB" || segment === "FB";
+    const hasOwnership = segment === "FOB" || segment === "FO";
+    const yearsInBusiness = member.yearsInBusiness || 0;
+
     switch(generation) {
-        case 1:  // Founder
-            if (age < 50) {
-                // Young founder: high risk, reinvest everything
-                prefs.riskTolerance += 20;
-                prefs.dividendPreference -= 30;
-                prefs.growthPreference += 15;
+        case 1:  // Founder generation
+            // Founders have unique psychology based on life stage
+            if (age < 45) {
+                // Young founder: Building phase
+                prefs.riskTolerance += 25;
+                prefs.dividendPreference -= 40;   // Reinvest everything
+                prefs.growthPreference += 20;
+                prefs.controlPreference += 15;
+                prefs.successionUrgency -= 20;    // "I'll run this forever"
+            } else if (age < 55) {
+                // Mature founder: Peak performance
+                prefs.riskTolerance += 10;
+                prefs.dividendPreference -= 20;
+                prefs.growthPreference += 10;
+                prefs.professionalizationSupport += 5; // Starting to see value
             } else if (age < 65) {
-                // Mature founder: more balanced
-                prefs.riskTolerance -= 5;
-                prefs.dividendPreference += 10;
+                // Pre-retirement founder: Transition thinking
+                prefs.riskTolerance -= 10;
+                prefs.dividendPreference += 15;
+                prefs.successionUrgency += 25;    // Need to plan
+                prefs.controlPreference -= 5;     // Slowly letting go
+            } else if (age < 75) {
+                // Late founder: Legacy preservation
+                prefs.riskTolerance -= 25;
+                prefs.dividendPreference += 30;
+                prefs.growthPreference -= 15;
+                prefs.professionalizationSupport -= 15; // "My way worked"
+                prefs.successionUrgency += 40;
+                prefs.controlPreference -= 15;    // Should let go but often doesn't
             } else {
-                // Late founder: conservative, legacy-focused
-                prefs.riskTolerance -= 15;
-                prefs.dividendPreference += 20;
-                prefs.professionalizationSupport -= 10;  // "Built it my way"
+                // Very late founder: Should have transitioned
+                prefs.riskTolerance -= 35;
+                prefs.dividendPreference += 40;
+                prefs.growthPreference -= 25;
+                prefs.professionalizationSupport -= 20;
+                prefs.successionUrgency += 60;
+            }
+
+            // Founder spouse (Patricia) has different dynamics
+            if (!member.role?.includes('CEO') && !member.role?.includes('Founder')) {
+                prefs.professionalizationSupport += 15; // Often sees need for structure
+                prefs.controlPreference -= 20;
             }
             break;
+
         case 2:  // Second generation
-            // "Don't be the one who lost it" mentality
-            prefs.riskTolerance -= 10;
-            prefs.professionalizationSupport += 10;  // Implement governance
+            // "Stewardship generation" - Don't lose what was built
+            prefs.riskTolerance -= 15;           // Conservative - don't lose it
+            prefs.professionalizationSupport += 15; // Implement governance
+
+            if (isInBusiness) {
+                // Working 2nd gen has different concerns
+                if (age < 35) {
+                    // Young, proving themselves
+                    prefs.growthPreference += 15;
+                    prefs.riskTolerance += 10;    // Want to make their mark
+                    prefs.successionUrgency -= 10;
+                } else if (age < 50) {
+                    // Prime leadership years
+                    prefs.controlPreference += 10;
+                    prefs.growthPreference += 5;
+                } else {
+                    // Mature 2nd gen - thinking about 3rd gen
+                    prefs.successionUrgency += 20;
+                    prefs.professionalizationSupport += 10;
+                }
+            } else if (hasOwnership) {
+                // Passive 2nd gen shareholder
+                prefs.dividendPreference += 20;
+                prefs.liquidityInterest += 15;
+                prefs.professionalizationSupport += 20; // Want accountability
+            }
+
+            // Sibling dynamics: multiple 2nd gen = more complexity
+            if (member.hasSiblings !== false) {
+                prefs.professionalizationSupport += 10; // Need formal processes
+            }
             break;
-        case 3:  // Third+ generation
-            // Want to make their mark, need liquidity options
-            prefs.riskTolerance += 10;
-            prefs.dividendPreference += 10;  // Many passive owners by now
-            prefs.professionalizationSupport += 15;
+
+        case 3:  // Third generation
+            // "Cousins generation" - Diverse interests, need for liquidity
+            prefs.professionalizationSupport += 20;  // Essential for cousins
+            prefs.liquidityInterest += 20;           // Many want exit options
+
+            if (isInBusiness) {
+                // Working 3rd gen wants to prove they're not just legacy hires
+                prefs.growthPreference += 15;
+                prefs.riskTolerance += 15;           // Make their mark
+                prefs.professionalizationSupport += 5; // Merit-based recognition
+            } else if (hasOwnership) {
+                // Passive 3rd gen - often disconnected
+                prefs.dividendPreference += 30;
+                prefs.liquidityInterest += 30;       // Many want to sell
+                prefs.riskTolerance -= 10;           // Protect inheritance
+                prefs.controlPreference -= 15;      // Often have less voice
+            } else {
+                // Non-owning 3rd gen family
+                prefs.growthPreference += 5;        // Hope for future opportunity
+            }
+            break;
+
+        default:  // 4th+ generation
+            prefs.professionalizationSupport += 25;
+            prefs.liquidityInterest += 35;
+            prefs.dividendPreference += 25;
+            prefs.riskTolerance -= 15;
             break;
     }
+
     return prefs;
 }
 
-function applyAgeModifiers(prefs, age) {
-    // Age-specific adjustments (separate from generation)
-    if (age < 35) {
+function applyAgeModifiers(prefs, age, segment, generation) {
+    // Life-stage adjustments that interact with position and generation
+
+    const isActiveOwner = segment === "FOB";
+    const isPassiveOwner = segment === "FO";
+    const hasOwnership = isActiveOwner || isPassiveOwner;
+
+    // Age brackets represent life stages
+    if (age < 25) {
+        // Young adult - limited influence
+        prefs.riskTolerance += 20;
+        prefs.dividendPreference -= 15;
+        prefs.growthPreference += 10;
+        prefs.controlPreference -= 20;       // Haven't earned influence yet
+        prefs.successionUrgency -= 15;       // Not thinking about this
+    } else if (age < 35) {
+        // Establishing career
         prefs.riskTolerance += 15;
-        prefs.dividendPreference -= 10;  // Can wait for returns
-    } else if (age >= 35 && age < 55) {
-        // Peak earning years - neutral adjustments
-    } else if (age >= 55 && age < 70) {
-        prefs.riskTolerance -= 15;
-        prefs.dividendPreference += 20;  // Need income
-        prefs.growthPreference -= 10;
-    } else if (age >= 70) {
-        prefs.riskTolerance -= 25;
-        prefs.dividendPreference += 30;
+        prefs.dividendPreference -= 10;
+        prefs.growthPreference += 10;
+
+        if (isActiveOwner) {
+            prefs.controlPreference += 5;    // Starting to assert
+        }
+    } else if (age < 45) {
+        // Prime building years
+        prefs.riskTolerance += 5;
+        prefs.growthPreference += 5;
+
+        if (isActiveOwner) {
+            prefs.controlPreference += 10;
+        }
+    } else if (age >= 45 && age < 55) {
+        // Peak leadership / mid-career
+        // Neutral - this is baseline behavior for most calculations
+        if (isPassiveOwner) {
+            prefs.dividendPreference += 10;  // Kids' college, etc.
+        }
+    } else if (age >= 55 && age < 65) {
+        // Pre-retirement
+        prefs.riskTolerance -= 20;
+        prefs.dividendPreference += 25;
         prefs.growthPreference -= 15;
-        prefs.professionalizationSupport -= 5;  // Resist change
+        prefs.successionUrgency += 20;
+
+        if (isActiveOwner) {
+            prefs.controlPreference -= 10;   // Should start letting go
+        }
+        if (isPassiveOwner) {
+            prefs.liquidityInterest += 20;   // May want to fund retirement
+        }
+    } else if (age >= 65 && age < 75) {
+        // Early retirement age
+        prefs.riskTolerance -= 30;
+        prefs.dividendPreference += 35;
+        prefs.growthPreference -= 20;
+        prefs.successionUrgency += 30;
+        prefs.professionalizationSupport -= 10; // Resistance to change
+
+        if (hasOwnership) {
+            prefs.liquidityInterest += 25;
+        }
+    } else if (age >= 75) {
+        // Late stage
+        prefs.riskTolerance -= 40;
+        prefs.dividendPreference += 45;
+        prefs.growthPreference -= 25;
+        prefs.successionUrgency += 40;
+        prefs.professionalizationSupport -= 15;
+        prefs.controlPreference -= 20;       // Health may limit involvement
+
+        if (hasOwnership) {
+            prefs.liquidityInterest += 15;   // Estate planning
+        }
     }
+
     return prefs;
 }
 
-function applyContextualModifiers(prefs, member) {
-    // Contextual factors
+function applyContextualModifiers(prefs, member, segment) {
+    // Contextual factors based on individual circumstances
 
-    // Liquidity needs
+    // Liquidity needs (financial pressure)
     if (member.liquidityNeeds === "high") {
-        prefs.dividendPreference += 25;
-        prefs.riskTolerance -= 10;
+        prefs.dividendPreference += 30;
+        prefs.liquidityInterest += 25;
+        prefs.riskTolerance -= 15;
+        prefs.growthPreference -= 10;  // Want cash now, not future value
     } else if (member.liquidityNeeds === "medium") {
-        prefs.dividendPreference += 10;
+        prefs.dividendPreference += 15;
+        prefs.liquidityInterest += 10;
+    } else if (member.liquidityNeeds === "low") {
+        prefs.dividendPreference -= 5;
+        prefs.riskTolerance += 5;
     }
 
     // Other income sources
     if (member.otherIncome === "high") {
-        prefs.dividendPreference -= 15;  // Less dependent
-        prefs.riskTolerance += 10;       // Can afford to wait
-    } else if (member.otherIncome === "none") {
-        prefs.dividendPreference += 10;  // More dependent on business
+        prefs.dividendPreference -= 20;  // Less dependent on business
+        prefs.riskTolerance += 15;       // Can afford to wait
+        prefs.liquidityInterest -= 15;   // Less pressure to sell
+    } else if (member.otherIncome === "medium") {
+        prefs.dividendPreference -= 10;
+        prefs.riskTolerance += 5;
+    } else if (member.otherIncome === "none" || member.otherIncome === "low") {
+        prefs.dividendPreference += 15;  // Dependent on business
+        prefs.riskTolerance -= 10;       // Can't afford losses
     }
 
-    // Business training
+    // Business training/education
     if (member.hasBusinessTraining) {
-        prefs.professionalizationSupport += 15;
-        prefs.riskTolerance += 5;  // Better at evaluating risk
+        prefs.professionalizationSupport += 20;
+        prefs.riskTolerance += 10;       // Better at evaluating risk
+        prefs.growthPreference += 5;     // Understands value creation
+    }
+
+    // Tenure in business (years working there)
+    const yearsInBusiness = member.yearsInBusiness || 0;
+    if (yearsInBusiness > 20) {
+        prefs.controlPreference += 15;   // Earned their stripes
+        prefs.professionalizationSupport -= 5; // "This is how we do things"
+    } else if (yearsInBusiness > 10) {
+        prefs.controlPreference += 10;
+    } else if (yearsInBusiness > 0 && yearsInBusiness < 5) {
+        prefs.professionalizationSupport += 10; // Fresh perspective
+        prefs.growthPreference += 5;
+    }
+
+    // Role-specific adjustments
+    if (member.role) {
+        if (member.role.includes('CEO')) {
+            prefs.controlPreference += 20;
+            prefs.growthPreference += 10;
+            prefs.professionalizationSupport -= 5;
+        } else if (member.role.includes('CFO')) {
+            prefs.riskTolerance -= 10;
+            prefs.professionalizationSupport += 15;
+            prefs.dividendPreference += 5;  // Focused on financial discipline
+        } else if (member.role.includes('Sales') || member.role.includes('Business Development')) {
+            prefs.growthPreference += 15;
+            prefs.riskTolerance += 10;
+        } else if (member.role.includes('Operations') || member.role.includes('COO')) {
+            prefs.professionalizationSupport += 10;
+            prefs.riskTolerance -= 5;       // Operationally conservative
+        }
+    }
+
+    // Relationship to founder
+    if (member.isSpouseOfFounder) {
+        prefs.professionalizationSupport += 10; // Often sees need for structure
+        prefs.successionUrgency += 10;          // Concerned about spouse's health
+    }
+
+    // Left the business (like Michael if he left)
+    if (member.leftBusiness) {
+        prefs.liquidityInterest += 30;   // Disconnected, want out
+        prefs.dividendPreference += 25;  // If stuck with shares
+        prefs.controlPreference -= 30;   // No interest in running it
     }
 
     return prefs;
@@ -222,12 +498,14 @@ function applyContextualModifiers(prefs, member) {
 
 function getMemberPreferences(member) {
     // Get full preference profile for a family member
-    const segment = getMemberSegment(member);
-    let prefs = getSegmentBaselinePreferences(segment);
+    // Enhanced to pass more context through the preference chain
 
-    prefs = applyGenerationModifiers(prefs, member.generation, member.age);
-    prefs = applyAgeModifiers(prefs, member.age);
-    prefs = applyContextualModifiers(prefs, member);
+    const segment = getMemberSegment(member);
+    let prefs = getSegmentBaselinePreferences(segment, member);
+
+    prefs = applyGenerationModifiers(prefs, member.generation, member.age, segment, member);
+    prefs = applyAgeModifiers(prefs, member.age, segment, member.generation);
+    prefs = applyContextualModifiers(prefs, member, segment);
 
     // Clamp all values to 0-100
     Object.keys(prefs).forEach(key => {
@@ -240,11 +518,12 @@ function getMemberPreferences(member) {
 
 // ============================================
 // SHAREHOLDER PREFERENCE AGGREGATION
-// Weighted by ownership percentage
+// Weighted by ownership percentage with minority protections
 // ============================================
 
 function getShareholderPreferences() {
     // Aggregate preferences weighted by ownership
+    // Enhanced: Includes minority shareholder influence and blocking rights
     let aggregated = {
         riskTolerance: 0,
         dividendPreference: 0,
@@ -253,28 +532,93 @@ function getShareholderPreferences() {
     };
 
     let totalOwnership = 0;
+    const shareholders = [];
 
     Object.keys(familyMembers).forEach(key => {
         const member = familyMembers[key];
         if (member.isDead || member.ownership <= 0) return;
 
         const prefs = getMemberPreferences(member);
-        const weight = member.ownership / 100;
+        shareholders.push({ member, prefs, ownership: member.ownership });
+        totalOwnership += member.ownership;
+    });
+
+    // Basic ownership-weighted aggregation
+    shareholders.forEach(({ member, prefs, ownership }) => {
+        const weight = ownership / totalOwnership;
 
         aggregated.riskTolerance += prefs.riskTolerance * weight;
         aggregated.dividendPreference += prefs.dividendPreference * weight;
         aggregated.growthPreference += prefs.growthPreference * weight;
         aggregated.professionalizationSupport += prefs.professionalizationSupport * weight;
-
-        totalOwnership += member.ownership;
     });
 
-    // Normalize if ownership doesn't sum to 100
-    if (totalOwnership > 0 && totalOwnership !== 100) {
-        const normalizer = 100 / totalOwnership;
-        Object.keys(aggregated).forEach(key => {
-            aggregated[key] *= normalizer;
+    // ============================================
+    // MINORITY SHAREHOLDER PROTECTIONS
+    // Shareholders with 10%+ can influence decisions
+    // Shareholders with 20%+ have stronger blocking power
+    // ============================================
+    const minorityShareholdersWithInfluence = shareholders.filter(s =>
+        s.ownership >= 10 && s.ownership < 50
+    );
+
+    if (minorityShareholdersWithInfluence.length > 0) {
+        // Calculate minority coalition preferences
+        let minorityWeight = 0;
+        let minorityPrefs = {
+            riskTolerance: 0,
+            dividendPreference: 0,
+            growthPreference: 0,
+            professionalizationSupport: 0
+        };
+
+        minorityShareholdersWithInfluence.forEach(({ prefs, ownership }) => {
+            minorityWeight += ownership;
+            minorityPrefs.riskTolerance += prefs.riskTolerance * ownership;
+            minorityPrefs.dividendPreference += prefs.dividendPreference * ownership;
+            minorityPrefs.growthPreference += prefs.growthPreference * ownership;
+            minorityPrefs.professionalizationSupport += prefs.professionalizationSupport * ownership;
         });
+
+        if (minorityWeight > 0) {
+            // Normalize minority preferences
+            Object.keys(minorityPrefs).forEach(key => {
+                minorityPrefs[key] /= minorityWeight;
+            });
+
+            // Minority influence factor: 20-30% pull toward minority preferences
+            // This represents minority blocking power on major decisions
+            const minorityInfluence = Math.min(0.30, minorityWeight / 100 * 0.5);
+
+            // Blend: if minorities strongly disagree, they pull the aggregate toward moderation
+            Object.keys(aggregated).forEach(key => {
+                const majorityPref = aggregated[key];
+                const minorityPref = minorityPrefs[key];
+
+                // If there's significant disagreement (>20 points), minorities have blocking influence
+                if (Math.abs(majorityPref - minorityPref) > 20) {
+                    // Pull toward compromise (weighted average favoring minorities somewhat)
+                    aggregated[key] = majorityPref * (1 - minorityInfluence) + minorityPref * minorityInfluence;
+                }
+            });
+        }
+    }
+
+    // ============================================
+    // PASSIVE SHAREHOLDER DIVIDEND FLOOR
+    // If significant passive ownership exists, ensure minimum dividend consideration
+    // ============================================
+    const passiveOwnership = shareholders
+        .filter(s => !s.member.inBusiness)
+        .reduce((sum, s) => sum + s.ownership, 0);
+
+    if (passiveOwnership >= 20) {
+        // Passive owners with 20%+ ensure dividend preference doesn't go too low
+        const passiveFloor = 30 + (passiveOwnership - 20) * 0.5; // 30-50 floor
+        aggregated.dividendPreference = Math.max(aggregated.dividendPreference, passiveFloor);
+
+        // Also reduce risk tolerance if significant passive ownership
+        aggregated.riskTolerance = Math.min(aggregated.riskTolerance, 60);
     }
 
     return aggregated;
@@ -363,14 +707,46 @@ function getConflictDescription(dimension, highSide, lowSide) {
 
 function calculateConflictPenalty() {
     // Returns negative impact on management quality from unresolved conflicts
+    // Enhanced: Stronger penalties with lasting effects
     const conflicts = detectShareholderConflicts();
     let penalty = 0;
 
     conflicts.forEach(conflict => {
-        penalty += conflict.severity * 8;  // Each conflict can reduce managementQuality by up to 8
+        // Base penalty: 12 points per severe conflict (increased from 8)
+        let conflictPenalty = conflict.severity * 12;
+
+        // Active vs Passive conflicts are particularly damaging
+        if (conflict.type === 'activeVsPassive') {
+            conflictPenalty *= 1.3; // 30% worse
+        }
+
+        // Conflicts involving high-ownership members are worse
+        const ownershipAtStake = conflict.highSide.reduce((sum, name) => {
+            const member = Object.values(familyMembers).find(m => m.name === name);
+            return sum + (member ? member.ownership : 0);
+        }, 0) + conflict.lowSide.reduce((sum, name) => {
+            const member = Object.values(familyMembers).find(m => m.name === name);
+            return sum + (member ? member.ownership : 0);
+        }, 0);
+
+        if (ownershipAtStake > 60) {
+            conflictPenalty *= 1.2; // Major shareholders in conflict = worse
+        }
+
+        penalty += conflictPenalty;
     });
 
-    return Math.min(25, penalty);  // Cap at 25 point penalty
+    // Add lingering penalty from historical conflicts (trust takes time to rebuild)
+    if (typeof gameState !== 'undefined' && gameState.conflictHistory) {
+        gameState.conflictHistory.forEach(historical => {
+            if (!historical.resolved) {
+                penalty += historical.severity * 0.3; // Historical conflicts still hurt
+            }
+        });
+    }
+
+    // Cap at 40 points (increased from 25) - severe conflicts can cripple a company
+    return Math.min(40, penalty);
 }
 
 function updateFamilyDisplay() {
@@ -579,37 +955,61 @@ function getFamilyAverageHappiness() {
 function getBusinessPerformanceScore() {
     let score = 0;
 
-    // Revenue contribution (0-30 points)
-    if (gameState.revenue >= 20000000) score += 30;
-    else if (gameState.revenue >= 15000000) score += 25;
-    else if (gameState.revenue >= 10000000) score += 20;
-    else if (gameState.revenue >= 5000000) score += 15;
-    else if (gameState.revenue >= 2000000) score += 10;
-    else score += 5;
+    // Revenue contribution (0-25 points)
+    if (gameState.revenue >= 20000000) score += 25;
+    else if (gameState.revenue >= 15000000) score += 20;
+    else if (gameState.revenue >= 10000000) score += 15;
+    else if (gameState.revenue >= 5000000) score += 10;
+    else if (gameState.revenue >= 2000000) score += 5;
+    else score += 2;
 
     // Profitability (0-20 points)
-    if (gameState.profit >= 3000000) score += 20;
-    else if (gameState.profit >= 2000000) score += 15;
-    else if (gameState.profit >= 1000000) score += 10;
-    else if (gameState.profit >= 500000) score += 5;
+    if (gameState.profit >= 2000000) score += 20;
+    else if (gameState.profit >= 1000000) score += 15;
+    else if (gameState.profit >= 500000) score += 10;
+    else if (gameState.profit >= 200000) score += 5;
+    else if (gameState.profit < 0) score -= 10;
 
-    // Cash position (0-20 points)
-    if (gameState.cash >= 5000000) score += 20;
-    else if (gameState.cash >= 3000000) score += 15;
-    else if (gameState.cash >= 1000000) score += 10;
-    else if (gameState.cash >= 500000) score += 5;
+    // Cash position (0-15 points)
+    if (gameState.cash >= 5000000) score += 15;
+    else if (gameState.cash >= 2000000) score += 12;
+    else if (gameState.cash >= 1000000) score += 8;
+    else if (gameState.cash >= 500000) score += 4;
     else if (gameState.cash < 0) score -= 10;
 
     // Debt management (0-15 points)
+    const debtToRevenue = gameState.revenue > 0 ? gameState.debt / gameState.revenue : 0;
     if (!gameState.hasDebt || gameState.debt === 0) score += 15;
-    else if (gameState.debt < 1000000) score += 10;
-    else if (gameState.debt < 3000000) score += 5;
-    else score -= 5;
+    else if (debtToRevenue < 0.3) score += 10;
+    else if (debtToRevenue < 0.6) score += 5;
+    else if (debtToRevenue > 1.0) score -= 10;
 
-    // Growth and sustainability based on assets (0-15 points)
-    if (gameState.assets >= 25000000) score += 15;
-    else if (gameState.assets >= 15000000) score += 10;
-    else if (gameState.assets >= 8000000) score += 5;
+    // Growth and sustainability based on assets (0-10 points)
+    if (gameState.assets >= 20000000) score += 10;
+    else if (gameState.assets >= 10000000) score += 7;
+    else if (gameState.assets >= 5000000) score += 4;
+
+    // Credit rating health (0-10 points) - new mechanic
+    if (gameState.creditRating) {
+        if (gameState.creditRating >= 80) score += 10;
+        else if (gameState.creditRating >= 60) score += 6;
+        else if (gameState.creditRating >= 40) score += 3;
+        else score -= 5;
+    }
+
+    // Equipment health (0-5 points) - new mechanic
+    if (gameState.equipmentAge !== undefined) {
+        if (gameState.equipmentAge <= 5) score += 5;
+        else if (gameState.equipmentAge <= 10) score += 3;
+        else if (gameState.equipmentAge > 15) score -= 5;
+    }
+
+    // Ending in a recession is harder (-5 penalty if in recession)
+    if (gameState.economicCycle === 'recession') {
+        score -= 5;
+    } else if (gameState.economicCycle === 'boom') {
+        score += 3;
+    }
 
     return Math.max(0, Math.min(100, score));
 }
@@ -656,6 +1056,19 @@ function getFamilyHarmonyScore() {
     if (gameState.robertDeceased) {
         const avgHappiness = getFamilyAverageHappiness();
         if (avgHappiness < 50) score -= 10; // Grief + poor relationships = very strained
+    }
+
+    // Penalty for unresolved historical conflicts (new mechanic)
+    if (gameState.conflictHistory && gameState.conflictHistory.length > 0) {
+        const unresolvedConflicts = gameState.conflictHistory.filter(c => !c.resolved);
+        score -= unresolvedConflicts.length * 5; // Each unresolved conflict hurts harmony
+    }
+
+    // Bonus for family cohesion maintained over time
+    if (gameState.familyCohesion >= 70) {
+        score += 5; // Bonus for maintaining high cohesion
+    } else if (gameState.familyCohesion < 40) {
+        score -= 10; // Penalty for very low cohesion
     }
 
     return Math.max(0, Math.min(100, score));
