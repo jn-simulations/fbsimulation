@@ -680,7 +680,7 @@ const EVENTS = [
                     },
                     options: [
                         {
-                            text: "Accept contract—business growth over dividends",
+                            text: "Accept contract—aggressive growth, accept the risks",
                             effects: {
                                 revenue: 3000000,
                                 profit: 180000,  // 6% margin on cardboard
@@ -691,56 +691,95 @@ const EVENTS = [
                                 michaelHappiness: 15,
                                 jenniferHappiness: -20,
                                 robertHappiness: 5,
-                                hasDebt: true
+                                hasDebt: true,
+                                // REBALANCED: Add long-term risks
+                                managementQuality: -8,              // Stretched too thin
+                                customerConcentration: true,        // Flag for future events
+                                reputationIndustry: -5,             // Industry sees you as Fortune 100 dependent
+                                reputationEmployee: -10,            // Employees overworked
+                                valuesLongTermFocus: -15,           // Short-term revenue grab
+                                valuesFamilyFirst: -10              // Business over family
                             },
                             impact: function() {
                                 const jenOwn = familyMembers.jennifer.ownership;
+                                let result = `<p>Robert sides with Sarah and Michael. The company accepts the contract and makes the major investment. Revenue increases by $3M annually.</p>`;
+                                result += `<p>However, the rapid expansion strains the organization. Quality control slips as the team rushes to meet demand. Two experienced supervisors quit, burned out from the pace.</p>`;
+                                result += `<p>The company now depends on one customer for 40% of revenue—a dangerous concentration. If they ever lose this contract, it will be devastating.</p>`;
+
                                 if (jenOwn > 0) {
-                                    return `<p>Robert sides with Sarah and Michael. The company accepts the contract and makes the major investment. Revenue increases by $3M annually and company valuation rises substantially.</p><p>However, cash is depleted and the company takes on $500K in debt to complete the investment.</p><p>Sarah and Michael are thrilled with the growth opportunity.</p><p>Jennifer feels powerless. "I own ${jenOwn.toFixed(0)}% but apparently that doesn't matter. You all just decided for me." Her dividend income disappears for years.</p><p>The decision establishes a precedent: active family members control decisions, even over passive owners' objections.</p>`;
+                                    result += `<p>Jennifer feels powerless. "I own ${jenOwn.toFixed(0)}% but apparently that doesn't matter." Her dividend income disappears for years while she watches her siblings build wealth.</p>`;
                                 } else {
-                                    return `<p>Robert sides with Sarah and Michael. The company accepts the contract and makes the major investment. Revenue increases by $3M annually and company valuation rises substantially.</p><p>However, cash is depleted and the company takes on $500K in debt to complete the investment.</p><p>Sarah and Michael are thrilled with the growth opportunity.</p><p>Jennifer is devastated. "So I just... don't matter? You all get to build wealth while I struggle?" She stops attending family dinners for months.</p><p>The growing wealth gap between family members in the business and those outside it becomes painfully visible.</p>`;
+                                    result += `<p>Jennifer is devastated. The growing wealth gap between family members in the business and those outside it becomes painfully visible.</p>`;
                                 }
+                                result += `<p>The decision establishes a precedent: growth trumps everything, including family needs and sustainable operations.</p>`;
+                                return result;
                             }
                         },
                         {
-                            text: "Decline contract—protect Jennifer's financial needs",
+                            text: "Decline contract—preserve stability, quality, and family",
                             effects: {
                                 cash: 200000,
                                 sarahHappiness: -15,
                                 michaelHappiness: -15,
                                 jenniferHappiness: 15,
-                                robertHappiness: -10
+                                robertHappiness: -5,
+                                // REBALANCED: Add business benefits
+                                reputationCustomer: 8,              // Existing customers appreciate focus
+                                reputationEmployee: 5,              // Reasonable workload
+                                reputationIndustry: 5,              // Known for quality, not desperation
+                                valuesLongTermFocus: 10,            // Sustainable approach
+                                valuesFamilyFirst: 15,              // Family over pure growth
+                                valuesIntegrity: 5,                 // Kept promises to shareholders
+                                managementQuality: 3                // Time to develop systems
                             },
                             impact: function() {
                                 const jenOwn = familyMembers.jennifer.ownership;
+                                let result = `<p>Robert declines the contract. "We're not ready for this scale of growth. It would break us."</p>`;
+                                result += `<p>The company maintains its focus on existing customers, who appreciate the attention. Quality remains high. Employees are grateful for the manageable pace.</p>`;
+                                result += `<p>Industry peers notice that Anderson Packaging turned down "easy money"—some think it's foolish, but others respect the discipline.</p>`;
+
                                 if (jenOwn > 0) {
-                                    return `<p>Robert declines the contract to honor Jennifer's ownership rights and financial needs.</p><p>Jennifer is relieved—her dividend income continues, and she can proceed with buying her house. Her ownership stake is finally being respected.</p><p>Sarah and Michael are furious. "We're letting Jennifer's ${jenOwn.toFixed(0)}% ownership block a transformational opportunity? This is insane," Michael says bitterly.</p><p>Sarah starts quietly exploring CEO opportunities at other companies. The family business feels like a cage.</p><p>The decision establishes a precedent: ownership rights can block operational growth.</p>`;
+                                    result += `<p>Jennifer is relieved—her dividend income continues. "Thank you for remembering that I'm a shareholder too."</p>`;
+                                    result += `<p>Sarah and Michael are furious. "We're letting Jennifer's ${jenOwn.toFixed(0)}% ownership block growth."</p>`;
                                 } else {
-                                    return `<p>Robert declines the contract to protect family harmony and Jennifer's needs, even though she doesn't own shares.</p><p>Jennifer is relieved and grateful that she still matters to the family.</p><p>Sarah and Michael are furious. "We're turning down a transformational opportunity for Jennifer, who doesn't even work here or own shares? This is insane," Michael says bitterly.</p><p>Sarah starts quietly exploring CEO opportunities at other companies. The family business feels like it prioritizes everyone except those who actually run it.</p>`;
+                                    result += `<p>Jennifer is grateful that she still matters to the family.</p>`;
+                                    result += `<p>Sarah and Michael are furious. "We're turning down a transformational opportunity for family feelings?"</p>`;
                                 }
+                                result += `<p>Sarah starts quietly exploring opportunities elsewhere. The company may lose her ambition.</p>`;
+                                return result;
                             }
                         },
                         {
-                            text: "Compromise: Accept contract but guarantee Jennifer dividend priority",
+                            text: "Negotiate smaller contract—balance growth with sustainability",
                             effects: {
-                                revenue: 3000000,
-                                profit: 180000,
-                                cash: -1200000,
-                                assets: 1200000,
-                                debt: 500000,
-                                sarahHappiness: 8,
-                                michaelHappiness: 8,
-                                jenniferHappiness: 10,
-                                robertHappiness: 10,
-                                hasDebt: true
+                                revenue: 1500000,                   // Half the revenue
+                                profit: 90000,                      // Half the profit
+                                cash: -600000,                      // Half the investment
+                                assets: 600000,
+                                debt: 250000,
+                                sarahHappiness: -5,                 // Disappointed but understands
+                                michaelHappiness: -5,
+                                jenniferHappiness: 5,
+                                robertHappiness: 5,
+                                hasDebt: true,
+                                // REBALANCED: Compromise has real costs—nobody fully satisfied
+                                reputationIndustry: -8,             // "They couldn't handle the big contract"
+                                managementQuality: -3,              // Some strain, but manageable
+                                valuesFamilyFirst: 5,
+                                valuesLongTermFocus: 5
                             },
                             impact: function() {
                                 const jenOwn = familyMembers.jennifer.ownership;
+                                let result = `<p>Robert negotiates a smaller scope—$1.5M annually instead of $3M. The Fortune 100 company is disappointed but agrees.</p>`;
+                                result += `<p>Revenue grows, but the company misses the "transformational" opportunity. The client makes clear they'll look elsewhere for their remaining needs.</p>`;
+                                result += `<p>Industry whispers: "Anderson couldn't handle the big contract." The company's reputation for ambition takes a hit.</p>`;
+                                result += `<p>Sarah and Michael are frustrated. "We played it safe when we should have been bold." Jennifer gets modest dividends—better than nothing.</p>`;
+
                                 if (jenOwn > 0) {
-                                    return `<p>Robert proposes a compromise: accept the contract, but guarantee Jennifer receives dividends equal to 8% return on her ownership stake annually, even during the investment period.</p><p>Revenue grows substantially, and company valuation increases. The company takes on debt to fund both the investment and Jennifer's dividends.</p><p>Everyone is moderately satisfied but not thrilled. Sarah and Michael feel they're "paying Jennifer" for growth. Jennifer appreciates being considered but wonders if she's now seen as a burden.</p><p>The compromise establishes an important precedent: passive owners have rights that must be balanced with business needs. But it's messy and expensive.</p>`;
-                                } else {
-                                    return `<p>Robert proposes a compromise: accept the contract, but the family will personally support Jennifer with $30K annually during the investment period.</p><p>Revenue grows substantially, and company valuation increases. The company takes on debt for the investment.</p><p>Everyone is moderately satisfied. Jennifer feels the family cares about her welfare even though she's not in the business.</p><p>Sarah and Michael accept this but wonder: "Will Jennifer always constrain our decisions? Should we have given her ownership just to formalize this?"</p><p>The compromise keeps family harmony but raises questions about fairness and precedent.</p>`;
+                                    result += `<p>Jennifer appreciates being considered, but wonders if she's now seen as the reason the family couldn't go big.</p>`;
                                 }
+                                result += `<p>The compromise satisfies no one fully—classic middle-ground leadership that avoids both the biggest risks and the biggest rewards.</p>`;
+                                return result;
                             }
                         }
                     ]
@@ -790,34 +829,33 @@ const EVENTS = [
                                 michaelOwnership: function() { return familyMembers.michael.ownership > 0 ? -2 : 0; },
                                 jenniferOwnership: function() { return familyMembers.jennifer.ownership > 0 ? -1 : 0; },
                                 // Cash from investment = 20% of valuation
-                                // Valuation = profit × multiple (4-7x based on growth)
                                 cash: function() {
                                     const profit = gameState.profit || 100000;
-                                    // Calculate growth rate from previous period
                                     const growthRate = gameState.previousRevenue > 0 ?
                                         (gameState.revenue - gameState.previousRevenue) / gameState.previousRevenue : 0.05;
-                                    // Base multiple 4x, up to 7x for high growth (>15% annual)
                                     const baseMultiple = 4;
                                     const growthPremium = Math.min(3, Math.max(0, growthRate * 20));
                                     const multiple = baseMultiple + growthPremium;
-                                    // Valuation and 20% stake
                                     const valuation = profit * multiple;
                                     const investmentAmount = valuation * 0.20;
-                                    // Round to nearest 50K
                                     return Math.round(investmentAmount / 50000) * 50000;
                                 },
                                 managementQuality: 5,           // Investor oversight helps
                                 shareholderMonitoring: 15,      // External accountability
                                 boardEffectiveness: 10,         // Investor wants board seat
-                                familyCohesion: -10,            // Tension over "selling out"
+                                familyCohesion: -15,            // REBALANCED: Deeper tension over "selling out"
                                 sarahHappiness: 10,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -5; },
-                                jenniferHappiness: -10,
-                                robertHappiness: -5,
-                                hasExternalInvestors: true
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -8; },
+                                jenniferHappiness: -15,
+                                robertHappiness: -10,
+                                hasExternalInvestors: true,
+                                // REBALANCED: Add long-term cultural and strategic costs
+                                reputationEmployee: -8,         // Employees worry about "corporate" changes
+                                valuesLongTermFocus: -12,       // Investors want returns in 5-7 years
+                                valuesFamilyFirst: -15,         // Business becomes more transactional
+                                valuesLegacy: -10               // Less about legacy, more about returns
                             },
                             impact: function() {
-                                // Calculate the investment amount for display
                                 const profit = gameState.profit || 100000;
                                 const growthRate = gameState.previousRevenue > 0 ?
                                     (gameState.revenue - gameState.previousRevenue) / gameState.previousRevenue : 0.05;
@@ -829,14 +867,14 @@ const EVENTS = [
 
                                 let result = `<p>Robert accepts the investment. The investors value Anderson Packaging based on its profits and growth trajectory, investing $${formatNumber(investmentAmount)} for a 20% stake.</p>`;
 
-                                result += `<p>Fresh capital flows into the business, and the family's ownership is diluted to make room for the new investors.</p>`;
+                                result += `<p>Fresh capital flows into the business, and the family's ownership is diluted.</p>`;
 
-                                result += `<p>The investors are professional and hands-off in daily operations, but they expect quarterly updates, audited financials, and a seat on the board. The informal family decision-making style must adapt.</p>`;
+                                result += `<p>The investors are professional but demanding. They expect quarterly updates, audited financials, a board seat, and a clear "exit strategy" within 5-7 years. The informal family decision-making style must adapt.</p>`;
 
                                 result += `<p>Sarah is energized by the growth possibilities. "Now we can actually compete," she says.</p>`;
 
                                 if (!gameState.michaelLeft) {
-                                    result += `<p>Michael feels the business has lost something. "We used to make decisions at the dinner table. Now we have board meetings and investor calls."</p>`;
+                                    result += `<p>Michael feels the business has lost something. "We used to make decisions at the dinner table. Now we have board meetings and investor calls. And they keep asking about our 'exit strategy'—I thought this was forever."</p>`;
                                 }
 
                                 const jenOwn = familyMembers.jennifer.ownership;
@@ -844,41 +882,50 @@ const EVENTS = [
                                     result += `<p>Jennifer watches her ownership stake shrink. "I had ${jenOwn.toFixed(0)}% of a family business. Now I have less of a... what? A portfolio company?"</p>`;
                                 }
 
-                                result += `<p>Anderson Packaging is no longer 100% family-owned. The investors are minority shareholders, but their presence changes the culture. Every major decision now considers: "What will the investors think?"</p>`;
+                                result += `<p>Long-time employees are nervous. "Are they going to cut jobs to boost returns?" one supervisor asks quietly. Two experienced managers start updating their resumes.</p>`;
 
-                                result += `<p>The family has traded some control for capital. Whether that trade pays off depends on what they do with the opportunity.</p>`;
+                                result += `<p>Anderson Packaging is no longer 100% family-owned. Every major decision now considers: "What will the investors think?" The clock is now ticking toward their exit.</p>`;
 
                                 return result;
                             }
                         },
                         {
-                            text: "Decline the investment—this is a family business",
+                            text: "Decline the investment—this is a family business, not a portfolio company",
                             effects: {
                                 // Preserve control, accept constraints
-                                familyCohesion: 5,              // United in keeping it family
+                                familyCohesion: 10,             // REBALANCED: Stronger family unity
                                 managementQuality: -3,          // Miss out on external discipline
-                                sarahHappiness: -10,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 8; },
-                                jenniferHappiness: 5,
-                                robertHappiness: 10,
-                                capitalConstrained: true        // Growth will be limited
+                                sarahHappiness: -12,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 12; },
+                                jenniferHappiness: 8,
+                                robertHappiness: 15,
+                                capitalConstrained: true,       // Growth will be limited
+                                // REBALANCED: Add real benefits beyond just "family feelings"
+                                reputationEmployee: 10,         // Employees value stability and loyalty
+                                reputationCustomer: 8,          // Customers value family business relationship
+                                valuesLongTermFocus: 10,        // Can make 20-year decisions
+                                valuesFamilyFirst: 10,          // Family values preserved
+                                valuesLegacy: 15,               // Building for generations
+                                valuesIntegrity: 5              // Stayed true to principles
                             },
                             impact: function() {
-                                let result = `<p>Robert declines the investment. "Thank you for your interest, but Anderson Packaging is a family business. We're not looking for outside partners."</p>`;
+                                let result = `<p>Robert declines the investment. "Thank you for your interest, but Anderson Packaging is a family business. We're not building toward an exit—we're building for generations."</p>`;
 
-                                result += `<p>The investors are disappointed but understanding. "The offer stands if you change your mind," they say.</p>`;
+                                result += `<p>The investors are disappointed. "You're leaving money on the table," they say.</p>`;
 
-                                result += `<p>Sarah is frustrated. "We're leaving growth on the table because of pride. How is that good business?"</p>`;
+                                result += `<p>Sarah is frustrated. "We're limiting our growth because of... what? Pride? Nostalgia?"</p>`;
 
                                 if (!gameState.michaelLeft) {
-                                    result += `<p>Michael supports the decision. "Dad's right. Once you let outsiders in, you can never get them out. This is our business, our legacy."</p>`;
+                                    result += `<p>Michael supports the decision firmly. "Dad's right. Once you let Wall Street types in, everything becomes about quarterly returns. This is our legacy, not their investment vehicle."</p>`;
                                 }
 
-                                result += `<p>The family retains 100% ownership and complete control. But growth will be constrained by the capital they can generate internally or borrow.</p>`;
+                                result += `<p>Employees are relieved when they hear the news. "I've worked here 15 years because it's a family company," one manager says. "That matters."</p>`;
 
-                                result += `<p>Competitors who take outside investment may grow faster. Anderson Packaging will need to compete on operational excellence rather than capital deployment.</p>`;
+                                result += `<p>Several long-time customers mention how much they appreciate working with a family business. "I can call Robert directly. Try doing that with a PE-backed company."</p>`;
 
-                                result += `<p>Robert feels at peace with the decision. The business remains fully in family hands. That's worth something—even if it's hard to put a number on it.</p>`;
+                                result += `<p>The family retains 100% ownership. Growth will be slower, but every decision can focus on the next 50 years, not the next quarterly report.</p>`;
+
+                                result += `<p>Competitors may grow faster with outside capital. But Anderson Packaging will compete on relationships, quality, and the trust that comes from knowing who owns the business.</p>`;
 
                                 return result;
                             }
@@ -1096,15 +1143,19 @@ const EVENTS = [
                                 boardEffectiveness: 25,         // Professional board oversight
                                 shareholderMonitoring: 20,      // External accountability
                                 managementQuality: 8,           // Better strategic guidance
-                                familyCohesion: -5,             // Family feels scrutinized
+                                familyCohesion: -10,            // REBALANCED: Family feels scrutinized
                                 cash: -50000,                   // Director fees
                                 robertHappiness: 5,
-                                sarahHappiness: -5,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -8; },
-                                hasIndependentBoard: true
+                                sarahHappiness: -8,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -10; },
+                                hasIndependentBoard: true,
+                                // REBALANCED: Add cultural/values costs
+                                reputationEmployee: -5,         // Employees worry about "corporate" changes
+                                valuesLongTermFocus: -5,        // Directors often push for faster returns
+                                valuesFamilyFirst: -8           // Decisions now consider non-family
                             },
                             impact: function() {
-                                return `<p>Robert recruits three independent directors: a former CEO of a packaging company, a CFO with manufacturing experience, and a governance expert.</p><p>The board meets quarterly and provides rigorous oversight. Revenue and profit increase from better strategic guidance.</p><p>However, the directors don't just advise—they challenge. At the first meeting, they question Sarah's operational decisions and suggest Michael's sales approach is outdated.</p><p>Sarah feels scrutinized and second-guessed. "I've been running operations successfully for years. Now I have to justify every decision to outsiders?"</p><p>Michael resents the intrusion. "They don't understand our culture. They just see spreadsheets."</p><p>Director fees cost $50K annually. The family has gained accountability but lost autonomy. Every major decision now requires board approval.</p>`;
+                                return `<p>Robert recruits three independent directors: a former CEO of a packaging company, a CFO with manufacturing experience, and a governance expert.</p><p>The board meets quarterly and provides rigorous oversight. Better strategic guidance improves operations.</p><p>However, the directors don't just advise—they challenge. At the first meeting, they question Sarah's "inefficient" operational decisions and suggest Michael's relationship-based sales approach is outdated.</p><p>Sarah feels scrutinized. "I've been running operations successfully for years. Now I have to justify every decision to outsiders who've never met our customers?"</p><p>Michael resents the intrusion. "They don't understand our culture. They just see spreadsheets and want to optimize everything into a soulless machine."</p><p>Director fees cost $50K annually. Long-time employees notice the change—decisions now take longer and feel more bureaucratic. Some of the family business warmth fades.</p>`;
                             }
                         },
                         {
@@ -1113,36 +1164,50 @@ const EVENTS = [
                                 // Major governance transformation
                                 boardEffectiveness: 35,         // Strong professional board
                                 shareholderMonitoring: 30,      // High accountability
-                                managementQuality: 25,          // Professional management
-                                familyCohesion: -20,            // Sarah demoted, family tension
+                                managementQuality: 20,          // REBALANCED: Reduced from 25
+                                familyCohesion: -25,            // REBALANCED: Stronger family tension
                                 robertOwnership: -2,
                                 sarahOwnership: -2,
                                 michaelOwnership: -1,
                                 jenniferOwnership: -1,
-                                sarahHappiness: -25,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -12; },
-                                robertHappiness: 12,
+                                sarahHappiness: -30,            // REBALANCED: Deeper hurt
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -15; },
+                                robertHappiness: 5,             // REBALANCED: Mixed feelings
                                 hasOutsideCOO: true,
-                                hasIndependentBoard: true
+                                hasIndependentBoard: true,
+                                // REBALANCED: Add significant cultural/values costs
+                                reputationEmployee: -15,        // Employees feel betrayed
+                                reputationCustomer: -8,         // Customers liked the family touch
+                                valuesLongTermFocus: -10,       // Professional managers often chase short-term metrics
+                                valuesFamilyFirst: -20,         // Clear statement that business > family
+                                valuesLegacy: -15,              // No longer about Anderson legacy
+                                valuesMeritocracy: 10           // At least it's merit-based now
                             },
                             impact: function() {
-                                return `<p>Robert makes a bold move: hire Amanda Chen as COO (Sarah moves to VP of Operations) AND add two independent directors to provide governance oversight.</p><p>The transformation is dramatic. Revenue and profit surge under professional management and board oversight. Management quality reaches new heights.</p><p>Sarah is devastated by the demotion. After years of leadership, she's been displaced by a non-family executive. She questions her future in the company.</p><p>The independent directors support the decision: "This is what's best for the business." But they also note the family pain it causes.</p><p>The company is now highly professionalized—but at significant cost to family relationships and Sarah's commitment.</p>`;
+                                return `<p>Robert makes a bold move: hire Amanda Chen as COO (Sarah moves to VP of Operations) AND add two independent directors.</p><p>The transformation is dramatic. Amanda implements professional systems. Board oversight is rigorous. Efficiency improves measurably.</p><p>Sarah is devastated by the demotion. After years of leadership, she's been displaced by a non-family executive. "I gave everything to this company. Now I report to a stranger."</p><p>Three long-time employees quit within months. "This isn't the Anderson Packaging I joined," one says. Customers notice the change too—response times improve, but the personal touch fades.</p><p>Amanda is competent but has different values. She cuts costs by reducing quality buffers that Robert insisted on. "We need to be lean and efficient," she explains.</p><p>The company is more professional but less distinctively "Anderson." The family wonders if they've built something or just become another corporation.</p>`;
                             }
                         },
                         {
-                            text: "Keep it family-only—preserve independence and culture",
+                            text: "Keep it family-only—preserve the culture Robert built",
                             effects: {
-                                // No governance improvement
+                                // REBALANCED: Real benefits to family culture, not just "missing out"
                                 boardEffectiveness: 0,          // No board change
-                                shareholderMonitoring: -5,      // Insularity increases
-                                managementQuality: -5,          // Miss out on expertise
-                                familyCohesion: 10,             // Family stays unified
-                                sarahHappiness: 15,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 12; },
-                                robertHappiness: 5
+                                shareholderMonitoring: -3,      // Slight insularity
+                                managementQuality: -3,          // REBALANCED: Reduced penalty
+                                familyCohesion: 15,             // REBALANCED: Strong family unity
+                                sarahHappiness: 18,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 15; },
+                                robertHappiness: 12,
+                                // REBALANCED: Add real cultural/reputation benefits
+                                reputationEmployee: 10,         // Employees value stability
+                                reputationCustomer: 8,          // Customers value relationship
+                                valuesLongTermFocus: 8,         // Family can think in decades
+                                valuesFamilyFirst: 12,          // Family values preserved
+                                valuesLegacy: 10,               // Building for generations
+                                valuesIntegrity: 5              // Stayed true to principles
                             },
                             impact: function() {
-                                return `<p>Robert declines both opportunities. Anderson Packaging will remain fully family-controlled.</p><p>"This is a family business," Robert explains. "Our culture, our values, our way of doing things—that's what makes us special. Outsiders would change that."</p><p>` + (gameState.michaelLeft ? "Sarah is" : "Sarah and Michael are") + ` relieved. No outsiders will second-guess ` + (gameState.michaelLeft ? "her" : "their") + ` decisions or threaten ` + (gameState.michaelLeft ? "her" : "their") + ` future.</p><p>The company continues with its distinctive family culture intact. Employees appreciate that the Andersons haven't "sold out" to corporate thinking.</p><p>However, growth may be limited. Without outside perspective, the family risks blind spots. Competitors with professional boards may gain advantages.</p><p>The family retains complete control—but complete responsibility too. There are no outside experts to blame if things go wrong.</p>`;
+                                return `<p>Robert declines both opportunities. "This is a family business," Robert explains. "Our culture, our values, our way of doing things—that's what makes us special."</p><p>` + (gameState.michaelLeft ? "Sarah is" : "Sarah and Michael are") + ` relieved. The family remains in control, making decisions based on values and relationships, not just spreadsheets.</p><p>Employees are grateful. "I was worried we'd become another corporate place," the plant manager says. "Thank you for keeping Anderson Anderson."</p><p>Several long-time customers express appreciation. "We do business with you because we trust the family. That means something."</p><p>Growth may be slower without outside expertise. Competitors with professional boards may move faster. But the Anderson culture—the handshake deals, the personal relationships, the pride in craftsmanship—remains intact.</p><p>The family accepts complete responsibility for success or failure. There are no outside experts to blame if things go wrong—but also no outsiders diluting the Anderson way.</p>`;
                             }
                         }
                     ]
@@ -1261,33 +1326,43 @@ const EVENTS = [
                 {
                     date: "2022",
                     title: "A Wake-Up Call",
-                    description: `Robert suffered a minor heart attack. He's recovering well, but it's a stark reminder that he's 63 years old and can't work forever.\n\nThe doctors have advised him to reduce stress and work fewer hours. His wife is insistent.\n\nThis forces the succession question that Robert has been postponing. Sarah is clearly the logical choice for CEO—she has the skills, experience, and has been groomed for the role. But actually pulling the trigger means Robert giving up control of what he built.\n\nMichael has matured significantly but still lacks Sarah's operational depth.`,
+                    description: `Robert suffered a minor heart attack. He's recovering well, but it's a stark reminder that he's 63 years old and can't work forever.\n\nThe doctors have advised him to reduce stress and work fewer hours. His wife is insistent.\n\nThis forces the succession question that Robert has been postponing. Sarah is clearly the logical choice for CEO—she has the skills, experience, and has been groomed for the role. But actually pulling the trigger means Robert giving up control of what he built.\n\nMichael has matured significantly but still lacks Sarah's operational depth.\n\nSome key customers have expressed concern: "We do business with you because of Robert. He knows our business inside and out."`,
                     options: [
                         {
                             text: "Make Sarah CEO immediately, Robert becomes Executive Chairman",
                             effects: {
                                 sarahHappiness: 25,
-                                michaelHappiness: -18,
-                                robertHappiness: -5,
-                                revenue: 800000,
-                                profit: 150000,
+                                michaelHappiness: -20,          // REBALANCED: Deeper resentment
+                                robertHappiness: -10,           // REBALANCED: Letting go is painful
+                                revenue: 600000,                // REBALANCED: Modest growth, not guaranteed
+                                profit: 100000,
                                 robertRetired: true,
                                 sarahCEO: true,
-                                managementQuality: 12
+                                managementQuality: 10,          // REBALANCED: Reduced
+                                // REBALANCED: Add transition costs
+                                reputationCustomer: -8,         // Some customers nervous about transition
+                                familyCohesion: -8,             // Michael's resentment, Robert's struggle
+                                valuesFamilyFirst: -5,          // Abrupt transition
+                                valuesLegacy: 10                // Succession is happening
                             },
-                            impact: `<p>Sarah becomes CEO. She's energized and ready. Revenue and profit increase as she implements changes she's been planning for years.</p><p>Sarah is thrilled—she's finally leading the company.</p><p>Michael feels definitively passed over.</p><p>Robert struggles with letting go, even though he knows it's right. He stays involved as Executive Chairman, sometimes second-guessing Sarah's decisions.</p>`
+                            impact: `<p>Sarah becomes CEO. She's energized and ready. She implements changes she's been planning for years.</p><p>Sarah is thrilled—she's finally leading the company. But the transition isn't seamless.</p><p>Robert struggles with letting go. As Executive Chairman, he sometimes second-guesses Sarah's decisions, creating confusion. "Dad, you said you'd step back," Sarah says, frustrated.</p><p>Michael feels definitively passed over. He withdraws, doing his job but no more. The sibling dynamic is strained.</p><p>Several long-time customers call Robert directly, uncomfortable with the change. "I've worked with you for 20 years. I don't know Sarah." Robert has to actively transition relationships.</p><p>The company is now Sarah's to lead—for better or worse. Her reputation will be made on her own decisions, without Robert as a safety net.</p>`
                         },
                         {
-                            text: "Continue as CEO but delegate more responsibilities",
+                            text: "Plan a 2-year transition—Robert stays as CEO, Sarah as President",
                             effects: {
-                                robertHappiness: 5,
-                                sarahHappiness: -15,
-                                michaelHappiness: 5,
-                                profit: -150000,
-                                revenue: -400000,
-                                managementQuality: -7
+                                robertHappiness: 10,
+                                sarahHappiness: -5,             // REBALANCED: Disappointed but patient
+                                michaelHappiness: 8,            // Time to prove himself
+                                profit: 50000,                  // REBALANCED: Modest but stable
+                                revenue: 200000,
+                                managementQuality: 3,           // REBALANCED: Neutral
+                                // REBALANCED: Add stability benefits
+                                reputationCustomer: 5,          // Customers appreciate continuity
+                                reputationEmployee: 5,          // Employees appreciate stability
+                                valuesLongTermFocus: 8,         // Thoughtful transition
+                                valuesFamilyFirst: 5            // Giving everyone time
                             },
-                            impact: `<p>Robert stays on as CEO, promising to work less and delegate more.</p><p>In practice, he can't let go. He still involves himself in day-to-day decisions. The company suffers from unclear leadership as responsibility is ambiguous.</p><p>Sarah is deeply frustrated—even a health scare wasn't enough to trigger real succession.</p><p>She begins quietly exploring CEO opportunities at other companies.</p>`
+                            impact: `<p>Robert stays as CEO but elevates Sarah to President with a clear 2-year transition plan. She'll take over operations while Robert focuses on customer relationships and mentoring.</p><p>Sarah is disappointed but accepts the logic. "Two more years, Dad. I'm holding you to it."</p><p>Michael appreciates the additional time. With Sarah focused on operations and Robert on customers, Michael can prove his value in sales and strategy.</p><p>Customers are relieved by the continuity. "Glad Robert isn't going anywhere just yet. We trust him."</p><p>The transition is smoother but slower. Sarah has time to build relationships, but she's also still waiting. Will Robert actually let go in two years, or will he find new reasons to stay?</p><p>The company trades speed for stability. Robert's health remains a concern—what if something happens before the transition completes?</p>`
                         }
                     ]
                 },
@@ -1501,51 +1576,88 @@ const EVENTS = [
                             effects: {
                                 profit: -1800000,
                                 cash: -1800000,
-                                revenue: 1000000,
+                                revenue: 1200000,               // REBALANCED: Strong customer loyalty
                                 assets: 500000,
-                                robertOwnership: 2,  // Family puts personal money in
+                                robertOwnership: 2,             // Family puts personal money in
                                 sarahOwnership: 1,
                                 michaelOwnership: function() { return gameState.michaelLeft ? 0 : 0.5; },
-                                sarahHappiness: 15,
-                                robertHappiness: 20,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 10; },
-                                managementQuality: 10
+                                sarahHappiness: 10,             // REBALANCED: Proud but personally poorer
+                                robertHappiness: 15,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 5; },
+                                managementQuality: 12,
+                                jenniferHappiness: -15,         // REBALANCED: "You gave away family money"
+                                // REBALANCED: Strong reputation boost but real personal cost
+                                reputationIndustry: 20,         // Legendary reputation
+                                reputationCustomer: 15,         // Deep customer loyalty
+                                reputationEmployee: 15,         // Employees respect leadership
+                                valuesIntegrity: 20,            // Ultimate integrity
+                                valuesFamilyFirst: -10,         // Sacrificed family wealth for business
+                                valuesLegacy: 15                // Building Anderson legacy
                             },
                             impact: function() {
                                 const michaelStillHere = !gameState.michaelLeft;
                                 const familyContrib = michaelStillHere ? "$500K split three ways" : "$500K split between Robert and Sarah";
 
-                                return `<p>The Anderson family makes a powerful statement: they personally contribute ${familyContrib} from their own wealth, with the company covering the remaining $1.3M.</p><p>"The Anderson name means something," ` + (gameState.sarahCEO ? "Sarah" : "Robert") + ` announces publicly. "When we fail, we own it completely."</p><p>The total cost is enormous, but the client is deeply impressed. They not only maintain the contract but increase it and refer new business.</p><p>The personal financial sacrifice by the family sends a powerful message to employees: leadership accountability is real, not just words.</p><p>The Anderson family's reputation for integrity becomes legendary in the industry. Competitors talk about this decision for years.</p>`;
+                                let result = `<p>The Anderson family makes a powerful statement: they personally contribute ${familyContrib} from their own wealth, with the company covering the remaining $1.3M.</p>`;
+                                result += `<p>"The Anderson name means something," ` + (gameState.sarahCEO ? "Sarah" : "Robert") + ` announces publicly. "When we fail, we own it completely."</p>`;
+                                result += `<p>The total cost is enormous. The family's personal savings take a significant hit. Jennifer is upset: "You gave away hundreds of thousands of family money for a business reputation?"</p>`;
+                                result += `<p>But the client is deeply impressed. They not only maintain the contract but expand it and become vocal advocates for Anderson Packaging.</p>`;
+                                result += `<p>The industry takes notice. "The Andersons put their own money where their mouth is," one competitor says admiringly.</p>`;
+                                result += `<p>Employees work harder, knowing leadership has their back. The personal sacrifice creates a culture of accountability at every level.</p>`;
+                                return result;
                             }
                         },
                         {
-                            text: "Company accepts full responsibility and bears the $1.8M cost",
+                            text: "Company accepts full responsibility—business absorbs the $1.8M cost",
                             effects: {
                                 profit: -1800000,
                                 cash: -1800000,
-                                revenue: 1000000,
+                                revenue: 800000,                // REBALANCED: Good but not legendary
                                 assets: 500000,
-                                sarahHappiness: 10,
-                                robertHappiness: 12,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 8; },
-                                managementQuality: 7
+                                sarahHappiness: 8,
+                                robertHappiness: 10,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : 6; },
+                                managementQuality: 8,
+                                jenniferHappiness: 5,           // REBALANCED: Preserved family wealth
+                                // REBALANCED: Good reputation, but not legendary
+                                reputationIndustry: 10,         // Solid reputation
+                                reputationCustomer: 10,
+                                reputationEmployee: 8,
+                                valuesIntegrity: 12,            // Did the right thing
+                                valuesFamilyFirst: 5            // Protected family wealth
                             },
-                            impact: `<p>The company accepts full responsibility. The business takes a major financial hit for recalls and rebuilding quality systems.</p><p>The client is impressed by the integrity. They maintain the contract and eventually increase it.</p><p>The Anderson family feels they've upheld their values, though some wonder if personal family contribution would have sent a stronger message about accountability.</p><p>Employee morale improves—leadership did the right thing, even though it was expensive.</p>`
+                            impact: `<p>The company accepts full responsibility. The business takes a major financial hit for recalls and rebuilding quality systems, but family personal wealth is preserved.</p><p>The client is impressed by the response. They maintain the contract and speak well of Anderson Packaging.</p><p>The Anderson family feels they've done the right thing. Robert nods approvingly: "The business should pay for business failures."</p><p>Employees appreciate the accountability, though some wonder if leadership would personally sacrifice for them. "The company paid, not the family," one notes.</p><p>The reputation boost is real but modest. Anderson Packaging did what any professional company would do—no more, no less.</p>`
                         },
                         {
-                            text: "Settle quietly for $600K—protect family wealth and business",
+                            text: "Settle quietly for $600K—preserve capital for future opportunities",
                             effects: {
                                 profit: -600000,
-                                cash: -600000,
-                                revenue: -800000,
-                                sarahHappiness: -18,
-                                robertHappiness: -25,
-                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -12; },
+                                cash: -600000,                  // REBALANCED: More cash retained
+                                revenue: -600000,               // REBALANCED: Modest revenue loss
+                                sarahHappiness: -12,
+                                robertHappiness: -20,
+                                michaelHappiness: function() { return gameState.michaelLeft ? 0 : -8; },
                                 hasQualityIssues: true,
-                                managementQuality: -12
+                                managementQuality: -10,
+                                jenniferHappiness: 10,          // REBALANCED: "Finally, practical thinking"
+                                // REBALANCED: Add tempting short-term benefit
+                                debt: -200000,                  // Can pay down debt or invest elsewhere
+                                // But long-term reputation cost
+                                reputationIndustry: -15,        // Word gets around
+                                reputationCustomer: -12,
+                                reputationEmployee: -10,
+                                valuesIntegrity: -20,           // Compromised values
+                                valuesLongTermFocus: -10        // Short-term thinking
                             },
                             impact: function() {
-                                return `<p>The family chooses the cheaper settlement, avoiding full accountability.</p><p>The client accepts the settlement but terminates the contract. Revenue decreases substantially. Word spreads in the industry that the Andersons cut corners.</p><p>Robert is devastated. "I spent 30+ years building a reputation for integrity. We just sold it for $1.2M in savings."</p><p>Sarah also struggles with deep regret. ` + (gameState.sarahCEO ? "As CEO, she feels she's betrayed her father's legacy." : "She wonders if she should have pushed harder for full accountability.") + `</p><p>Employees lose respect for family leadership. Some of the best people start quietly looking for other jobs. The company culture shifts—integrity is negotiable after all.</p>`;
+                                let result = `<p>The family chooses the pragmatic path. "We settle for $600K, avoid publicity, and move on. That's $1.2M we keep for other opportunities."</p>`;
+                                result += `<p>Jennifer nods: "Finally, some practical business thinking. Why throw money at a problem when you can solve it for less?"</p>`;
+                                result += `<p>The client accepts the settlement but terminates the contract. The crisis stays out of the trade press.</p>`;
+                                result += `<p>But word gets around anyway. Industry contacts who heard about the issue notice the Andersons didn't make it right. "They settled," one says. "That tells you something."</p>`;
+                                result += `<p>Robert is deeply troubled. "I spent 30+ years building a reputation for integrity. What did we just trade it for?"</p>`;
+                                result += (gameState.sarahCEO ? `<p>Sarah, as CEO, feels the weight of the decision. This happened on her watch, and she didn't stand behind it fully.</p>` : `<p>Sarah wonders if she should have pushed harder for full accountability.</p>`);
+                                result += `<p>The $1.2M saved sits in the bank—but what's it worth compared to a reputation that took decades to build?</p>`;
+                                return result;
                             }
                         }
                     ]
@@ -1813,101 +1925,124 @@ const EVENTS = [
                     },
                     options: [
                         {
-                            text: "Transform dramatically—$5M automation investment (Gen 3 leads)",
+                            text: "Transform dramatically—$5M automation investment, embrace the future",
                             effects: {
                                 cash: -5000000,
                                 debt: 3000000,
-                                revenue: 5000000,
-                                profit: 300000,
+                                revenue: 6000000,               // REBALANCED: Strong growth
+                                profit: 400000,
                                 assets: 5000000,
-                                sarahHappiness: function() { return gameState.hasGen3 ? 15 : 5; },
-                                robertHappiness: function() { return gameState.robertDeceased ? 0 : -15; },
+                                sarahHappiness: function() { return gameState.hasGen3 ? 18 : 5; },
+                                robertHappiness: function() { return gameState.robertDeceased ? 0 : -20; },
                                 hasDebt: true,
-                                managementQuality: 15,
-                                employees: -12  // Automation displaces workers
+                                managementQuality: 18,
+                                employees: -15,                 // More layoffs
+                                // REBALANCED: Strong business results but cultural destruction
+                                reputationIndustry: 10,         // Seen as modern and competitive
+                                reputationEmployee: -20,        // Employees feel betrayed
+                                reputationCustomer: -5,         // Personal touch fades
+                                valuesLegacy: -25,              // Robert's way is gone
+                                valuesFamilyFirst: -10,         // Business over tradition
+                                valuesLongTermFocus: 10         // Investing in future
                             },
                             impact: function() {
-                                let result = `<p>Sarah gives the green light. The company takes on $3M debt and invests massively in automation and AI.</p>`;
+                                let result = `<p>Sarah gives the green light. The company takes on $3M debt and invests massively in automation, AI, and modern manufacturing.</p>`;
 
                                 if (gameState.hasGen3) {
-                                    result += `<p>Emily and David lead the transformation. Revenue and profit surge as efficiency multiplies. Company valuation increases dramatically.</p><p>But the transformation is wrenching. Twelve long-time employees lose their jobs to automation—people who knew Robert personally. Some had been with the company for 20+ years.</p>`;
+                                    result += `<p>Emily and David lead the transformation with passion. Revenue surges. Efficiency multiplies. Company valuation doubles.</p>`;
                                 } else {
-                                    result += `<p>Without the next generation to drive it, the transformation is slower and more difficult. Revenue eventually increases, but Sarah shoulders an enormous burden.</p><p>Twelve long-time employees lose their jobs to automation.</p>`;
+                                    result += `<p>Without the next generation, Sarah shoulders the burden alone. The transformation succeeds but exhausts her.</p>`;
                                 }
+
+                                result += `<p>But the transformation is wrenching. Fifteen long-time employees lose their jobs to automation—people who knew Robert personally, who were there from the beginning. "We're just numbers now," one departing worker says.</p>`;
 
                                 if (gameState.robertDeceased) {
-                                    result += `<p>Sarah wonders what her father would think. "Did I honor his legacy by ensuring survival? Or betray it by transforming everything he built?"</p>`;
+                                    result += `<p>Sarah wonders what her father would think. The company is unrecognizable. Robots package what humans once crafted. Algorithms decide what relationships once determined.</p>`;
                                 } else {
-                                    result += `<p>Robert is deeply troubled. He barely recognizes the company he founded. "I built this with relationships and craftsmanship. Now it's algorithms and machines."</p>`;
+                                    result += `<p>Robert is devastated. He stops attending board meetings. "That's not my company anymore," he tells Patricia. "I don't belong there."</p>`;
                                 }
 
-                                result += `<p>The third generation will inherit a modernized, competitive company. But it looks nothing like the business Robert started in 1994.</p>`;
+                                result += `<p>Anderson Packaging is now a modern, competitive company. It will survive and thrive. But Robert's original vision—personal relationships, craftsmanship, family values—is gone. The question is: Was it worth it?</p>`;
 
                                 return result;
                             }
                         },
                         {
-                            text: "Preserve Robert's approach—modest organic growth only",
+                            text: "Preserve Robert's approach—honor the legacy, accept the consequences",
                             effects: {
-                                revenue: 500000,
-                                profit: 30000,
-                                sarahHappiness: function() { return gameState.hasGen3 ? -15 : 5; },
-                                robertHappiness: function() { return gameState.robertDeceased ? 0 : 15; },
-                                managementQuality: -5,
-                                employees: 0
+                                revenue: 300000,                // REBALANCED: Modest growth
+                                profit: 20000,
+                                sarahHappiness: function() { return gameState.hasGen3 ? -18 : 8; },
+                                robertHappiness: function() { return gameState.robertDeceased ? 0 : 20; },
+                                managementQuality: -3,
+                                employees: 0,
+                                // REBALANCED: Strong cultural preservation but business risk
+                                reputationIndustry: -10,        // Seen as outdated
+                                reputationEmployee: 15,         // Employees grateful for jobs
+                                reputationCustomer: 10,         // Loyal customers love it
+                                valuesLegacy: 25,               // Robert's vision preserved
+                                valuesFamilyFirst: 15,
+                                valuesIntegrity: 10             // Stayed true to values
                             },
                             impact: function() {
-                                let result = `<p>Sarah chooses to honor Robert's legacy by preserving his approach—personal relationships, craftsmanship, steady organic growth.</p>`;
+                                let result = `<p>Sarah chooses to honor Robert's legacy. "Dad built this company a certain way for a reason. Personal relationships. Craftsmanship. Taking care of our people. That's who we are."</p>`;
 
-                                result += `<p>No employees lose their jobs. The company culture remains unchanged. Loyal customers appreciate the continuity.</p>`;
+                                result += `<p>No employees lose their jobs. The company culture remains intact. Long-time customers express appreciation: "Thank you for not becoming another soulless corporation."</p>`;
 
                                 if (gameState.hasGen3) {
-                                    result += `<p>But Emily and David are devastated. "Mom, we're choosing to become irrelevant," Emily argues. "Grandpa would want us to survive, not to preserve a museum."</p><p>David starts exploring opportunities at other companies. The third generation may not stick around to inherit a declining business.</p>`;
-                                } else {
-                                    result += `<p>Sarah feels she's honored her father's vision, even though it means slower growth.</p>`;
+                                    result += `<p>But Emily and David are devastated. "Mom, you're choosing to kill this company slowly instead of save it quickly," Emily says, barely holding back tears.</p><p>David announces he's accepted a position at a tech startup. "I can't watch this happen." The third generation is slipping away.</p>`;
                                 }
 
                                 if (gameState.robertDeceased) {
-                                    result += `<p>Sarah feels at peace. She preserved what Robert built, even if it means the company won't dominate the market.</p>`;
+                                    result += `<p>Sarah feels she's kept faith with her father. The company is exactly what he would have wanted—even if competitors are pulling ahead.</p>`;
                                 } else {
-                                    result += `<p>Robert is grateful. "Thank you for keeping my vision alive, Sarah. This is the company I wanted it to be."</p>`;
+                                    result += `<p>Robert is deeply grateful. "Thank you, Sarah. This is still the company I built. That means everything to me."</p>`;
                                 }
 
-                                result += `<p>The company remains recognizable as Robert Anderson's creation. But competitors are pulling ahead. The question becomes: Will there be a fourth generation to inherit this?</p>`;
+                                result += `<p>Competitors with modern operations gain market share. Some customers leave for cheaper, faster alternatives. The company remains recognizable—but increasingly irrelevant.</p>`;
+                                result += `<p>Will there be a fourth generation to inherit this? Or will the Andersons be the last owners of a fading legacy?</p>`;
 
                                 return result;
                             }
                         },
                         {
-                            text: "Hybrid approach—modernize gradually while preserving culture ($2M investment)",
+                            text: "Hybrid approach—try to do both ($2M investment)",
                             effects: {
                                 cash: -2000000,
                                 debt: 1000000,
-                                revenue: 2500000,
-                                profit: 150000,
+                                revenue: 1500000,               // REBALANCED: Modest, not impressive
+                                profit: 80000,                  // REBALANCED: Reduced
                                 assets: 2000000,
-                                sarahHappiness: 10,
-                                robertHappiness: function() { return gameState.robertDeceased ? 0 : 5; },
+                                sarahHappiness: 0,              // REBALANCED: Exhausting, unsatisfying
+                                robertHappiness: function() { return gameState.robertDeceased ? 0 : -5; },
                                 hasDebt: true,
-                                managementQuality: 8,
-                                employees: -3  // Modest workforce reduction
+                                managementQuality: 3,           // REBALANCED: Modest
+                                employees: -5,
+                                // REBALANCED: Neither fish nor fowl
+                                reputationIndustry: -5,         // "They couldn't commit"
+                                reputationEmployee: -5,         // Still lost jobs, culture still changed
+                                reputationCustomer: -3,         // Some personal touch lost
+                                valuesLegacy: -8,               // Partially eroded
+                                valuesFamilyFirst: -3
                             },
                             impact: function() {
-                                let result = `<p>Sarah charts a middle path: modernize selectively while preserving the company culture and values Robert built.</p>`;
+                                let result = `<p>Sarah attempts the middle path. "We'll modernize selectively—keep the culture, add some automation, try to have it both ways."</p>`;
 
-                                result += `<p>The company invests $2M in targeted automation—enough to stay competitive without becoming unrecognizable. Revenue and profit increase moderately.</p><p>Three positions are eliminated, but Sarah works to find those employees other roles or generous severance packages.</p>`;
+                                result += `<p>The $2M investment produces modest improvements. Five employees lose their jobs—not as many as full transformation, but enough to damage morale. The remaining staff wonders: "Are we next?"</p>`;
 
                                 if (gameState.hasGen3) {
-                                    result += `<p>Emily and David are moderately satisfied. It's not the aggressive transformation they wanted, but it's progress. They can work with this.</p>`;
+                                    result += `<p>Emily and David are frustrated. "This isn't enough to compete, and it's too much change to preserve what made us special. We're becoming a mediocre version of both options."</p>`;
+                                    result += `<p>Emily stays, but her ambition is muted. David stays too—for now—but keeps his options open.</p>`;
                                 }
 
                                 if (gameState.robertDeceased) {
-                                    result += `<p>Sarah believes she's found the balance her father would have wanted—evolution without revolution.</p>`;
+                                    result += `<p>Sarah hoped to find balance. Instead, she's satisfied no one—including herself. "Did I honor Dad's legacy or betray it? I genuinely don't know."</p>`;
                                 } else {
-                                    result += `<p>Robert accepts the compromise. "It's not what I would have chosen, but I understand. Times change."</p>`;
+                                    result += `<p>Robert watches with mixed feelings. "You changed things, but not enough to really matter. You kept things, but not enough to really preserve. I'm not sure what this is anymore."</p>`;
                                 }
 
-                                result += `<p>The company remains recognizably "Anderson Packaging" while adapting to survive. It's not the most aggressive path, but it honors both legacy and pragmatism.</p><p>The family has chosen to be both builders AND preservers—a delicate balance that defines who the Andersons are.</p>`;
+                                result += `<p>Industry observers note: "Anderson tried to have it both ways. They got neither. Companies that went all-in on transformation are thriving. Companies that stayed true to their roots have loyal customers. Anderson is... in the middle."</p>`;
+                                result += `<p>The company survives, but without a clear identity. Is Anderson Packaging modern or traditional? Efficient or personal? The answer: neither fully. And that may be the worst outcome of all.</p>`;
 
                                 return result;
                             }

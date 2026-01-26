@@ -160,7 +160,37 @@ function init() {
         // Risk factors
         hasQualityIssues: false,
         hasDebt: false,
-        hasExternalInvestors: false   // Outside equity investors
+        hasExternalInvestors: false,   // Outside equity investors
+
+        // ============================================
+        // REPUTATION & VALUES TRACKING
+        // These persist across decisions and create long-term consequences
+        // ============================================
+
+        // Industry and customer reputation (0-100)
+        reputation: {
+            industry: 50,             // How peers and industry view the company
+            customer: 50,             // Customer trust and loyalty
+            employee: 50,             // What employees think of leadership
+            community: 50             // Local community perception
+        },
+
+        // Values tracking - shows what the family prioritizes (0-100)
+        values: {
+            familyFirst: 50,          // Family harmony vs business success
+            integrity: 60,            // Ethical standards and honesty
+            longTermFocus: 60,        // Long-term vs short-term thinking
+            meritocracy: 50,          // Performance-based vs equality
+            legacy: 50                // Preservation vs transformation
+        },
+
+        // Cumulative effects from reputation/values
+        reputationEffects: {
+            customerRetention: 1.0,   // Multiplier on revenue stability
+            employeeTurnover: 0,      // Annual % of employees leaving
+            acquisitionPremium: 0,    // Premium/discount on valuation
+            recruitingAdvantage: 0    // Easier/harder to hire talent
+        }
     };
     
     // Initialize family members
@@ -518,6 +548,48 @@ function applyEffects(effects) {
             member.otherIncome = effects[key + 'OtherIncome'];
         }
     });
+
+    // ============================================
+    // REPUTATION EFFECTS
+    // Apply changes to reputation scores (clamped 0-100)
+    // ============================================
+    const reputationFields = {
+        'reputationIndustry': 'industry',
+        'reputationCustomer': 'customer',
+        'reputationEmployee': 'employee',
+        'reputationCommunity': 'community'
+    };
+
+    Object.keys(reputationFields).forEach(effectKey => {
+        if (effects[effectKey] !== undefined) {
+            const repField = reputationFields[effectKey];
+            gameState.reputation[repField] += resolveEffectValue(effects[effectKey]);
+            gameState.reputation[repField] = Math.max(0, Math.min(100, gameState.reputation[repField]));
+        }
+    });
+
+    // ============================================
+    // VALUES EFFECTS
+    // Apply changes to values tracking (clamped 0-100)
+    // ============================================
+    const valuesFields = {
+        'valuesFamilyFirst': 'familyFirst',
+        'valuesIntegrity': 'integrity',
+        'valuesLongTermFocus': 'longTermFocus',
+        'valuesMeritocracy': 'meritocracy',
+        'valuesLegacy': 'legacy'
+    };
+
+    Object.keys(valuesFields).forEach(effectKey => {
+        if (effects[effectKey] !== undefined) {
+            const valField = valuesFields[effectKey];
+            gameState.values[valField] += resolveEffectValue(effects[effectKey]);
+            gameState.values[valField] = Math.max(0, Math.min(100, gameState.values[valField]));
+        }
+    });
+
+    // Customer concentration flag (used by later events)
+    if (effects.customerConcentration) gameState.customerConcentration = true;
 }
 
 function advanceGame() {
@@ -820,6 +892,12 @@ function advanceGame() {
         gameState.employees = Math.max(1, Math.round(gameState.revenue / revenuePerEmployee));
     }
 
+    // ============================================
+    // REPUTATION EFFECTS ON BUSINESS
+    // Reputation has tangible business consequences
+    // ============================================
+    updateReputationEffects();
+
     // Update UI to show current state before loading next event
     updateUI();
     updateFamilyDisplay();
@@ -830,6 +908,86 @@ function advanceGame() {
     } else {
         showEnding();
     }
+}
+
+// ============================================
+// REPUTATION AND VALUES EFFECTS
+// Long-term consequences of decisions accumulate
+// ============================================
+
+function updateReputationEffects() {
+    const rep = gameState.reputation;
+    const val = gameState.values;
+    const effects = gameState.reputationEffects;
+
+    // Customer retention: High reputation = stable revenue
+    // Low reputation = customers leave (0.85 to 1.05 multiplier)
+    effects.customerRetention = 0.90 + (rep.customer / 100) * 0.15;
+
+    // Employee turnover: Poor employee reputation = talent leaves
+    // High turnover hurts management quality
+    effects.employeeTurnover = Math.max(0, (50 - rep.employee) / 100) * 0.15; // 0-15% turnover
+
+    // Acquisition premium: Good reputation = higher valuation
+    // Poor reputation = discount (affects sale events)
+    effects.acquisitionPremium = (rep.industry - 50) / 50 * 0.15; // -15% to +15%
+
+    // Recruiting advantage: Reputation affects hiring
+    effects.recruitingAdvantage = (rep.employee - 50) / 50 * 10; // -10 to +10 on management quality
+
+    // Apply reputation effects to current metrics
+    // Customer churn affects revenue stability
+    if (effects.customerRetention < 1.0) {
+        gameState.revenue *= effects.customerRetention;
+    }
+
+    // Employee turnover damages management quality
+    if (effects.employeeTurnover > 0.05) {
+        gameState.managementQuality = Math.max(20,
+            gameState.managementQuality - effects.employeeTurnover * 30);
+    }
+
+    // Integrity score affects business relationships
+    if (val.integrity < 40) {
+        // Low integrity makes partners and customers suspicious
+        gameState.revenue *= 0.97;
+    } else if (val.integrity > 70) {
+        // High integrity attracts quality business
+        gameState.revenue *= 1.01;
+    }
+
+    // Family-first vs business focus affects different metrics
+    if (val.familyFirst > 70) {
+        // Very family-focused may sacrifice some efficiency
+        gameState.profitMargin *= 0.98;
+        gameState.familyCohesion = Math.min(100, gameState.familyCohesion + 2);
+    } else if (val.familyFirst < 30) {
+        // Very business-focused may improve efficiency but hurt family
+        gameState.profitMargin *= 1.01;
+        gameState.familyCohesion = Math.max(0, gameState.familyCohesion - 3);
+    }
+
+    // Long-term focus affects strategic decisions
+    if (val.longTermFocus < 40) {
+        // Short-term focus erodes long-term value
+        gameState.equipmentValue *= 0.98; // Less investment in maintenance
+        gameState.creditRating = Math.max(20, gameState.creditRating - 1);
+    }
+
+    // Natural reputation drift toward baseline over time
+    // Reputation slowly returns to 50 if not reinforced
+    Object.keys(rep).forEach(key => {
+        if (rep[key] > 52) rep[key] -= 1;
+        else if (rep[key] < 48) rep[key] += 1;
+    });
+
+    // Clamp all values
+    Object.keys(rep).forEach(key => {
+        rep[key] = Math.max(0, Math.min(100, rep[key]));
+    });
+    Object.keys(val).forEach(key => {
+        val[key] = Math.max(0, Math.min(100, val[key]));
+    });
 }
 
 // ============================================
