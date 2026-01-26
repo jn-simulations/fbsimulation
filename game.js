@@ -77,6 +77,58 @@ function init() {
         unresolvedConflicts: [],     // Tracks ongoing family conflicts
         conflictHistory: [],         // Past conflicts and their resolution
 
+        // ============================================
+        // GOVERNANCE & DECISION-MAKING STRUCTURE
+        // Who has power and what are their preferences?
+        // ============================================
+
+        // Board composition and preferences
+        boardComposition: {
+            familySeats: 1,          // Family members on board (starts with founder)
+            independentSeats: 0,      // Independent directors
+            totalSeats: 1
+        },
+        boardPreferences: {
+            riskTolerance: 50,        // Board's risk appetite (0-100)
+            growthOrientation: 60,    // Prioritize growth vs stability (0-100)
+            professionalization: 30,  // Support for professional management (0-100)
+            dividendPolicy: 20        // Preference for dividends vs reinvestment (0-100)
+        },
+
+        // Management structure and preferences
+        managementStructure: {
+            isFounderLed: true,       // Founder still making decisions?
+            hasProfessionalCEO: false,
+            hasProfessionalCFO: false,
+            familyInManagement: 1,    // Count of family in management roles
+            professionalManagers: 0   // Count of non-family executives
+        },
+        managementPreferences: {
+            riskTolerance: 60,        // Management's risk appetite
+            growthOrientation: 70,    // Managers typically want growth
+            investmentHorizon: 'long', // 'short', 'medium', 'long'
+            innovationFocus: 40       // Investment in R&D/new products
+        },
+
+        // Decision-making power distribution (must sum to 100)
+        decisionPower: {
+            founders: 80,             // Founder(s) control
+            otherShareholders: 10,    // Other family shareholders
+            board: 5,                 // Board influence (when exists)
+            management: 5             // Professional management influence
+        },
+
+        // Financing preferences and constraints
+        financingPreferences: {
+            debtAversion: 50,         // How much stakeholders dislike debt (0-100)
+            equityDilutionAversion: 90, // Resistance to outside equity (0-100)
+            retainedEarningsPreference: 70, // Preference for internal financing
+            minimumCashReserve: 3     // Months of operating expenses to keep
+        },
+
+        // Strategic alignment score (how aligned are decision-makers?)
+        strategicAlignment: 80,       // Starts high in founder era
+
         // Decision tracking
         decisions: [],
 
@@ -503,6 +555,12 @@ function advanceGame() {
     const effectiveManagement = calculateEffectiveManagement();
 
     // ============================================
+    // UPDATE GOVERNANCE STATE
+    // Track changes in decision-making structure
+    // ============================================
+    updateGovernanceState();
+
+    // ============================================
     // SHAREHOLDER PREFERENCE INFLUENCE
     // Aggregate preferences affect growth/margin tradeoffs
     // ============================================
@@ -563,85 +621,85 @@ function advanceGame() {
         };
 
         // ============================================
-        // GROWTH RATE & CAPITAL CONSTRAINTS (Realistic)
-        // Industry-appropriate growth rates
+        // GOVERNANCE-AWARE GROWTH RATE CALCULATION
+        // Growth depends on: governance, decision-maker preferences, financing
         // ============================================
-        // Packaging industry grows 1-3% annually, not 7%
-        const baseGrowth = gameState.marketGrowthRate; // 2% baseline
 
-        // Economic cycle affects growth potential
-        let cycleGrowthBonus = 0;
-        if (gameState.economicCycle === 'boom') cycleGrowthBonus = 0.015;
-        else if (gameState.economicCycle === 'recession') cycleGrowthBonus = -0.02;
+        // Step 1: Get growth strategy from governance analysis
+        const growthStrategy = calculateGrowthStrategy();
 
-        // Risk preference bonus (from shareholders): 0-1.5% (reduced from 3%)
-        const riskBonus = (shareholderPrefs.riskTolerance / 100) * 0.015;
+        // Step 2: Adjust for economic cycle
+        let cycleGrowthAdjustment = 0;
+        if (gameState.economicCycle === 'boom') cycleGrowthAdjustment = 0.015;
+        else if (gameState.economicCycle === 'recession') cycleGrowthAdjustment = -0.025;
 
-        // Management execution bonus: 0-1.5% (reduced from 2%)
-        const managementBonus = (effectiveManagement / 100) * 0.015;
+        // Step 3: Equipment condition affects growth capability
+        const equipmentConstraint = gameState.equipmentAge > 10 ?
+            Math.min(0.02, (gameState.equipmentAge - 10) * 0.003) : 0;
 
-        // Desired growth rate based on preferences and management
-        // Max realistic growth for packaging: ~5-6% in best conditions
-        const desiredGrowthRate = Math.min(0.06,
-            baseGrowth + cycleGrowthBonus + riskBonus + managementBonus - equipmentPenalty);
+        // Step 4: Calculate target growth rate
+        const targetGrowthRate = Math.max(0, Math.min(0.07,
+            growthStrategy.desiredGrowthRate + cycleGrowthAdjustment - equipmentConstraint - equipmentPenalty));
 
-        // Capital required to achieve desired growth
-        // Manufacturing needs ~0.8x of revenue growth in capital (more realistic)
-        const desiredRevenueIncrease = gameState.revenue * (Math.pow(1 + desiredGrowthRate, yearsToAdvance) - 1);
-        const capitalRequired = desiredRevenueIncrease * 0.8;
+        // Step 5: Calculate capital required for target growth
+        // Capital intensity varies by growth rate (higher growth needs more capital per $ revenue)
+        const capitalIntensity = 0.6 + (targetGrowthRate / 0.07) * 0.4; // 0.6-1.0x
+        const targetRevenueIncrease = gameState.revenue * (Math.pow(1 + targetGrowthRate, yearsToAdvance) - 1);
+        const capitalRequired = targetRevenueIncrease * capitalIntensity;
 
-        // Available capital sources
-        const internalCapital = allocated.growth;
-        // Keep 3 months operating expenses as reserve
-        const minimumReserve = (gameState.revenue / 12) * 3;
-        const availableCash = Math.max(0, gameState.cash - minimumReserve - netWorkingCapital);
-        const availableDebtCapacity = Math.max(0, gameState.debtCapacity - gameState.debt);
+        // Step 6: Analyze financing ability
+        const financing = calculateFinancingAbility(capitalRequired);
 
-        // Calculate funding gap
-        let fundingGap = capitalRequired - internalCapital;
-        let actualGrowthCapital = internalCapital;
-        gameState.capitalConstrained = false;
-        gameState.fundingGap = 0;
+        // Step 7: Apply financing to growth
+        gameState.capitalConstrained = financing.isConstrained;
+        gameState.fundingGap = financing.fundingGap;
 
-        if (fundingGap > 0) {
-            // Need external capital - check sources in order of preference
-
-            // 1. Use excess cash first (no cost, no control loss)
-            if (fundingGap > 0 && availableCash > 0) {
-                const cashUsed = Math.min(fundingGap, availableCash);
-                actualGrowthCapital += cashUsed;
-                gameState.cash -= cashUsed;
-                fundingGap -= cashUsed;
-            }
-
-            // 2. Take on debt (increases risk, no control loss)
-            // Only if shareholders have moderate-high risk tolerance
-            if (fundingGap > 0 && availableDebtCapacity > 0 && shareholderPrefs.riskTolerance > 40) {
-                const debtUsed = Math.min(fundingGap, availableDebtCapacity);
-                actualGrowthCapital += debtUsed;
-                gameState.debt += debtUsed;
+        // Execute capital deployment
+        financing.capitalSources.forEach(source => {
+            if (source.source === 'cash') {
+                gameState.cash -= source.amount;
+            } else if (source.source === 'debt') {
+                gameState.debt += source.amount;
                 gameState.hasDebt = true;
-                fundingGap -= debtUsed;
-
-                // Taking on debt REDUCES future capacity (not increases it)
-                gameState.creditRating = Math.max(20, gameState.creditRating - 5);
+                // Debt affects credit rating
+                const debtToRevenue = gameState.debt / Math.max(1, gameState.revenue);
+                if (debtToRevenue > 0.5) {
+                    gameState.creditRating = Math.max(20, gameState.creditRating - 3);
+                }
+            } else if (source.source === 'equity') {
+                // External equity dilutes family ownership
+                const dilution = (source.amount / (gameState.assets + source.amount)) * 100;
+                gameState.externalEquity += dilution;
+                gameState.hasExternalInvestors = true;
             }
+        });
 
-            // 3. If still short, growth is constrained
-            if (fundingGap > 0) {
-                gameState.capitalConstrained = true;
-                gameState.fundingGap = fundingGap;
-            }
-        }
+        // Step 8: Calculate actual growth rate achieved
+        const actualGrowthRate = targetGrowthRate * financing.utilizationRatio;
 
-        // Actual growth rate based on capital actually deployed
-        const capitalRatio = capitalRequired > 0 ? actualGrowthCapital / capitalRequired : 1;
-        const actualGrowthRate = desiredGrowthRate * Math.min(1, capitalRatio);
-
-        // Apply growth over the period (with market saturation dampening for very large companies)
+        // Step 9: Apply market saturation for very large companies
         const marketSaturationFactor = gameState.revenue > 20000000 ?
             Math.max(0.5, 1 - (gameState.revenue - 20000000) / 50000000) : 1;
-        gameState.revenue *= Math.pow(1 + (actualGrowthRate * marketSaturationFactor), yearsToAdvance);
+
+        // Step 10: Apply governance alignment factor
+        // Misaligned stakeholders slow down execution
+        const alignmentFactor = gameState.strategicAlignment / 100;
+        const effectiveGrowthRate = actualGrowthRate * marketSaturationFactor * (0.7 + alignmentFactor * 0.3);
+
+        // Step 11: Apply growth to revenue
+        gameState.revenue *= Math.pow(1 + effectiveGrowthRate, yearsToAdvance);
+
+        // Store growth metrics for UI/debugging
+        gameState.lastGrowthMetrics = {
+            targetRate: targetGrowthRate,
+            actualRate: actualGrowthRate,
+            effectiveRate: effectiveGrowthRate,
+            capitalRequired: capitalRequired,
+            capitalRaised: capitalRequired - financing.fundingGap,
+            financingCost: financing.weightedCostOfCapital,
+            governanceBonus: growthStrategy.governanceBonus,
+            alignmentFactor: alignmentFactor
+        };
 
         // ============================================
         // INTEREST EXPENSE (Realistic rates)
@@ -749,6 +807,305 @@ function advanceGame() {
     } else {
         showEnding();
     }
+}
+
+// ============================================
+// GOVERNANCE-AWARE GROWTH STRATEGY CALCULATION
+// Determines growth rate based on decision-maker preferences,
+// governance structures, and financing ability
+// ============================================
+
+function calculateGrowthStrategy() {
+    // Get preferences from all decision-makers weighted by their power
+    const shareholderPrefs = getShareholderPreferences();
+    const boardPrefs = gameState.boardPreferences;
+    const mgmtPrefs = gameState.managementPreferences;
+    const power = gameState.decisionPower;
+
+    // ============================================
+    // STEP 1: WEIGHTED GROWTH ORIENTATION
+    // Different stakeholders want different growth levels
+    // ============================================
+
+    // Shareholder growth orientation (based on age, liquidity needs, etc.)
+    const shareholderGrowthOrientation = shareholderPrefs.growthPreference;
+
+    // Board growth orientation (independent boards often push for growth)
+    const boardGrowthOrientation = gameState.boardComposition.independentSeats > 0 ?
+        boardPrefs.growthOrientation : shareholderGrowthOrientation;
+
+    // Management growth orientation (managers often want empire-building)
+    const mgmtGrowthOrientation = gameState.managementStructure.hasProfessionalCEO ?
+        mgmtPrefs.growthOrientation : shareholderGrowthOrientation;
+
+    // Weighted average based on decision power
+    const founderPower = power.founders / 100;
+    const otherShareholderPower = power.otherShareholders / 100;
+    const boardPower = power.board / 100;
+    const mgmtPower = power.management / 100;
+
+    const weightedGrowthOrientation =
+        (shareholderGrowthOrientation * (founderPower + otherShareholderPower)) +
+        (boardGrowthOrientation * boardPower) +
+        (mgmtGrowthOrientation * mgmtPower);
+
+    // ============================================
+    // STEP 2: RISK TOLERANCE FOR GROWTH
+    // How aggressive can growth be?
+    // ============================================
+
+    const shareholderRisk = shareholderPrefs.riskTolerance;
+    const boardRisk = gameState.boardComposition.independentSeats > 0 ?
+        boardPrefs.riskTolerance : shareholderRisk;
+    const mgmtRisk = gameState.managementStructure.hasProfessionalCEO ?
+        mgmtPrefs.riskTolerance : shareholderRisk;
+
+    const weightedRiskTolerance =
+        (shareholderRisk * (founderPower + otherShareholderPower)) +
+        (boardRisk * boardPower) +
+        (mgmtRisk * mgmtPower);
+
+    // ============================================
+    // STEP 3: GOVERNANCE QUALITY IMPACT
+    // Better governance enables better execution
+    // ============================================
+
+    // Board effectiveness enables strategic initiatives
+    const boardEffectivenessBonus = gameState.boardEffectiveness > 50 ?
+        (gameState.boardEffectiveness - 50) / 100 * 0.01 : 0; // Up to 0.5% bonus
+
+    // Independent directors bring expertise and networks
+    const independentDirectorBonus = gameState.boardComposition.independentSeats > 0 ?
+        Math.min(0.01, gameState.boardComposition.independentSeats * 0.003) : 0;
+
+    // Professional management executes better
+    const professionalMgmtBonus = gameState.managementStructure.hasProfessionalCEO ?
+        0.008 : 0;
+
+    // Shareholder monitoring improves accountability
+    const monitoringBonus = gameState.shareholderMonitoring > 50 ?
+        (gameState.shareholderMonitoring - 50) / 100 * 0.005 : 0;
+
+    // Strategic misalignment hurts execution
+    const alignmentPenalty = gameState.strategicAlignment < 50 ?
+        (50 - gameState.strategicAlignment) / 100 * 0.02 : 0;
+
+    const governanceBonus = boardEffectivenessBonus + independentDirectorBonus +
+        professionalMgmtBonus + monitoringBonus - alignmentPenalty;
+
+    // ============================================
+    // STEP 4: CALCULATE TARGET GROWTH RATE
+    // ============================================
+
+    // Base industry growth
+    const baseGrowth = gameState.marketGrowthRate; // 2% for packaging
+
+    // Growth orientation contribution (0-2%)
+    const orientationBonus = (weightedGrowthOrientation / 100) * 0.02;
+
+    // Risk tolerance contribution (0-1.5%)
+    const riskBonus = (weightedRiskTolerance / 100) * 0.015;
+
+    // Management execution (0-1.5%)
+    const effectiveMgmt = calculateEffectiveManagement();
+    const executionBonus = (effectiveMgmt / 100) * 0.015;
+
+    // Total desired growth (capped at realistic max)
+    const desiredGrowthRate = Math.min(0.07,
+        baseGrowth + orientationBonus + riskBonus + executionBonus + governanceBonus);
+
+    return {
+        desiredGrowthRate: desiredGrowthRate,
+        weightedGrowthOrientation: weightedGrowthOrientation,
+        weightedRiskTolerance: weightedRiskTolerance,
+        governanceBonus: governanceBonus,
+        alignmentPenalty: alignmentPenalty
+    };
+}
+
+// ============================================
+// FINANCING ABILITY CALCULATION
+// How much capital can be raised and at what cost?
+// ============================================
+
+function calculateFinancingAbility(capitalNeeded) {
+    const prefs = gameState.financingPreferences;
+    const shareholderPrefs = getShareholderPreferences();
+
+    // ============================================
+    // INTERNAL FINANCING (Retained Earnings)
+    // ============================================
+    const retainedEarnings = gameState.profit * (gameState.allocation.growth / 100);
+
+    // ============================================
+    // CASH RESERVES (Excess Cash)
+    // ============================================
+    const minimumReserve = (gameState.revenue / 12) * prefs.minimumCashReserve;
+    const workingCapitalNeeded = gameState.revenue * gameState.workingCapitalRatio;
+    const availableCash = Math.max(0, gameState.cash - minimumReserve - workingCapitalNeeded * 0.6);
+
+    // ============================================
+    // DEBT CAPACITY
+    // Depends on: credit rating, existing debt, governance, risk tolerance
+    // ============================================
+
+    // Base debt capacity from EBITDA
+    const ebitda = gameState.profit + (gameState.maintenanceCosts || 0);
+    const baseDebtMultiple = 2 + (gameState.creditRating / 100) * 2; // 2-4x EBITDA
+
+    // Governance affects debt access (banks trust well-governed companies more)
+    const governanceDebtBonus = gameState.hasProfessionalBoard ? 0.5 : 0;
+    const effectiveDebtMultiple = baseDebtMultiple + governanceDebtBonus;
+
+    const maxDebtCapacity = Math.max(200000, ebitda * effectiveDebtMultiple);
+    const currentDebtRoom = Math.max(0, maxDebtCapacity - gameState.debt);
+
+    // Willingness to use debt (based on preferences)
+    const debtWillingness = 1 - (prefs.debtAversion / 100);
+    const riskAdjustedDebtWillingness = debtWillingness * (shareholderPrefs.riskTolerance / 100);
+
+    // Available debt = capacity * willingness
+    const availableDebt = currentDebtRoom * riskAdjustedDebtWillingness;
+
+    // ============================================
+    // EXTERNAL EQUITY (if any)
+    // ============================================
+    // Family businesses are very reluctant to dilute
+    const equityWillingness = 1 - (prefs.equityDilutionAversion / 100);
+    const potentialEquity = equityWillingness > 0.2 ?
+        gameState.revenue * 0.3 * equityWillingness : 0;
+
+    // ============================================
+    // TOTAL FINANCING ABILITY
+    // ============================================
+    const totalAvailable = retainedEarnings + availableCash + availableDebt + potentialEquity;
+
+    // ============================================
+    // FINANCING COST (Weighted Average Cost of Capital proxy)
+    // ============================================
+    let weightedCost = 0;
+    let totalUsed = 0;
+
+    // Use capital in order of preference/cost
+    let remainingNeed = capitalNeeded;
+    const capitalSources = [];
+
+    // 1. Retained earnings (lowest cost - already "paid for")
+    if (remainingNeed > 0 && retainedEarnings > 0) {
+        const used = Math.min(remainingNeed, retainedEarnings);
+        capitalSources.push({ source: 'retained', amount: used, cost: 0.0 });
+        totalUsed += used;
+        remainingNeed -= used;
+    }
+
+    // 2. Excess cash (low cost - opportunity cost only)
+    if (remainingNeed > 0 && availableCash > 0) {
+        const used = Math.min(remainingNeed, availableCash);
+        capitalSources.push({ source: 'cash', amount: used, cost: 0.02 });
+        totalUsed += used;
+        remainingNeed -= used;
+    }
+
+    // 3. Debt (medium cost - interest expense)
+    if (remainingNeed > 0 && availableDebt > 0) {
+        const used = Math.min(remainingNeed, availableDebt);
+        const debtCost = 0.06 + (100 - gameState.creditRating) / 100 * 0.04;
+        capitalSources.push({ source: 'debt', amount: used, cost: debtCost });
+        totalUsed += used;
+        remainingNeed -= used;
+    }
+
+    // 4. External equity (highest cost - dilution + governance implications)
+    if (remainingNeed > 0 && potentialEquity > 0) {
+        const used = Math.min(remainingNeed, potentialEquity);
+        capitalSources.push({ source: 'equity', amount: used, cost: 0.15 });
+        totalUsed += used;
+        remainingNeed -= used;
+    }
+
+    // Calculate weighted cost
+    capitalSources.forEach(s => {
+        weightedCost += (s.amount / Math.max(1, totalUsed)) * s.cost;
+    });
+
+    return {
+        totalAvailable: totalAvailable,
+        retainedEarnings: retainedEarnings,
+        availableCash: availableCash,
+        availableDebt: availableDebt,
+        potentialEquity: potentialEquity,
+        capitalSources: capitalSources,
+        fundingGap: Math.max(0, capitalNeeded - totalUsed),
+        isConstrained: capitalNeeded > totalAvailable,
+        weightedCostOfCapital: weightedCost,
+        utilizationRatio: capitalNeeded > 0 ? totalUsed / capitalNeeded : 1
+    };
+}
+
+// ============================================
+// UPDATE GOVERNANCE STATE
+// Changes governance structure based on game events
+// ============================================
+
+function updateGovernanceState() {
+    // Update board composition based on flags
+    if (gameState.hasProfessionalBoard) {
+        gameState.boardComposition.independentSeats = Math.max(2, gameState.boardComposition.independentSeats);
+        gameState.boardComposition.totalSeats = gameState.boardComposition.familySeats + gameState.boardComposition.independentSeats;
+
+        // Independent board has more balanced preferences
+        gameState.boardPreferences.riskTolerance = 45;
+        gameState.boardPreferences.growthOrientation = 55;
+        gameState.boardPreferences.professionalization = 70;
+        gameState.boardPreferences.dividendPolicy = 35;
+    }
+
+    // Update management structure
+    if (gameState.hasOutsideCOO || gameState.managementStructure.hasProfessionalCEO) {
+        gameState.managementStructure.professionalManagers = Math.max(1, gameState.managementStructure.professionalManagers);
+    }
+
+    // Count family in management
+    let familyInMgmt = 0;
+    if (familyMembers.robert && familyMembers.robert.inBusiness && !gameState.robertRetired) familyInMgmt++;
+    if (familyMembers.patricia && familyMembers.patricia.inBusiness) familyInMgmt++;
+    if (familyMembers.sarah && familyMembers.sarah.inBusiness) familyInMgmt++;
+    if (familyMembers.michael && familyMembers.michael.inBusiness && !gameState.michaelLeft) familyInMgmt++;
+    gameState.managementStructure.familyInManagement = familyInMgmt;
+
+    // Update founder-led status
+    gameState.managementStructure.isFounderLed = !gameState.robertRetired && !gameState.robertDeceased;
+
+    // Update decision power distribution based on governance structure
+    if (gameState.hasProfessionalBoard) {
+        // Board gains power
+        gameState.decisionPower.board = 20;
+        gameState.decisionPower.founders = Math.max(40, gameState.decisionPower.founders - 15);
+    }
+
+    if (gameState.managementStructure.hasProfessionalCEO) {
+        // Professional management gains power
+        gameState.decisionPower.management = 15;
+        gameState.decisionPower.founders = Math.max(30, gameState.decisionPower.founders - 10);
+    }
+
+    // Normalize to 100
+    const totalPower = gameState.decisionPower.founders + gameState.decisionPower.otherShareholders +
+        gameState.decisionPower.board + gameState.decisionPower.management;
+    if (totalPower !== 100) {
+        const factor = 100 / totalPower;
+        gameState.decisionPower.founders *= factor;
+        gameState.decisionPower.otherShareholders *= factor;
+        gameState.decisionPower.board *= factor;
+        gameState.decisionPower.management *= factor;
+    }
+
+    // Calculate strategic alignment (how much do stakeholders agree?)
+    const shareholderPrefs = getShareholderPreferences();
+    const growthDiff = Math.abs(shareholderPrefs.growthPreference - gameState.boardPreferences.growthOrientation);
+    const riskDiff = Math.abs(shareholderPrefs.riskTolerance - gameState.boardPreferences.riskTolerance);
+
+    gameState.strategicAlignment = Math.max(20, 100 - growthDiff - riskDiff * 0.5);
 }
 
 // ============================================
@@ -1030,6 +1387,90 @@ function updateUI() {
         profitChangeEl.className = 'metric-change ' + (profitChange > 0 ? 'positive' : 'negative');
     } else {
         profitChangeEl.textContent = '';
+    }
+
+    // ============================================
+    // UPDATE GOVERNANCE INDICATORS
+    // ============================================
+
+    // Board status
+    const boardStatusEl = document.getElementById('boardStatus');
+    if (boardStatusEl) {
+        let boardText = 'Family Only';
+        let boardColor = '#666';
+
+        if (gameState.hasProfessionalBoard) {
+            const indSeats = gameState.boardComposition.independentSeats;
+            boardText = `${indSeats} Independent`;
+            boardColor = '#4caf50';
+        } else if (gameState.boardComposition.totalSeats > 1) {
+            boardText = 'Family Board';
+            boardColor = '#2196f3';
+        }
+        boardStatusEl.textContent = boardText;
+        boardStatusEl.style.color = boardColor;
+    }
+
+    // Management status
+    const mgmtStatusEl = document.getElementById('managementStatus');
+    if (mgmtStatusEl) {
+        let mgmtText = 'Founder-Led';
+        let mgmtColor = '#666';
+
+        if (gameState.managementStructure.hasProfessionalCEO) {
+            mgmtText = 'Professional CEO';
+            mgmtColor = '#4caf50';
+        } else if (gameState.sarahCEO) {
+            mgmtText = '2nd Gen CEO';
+            mgmtColor = '#2196f3';
+        } else if (gameState.robertRetired || gameState.robertDeceased) {
+            mgmtText = 'Family-Led';
+            mgmtColor = '#ff9800';
+        }
+        mgmtStatusEl.textContent = mgmtText;
+        mgmtStatusEl.style.color = mgmtColor;
+    }
+
+    // Strategic alignment
+    const alignmentEl = document.getElementById('strategicAlignment');
+    if (alignmentEl) {
+        const alignment = Math.round(gameState.strategicAlignment);
+        alignmentEl.textContent = alignment + '%';
+
+        if (alignment >= 70) {
+            alignmentEl.style.color = '#4caf50';
+        } else if (alignment >= 50) {
+            alignmentEl.style.color = '#ff9800';
+        } else {
+            alignmentEl.style.color = '#f44336';
+        }
+    }
+
+    // Growth capacity
+    const growthCapEl = document.getElementById('growthCapacity');
+    if (growthCapEl) {
+        let capacityText = 'Normal';
+        let capacityColor = '#4caf50';
+
+        if (gameState.capitalConstrained) {
+            capacityText = 'Constrained';
+            capacityColor = '#f44336';
+        } else if (gameState.lastGrowthMetrics) {
+            const utilizationRatio = gameState.lastGrowthMetrics.capitalRaised /
+                Math.max(1, gameState.lastGrowthMetrics.capitalRequired);
+            if (utilizationRatio >= 0.9) {
+                capacityText = 'Strong';
+                capacityColor = '#4caf50';
+            } else if (utilizationRatio >= 0.7) {
+                capacityText = 'Moderate';
+                capacityColor = '#ff9800';
+            } else {
+                capacityText = 'Limited';
+                capacityColor = '#f44336';
+            }
+        }
+        growthCapEl.textContent = capacityText;
+        growthCapEl.style.color = capacityColor;
     }
 }
 
