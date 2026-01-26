@@ -269,7 +269,35 @@ header h1 {
     line-height: 1.8;
     color: var(--text-secondary);
     margin-bottom: 30px;
-    white-space: pre-line;
+}
+
+/* Impact narrative that flows into event description */
+.impact-narrative {
+    background: linear-gradient(135deg, #f0f4f8, #e8eef3);
+    padding: 20px 25px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--accent-color);
+    line-height: 1.8;
+}
+
+.impact-narrative p {
+    margin-bottom: 12px;
+}
+
+.impact-narrative p:last-child {
+    margin-bottom: 0;
+}
+
+.narrative-divider {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, var(--accent-color), transparent);
+    margin: 25px 0;
+}
+
+.event-text {
+    line-height: 1.8;
 }
 
 /* Options */
