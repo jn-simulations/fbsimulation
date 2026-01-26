@@ -413,16 +413,33 @@ function applyEffects(effects) {
         familyMembers.patricia.role = "CFO";
         familyMembers.patricia.inBusiness = true;
         familyMembers.patricia.isActive = true;
+        familyMembers.patricia.yearsInBusiness = familyMembers.patricia.yearsInBusiness || 0;
     }
-    if (effects.robertRetired) gameState.robertRetired = true;
+    if (effects.robertRetired) {
+        gameState.robertRetired = true;
+        familyMembers.robert.inBusiness = false;  // No longer day-to-day
+    }
     if (effects.sarahCEO) {
         gameState.sarahCEO = true;
         familyMembers.sarah.role = "CEO";
+        familyMembers.sarah.hasBusinessTraining = true;  // Assumes competence
+    }
+    if (effects.sarahInBusiness && familyMembers.sarah) {
+        familyMembers.sarah.inBusiness = true;
+        familyMembers.sarah.isActive = true;
+        familyMembers.sarah.yearsInBusiness = familyMembers.sarah.yearsInBusiness || 0;
+    }
+    if (effects.michaelInBusiness && familyMembers.michael) {
+        familyMembers.michael.inBusiness = true;
+        familyMembers.michael.isActive = true;
+        familyMembers.michael.yearsInBusiness = familyMembers.michael.yearsInBusiness || 0;
     }
     if (effects.michaelLeft) {
         gameState.michaelLeft = true;
         familyMembers.michael.inBusiness = false;
         familyMembers.michael.isActive = false;
+        familyMembers.michael.leftBusiness = true;  // Track for preference calculations
+        familyMembers.michael.otherIncome = "high"; // Built career elsewhere
     }
     if (effects.hasOutsideCOO) gameState.hasOutsideCOO = true;
     if (effects.hasProfessionalBoard) gameState.hasProfessionalBoard = true;
@@ -509,9 +526,15 @@ function advanceGame() {
     gameState.year += yearsToAdvance;
     gameState.eventIndex += 1;
 
-    // Age family members
+    // Age family members and track tenure in business
     Object.keys(familyMembers).forEach(key => {
-        familyMembers[key].age += yearsToAdvance;
+        const member = familyMembers[key];
+        member.age += yearsToAdvance;
+
+        // Track years in business for tenure-based preferences
+        if (member.inBusiness && !member.leftBusiness) {
+            member.yearsInBusiness = (member.yearsInBusiness || 0) + yearsToAdvance;
+        }
     });
 
     // Check for life events
