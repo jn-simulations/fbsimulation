@@ -1361,14 +1361,33 @@ const EVENTS = [
                     date: "2026",
                     title: "The Temptation",
                     description: function() {
-                        var offerAmount = gameState.revenue > 10000000 ? 35 : 28;
+                        // EBITDA-based valuation (realistic for packaging industry)
+                        // Packaging companies typically trade at 5-8x EBITDA
+                        var ebitda = gameState.profit + (gameState.maintenanceCosts || 0) + (gameState.debt > 0 ? gameState.debt * 0.06 : 0);
+                        var ebitdaMultiple = 6; // 6x EBITDA is typical for packaging
+
+                        // Adjust multiple based on company performance
+                        if (gameState.profitMargin > 0.06) ebitdaMultiple = 7; // Premium for high margins
+                        if (gameState.profitMargin < 0.03) ebitdaMultiple = 5; // Discount for low margins
+                        if (gameState.revenue > 15000000) ebitdaMultiple += 0.5; // Scale premium
+                        if (gameState.hasQualityIssues) ebitdaMultiple -= 1; // Quality discount
+
+                        var enterpriseValue = ebitda * ebitdaMultiple;
+                        var equityValue = Math.max(enterpriseValue - gameState.debt, enterpriseValue * 0.7);
+                        var offerAmount = Math.round(equityValue / 1000000); // Convert to millions
+
+                        // Floor and ceiling for reasonable offers
+                        offerAmount = Math.max(15, Math.min(60, offerAmount));
+
                         var baseDesc = "A private equity firm has made an unsolicited offer: $" + offerAmount + "M for Anderson Packaging.\n\n";
+
+                        baseDesc += "Their analysts valued the company at " + ebitdaMultiple.toFixed(1) + "x EBITDA—a " + (ebitdaMultiple >= 6 ? "fair" : "modest") + " multiple for the packaging industry.\n\n";
 
                         if (gameState.hasDebt && gameState.debt > 1000000) {
                             baseDesc += "Given the company's $" + formatNumber(gameState.debt) + " in debt, this offer is particularly attractive. It would clear all obligations and leave the family wealthy.\n\n";
                         }
 
-                        baseDesc += "This values the company at far more than its current worth. The offer would give:\n";
+                        baseDesc += "The offer would give (after debt payoff):\n";
 
                         if (gameState.michaelLeft) {
                             baseDesc += "- Robert: $" + (offerAmount * 0.7).toFixed(1) + "M for his 70%\n";
@@ -1380,22 +1399,28 @@ const EVENTS = [
                             var sarahPct = familyMembers.sarah.ownership;
                             var michaelPct = familyMembers.michael.ownership;
                             var jenniferPct = familyMembers.jennifer.ownership;
-                            baseDesc += "- Robert: $" + (offerAmount * robertPct / 100).toFixed(1) + "M for his " + robertPct + "%\n";
-                            baseDesc += "- Sarah: $" + (offerAmount * sarahPct / 100).toFixed(1) + "M for her " + sarahPct + "%\n";
-                            baseDesc += "- Michael: $" + (offerAmount * michaelPct / 100).toFixed(1) + "M for his " + michaelPct + "%\n";
-                            baseDesc += "- Jennifer: $" + (offerAmount * jenniferPct / 100).toFixed(1) + "M for her " + jenniferPct + "%\n\n";
+                            baseDesc += "- Robert: $" + (offerAmount * robertPct / 100).toFixed(1) + "M for his " + robertPct.toFixed(0) + "%\n";
+                            baseDesc += "- Sarah: $" + (offerAmount * sarahPct / 100).toFixed(1) + "M for her " + sarahPct.toFixed(0) + "%\n";
+                            baseDesc += "- Michael: $" + (offerAmount * michaelPct / 100).toFixed(1) + "M for his " + michaelPct.toFixed(0) + "%\n";
+                            baseDesc += "- Jennifer: $" + (offerAmount * jenniferPct / 100).toFixed(1) + "M for her " + jenniferPct.toFixed(0) + "%\n\n";
                         }
 
                         baseDesc += "The family could keep 30% ownership and stay in management, but the PE firm would control decisions.\n\nThis is life-changing money, especially for Jennifer. But it would end " + (gameState.year - 1994) + " years of independence.\n\n";
                         baseDesc += "Robert built this. Sarah now runs it. Does the family sell?";
 
+                        // Store offer amount for use in effects
+                        gameState.currentAcquisitionOffer = offerAmount * 1000000;
+
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Accept the $28M acquisition offer",
+                            text: function() {
+                                var offerAmount = gameState.currentAcquisitionOffer ? Math.round(gameState.currentAcquisitionOffer / 1000000) : 28;
+                                return "Accept the $" + offerAmount + "M acquisition offer";
+                            },
                             effects: {
-                                cash: 28000000,
+                                cash: function() { return gameState.currentAcquisitionOffer || 28000000; },
                                 robertOwnership: 21,
                                 sarahOwnership: 5,
                                 jenniferOwnership: 3,
@@ -1404,7 +1429,11 @@ const EVENTS = [
                                 jenniferHappiness: 30,
                                 michaelHappiness: 10
                             },
-                            impact: `<p>The family accepts the offer. Everyone becomes wealthy overnight.</p><p>Jennifer is thrilled—she receives nearly $3M and can finally live comfortably.</p><p>Robert and Sarah are conflicted. They have the money, but they've given up the family legacy.</p><p>The PE firm immediately implements aggressive changes. The company Sarah built starts to feel foreign.</p>`
+                            impact: function() {
+                                var offerAmount = gameState.currentAcquisitionOffer ? Math.round(gameState.currentAcquisitionOffer / 1000000) : 28;
+                                var jenShare = (offerAmount * (familyMembers.jennifer.ownership / 100)).toFixed(1);
+                                return `<p>The family accepts the $${offerAmount}M offer. Everyone becomes wealthy overnight.</p><p>Jennifer is thrilled—she receives $${jenShare}M and can finally live comfortably.</p><p>Robert and Sarah are conflicted. They have the money, but they've given up the family legacy.</p><p>The PE firm immediately implements aggressive changes. The company Sarah built starts to feel foreign.</p>`;
+                            }
                         },
                         {
                             text: "Decline—keep Anderson Packaging family-owned",
@@ -1413,7 +1442,11 @@ const EVENTS = [
                                 sarahHappiness: 15,
                                 jenniferHappiness: -30
                             },
-                            impact: `<p>The family chooses legacy over liquidity.</p><p>Robert and Sarah feel proud of maintaining independence and continuing the family business into its second generation.</p><p>Jennifer is devastated—she watched nearly $3M disappear. She's still struggling financially while her siblings run a company she doesn't work for.</p><p>The decision creates a lasting rift. Jennifer feels her needs are always subordinated to the business.</p>`
+                            impact: function() {
+                                var offerAmount = gameState.currentAcquisitionOffer ? Math.round(gameState.currentAcquisitionOffer / 1000000) : 28;
+                                var jenShare = (offerAmount * (familyMembers.jennifer.ownership / 100)).toFixed(1);
+                                return `<p>The family chooses legacy over liquidity.</p><p>Robert and Sarah feel proud of maintaining independence and continuing the family business into its second generation.</p><p>Jennifer is devastated—she watched $${jenShare}M slip away. She's still struggling financially while her siblings run a company she doesn't work for.</p><p>The decision creates a lasting rift. Jennifer feels her needs are always subordinated to the business.</p>`;
+                            }
                         }
                     ]
                 },
@@ -1903,24 +1936,37 @@ const EVENTS = [
 
                         baseDesc += "The company employs " + gameState.employees + " people.\n\n";
 
-                        // Offer amount varies based on company performance
-                        var offerAmount = 45;
-                        if (gameState.revenue > 20000000) {
-                            offerAmount = 55;
-                        } else if (gameState.revenue < 10000000) {
-                            offerAmount = 30;
-                        }
+                        // EBITDA-based valuation for final offer (realistic for packaging industry)
+                        var ebitda = gameState.profit + (gameState.maintenanceCosts || 0) + (gameState.debt > 0 ? gameState.debt * 0.06 : 0);
+                        var ebitdaMultiple = 6.5; // Slightly higher multiple for established business
 
-                        baseDesc += "A private equity firm has made another offer: $" + offerAmount + "M.\n\n";
+                        // Adjust multiple based on company performance
+                        if (gameState.profitMargin > 0.06) ebitdaMultiple = 7.5;
+                        if (gameState.profitMargin < 0.03) ebitdaMultiple = 5;
+                        if (gameState.revenue > 20000000) ebitdaMultiple += 0.5;
+                        if (gameState.hasGen3) ebitdaMultiple += 0.5; // Management continuity premium
+                        if (gameState.hasQualityIssues) ebitdaMultiple -= 1;
+
+                        var enterpriseValue = ebitda * ebitdaMultiple;
+                        var equityValue = Math.max(enterpriseValue - gameState.debt, enterpriseValue * 0.7);
+                        var offerAmount = Math.round(equityValue / 1000000);
+
+                        // Floor and ceiling
+                        offerAmount = Math.max(20, Math.min(80, offerAmount));
+
+                        baseDesc += "A private equity firm has made another offer: $" + offerAmount + "M (valued at " + ebitdaMultiple.toFixed(1) + "x EBITDA).\n\n";
 
                         // Reference if they declined a previous offer
                         var prevOffer = gameState.decisions.find(function(d) { return d.event === 18; });
+                        var prevOfferAmount = gameState.currentAcquisitionOffer ? Math.round(gameState.currentAcquisitionOffer / 1000000) : 28;
                         if (prevOffer && prevOffer.choice === 1) {
-                            baseDesc += "The family declined a $28M offer back in 2026. This new offer is ";
-                            if (offerAmount > 35) {
+                            baseDesc += "The family declined a $" + prevOfferAmount + "M offer back in 2026. This new offer is ";
+                            if (offerAmount > prevOfferAmount * 1.25) {
                                 baseDesc += "significantly higher—perhaps they made the right choice to wait.\n\n";
+                            } else if (offerAmount < prevOfferAmount) {
+                                baseDesc += "actually lower. They wonder if they should have sold then.\n\n";
                             } else {
-                                baseDesc += "barely better. They wonder if they should have sold then.\n\n";
+                                baseDesc += "only marginally better. Was it worth 18 more years of work?\n\n";
                             }
                         }
 
@@ -1938,16 +1984,25 @@ const EVENTS = [
 
                         baseDesc += "Or the family could take the money, having built something remarkable and changed their family's trajectory forever.\n\nThis is the final decision in a 50-year journey.";
 
+                        // Store offer amount for use in effects
+                        gameState.finalAcquisitionOffer = offerAmount * 1000000;
+
                         return baseDesc;
                     },
                     options: [
                         {
-                            text: "Accept the $45M offer—complete the journey",
+                            text: function() {
+                                var offerAmount = gameState.finalAcquisitionOffer ? Math.round(gameState.finalAcquisitionOffer / 1000000) : 45;
+                                return "Accept the $" + offerAmount + "M offer—complete the journey";
+                            },
                             effects: {
-                                cash: 45000000,
+                                cash: function() { return gameState.finalAcquisitionOffer || 45000000; },
                                 sarahHappiness: -10
                             },
-                            impact: `<p>The Anderson family accepts the $45M offer.</p><p>After 50 years, Anderson Packaging is sold. The family becomes wealthy beyond Robert's wildest 1994 dreams.</p><p>Sarah has mixed emotions. Pride in what they built. Sadness that it's over.</p><p>Emily and David are disappointed—they wanted to lead the third generation. But they also understand the remarkable achievement.</p><p>Robert Anderson's $50,000 investment in 1994 has become $45M in 2044. The family business has changed the Anderson family forever.</p>`
+                            impact: function() {
+                                var offerAmount = gameState.finalAcquisitionOffer ? Math.round(gameState.finalAcquisitionOffer / 1000000) : 45;
+                                return `<p>The Anderson family accepts the $${offerAmount}M offer.</p><p>After 50 years, Anderson Packaging is sold. The family becomes wealthy beyond Robert's wildest 1994 dreams.</p><p>Sarah has mixed emotions. Pride in what they built. Sadness that it's over.</p><p>Emily and David are disappointed—they wanted to lead the third generation. But they also understand the remarkable achievement.</p><p>Robert Anderson's $50,000 investment in 1994 has become $${offerAmount}M in 2044. The family business has changed the Anderson family forever.</p>`;
+                            }
                         },
                         {
                             text: "Transition to third generation—Emily as CEO",
@@ -1956,7 +2011,10 @@ const EVENTS = [
                                 revenue: 2000000,
                                 profit: 120000  // 6% margin on cardboard
                             },
-                            impact: `<p>Sarah announces that Emily will become CEO within two years. David will be President.</p><p>The third generation takes the helm. Revenue and profit grow under fresh leadership with new ideas.</p><p>Sarah is proud—the family legacy continues.</p><p>Anderson Packaging enters its second half-century under third-generation leadership.</p><p>Robert's dream lives on. The family business he started in 1994 will see 2050 and beyond.</p>`
+                            impact: function() {
+                                var finalValue = gameState.finalAcquisitionOffer ? Math.round(gameState.finalAcquisitionOffer / 1000000) : 45;
+                                return `<p>Sarah announces that Emily will become CEO within two years. David will be President.</p><p>The third generation takes the helm. Revenue and profit grow under fresh leadership with new ideas.</p><p>Sarah is proud—the family legacy continues. The company is now worth approximately $${finalValue}M.</p><p>Anderson Packaging enters its second half-century under third-generation leadership.</p><p>Robert's dream lives on. The family business he started in 1994 will see 2050 and beyond.</p>`;
+                            }
                         }
                     ]
                 }

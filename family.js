@@ -240,11 +240,12 @@ function getMemberPreferences(member) {
 
 // ============================================
 // SHAREHOLDER PREFERENCE AGGREGATION
-// Weighted by ownership percentage
+// Weighted by ownership percentage with minority protections
 // ============================================
 
 function getShareholderPreferences() {
     // Aggregate preferences weighted by ownership
+    // Enhanced: Includes minority shareholder influence and blocking rights
     let aggregated = {
         riskTolerance: 0,
         dividendPreference: 0,
@@ -253,28 +254,93 @@ function getShareholderPreferences() {
     };
 
     let totalOwnership = 0;
+    const shareholders = [];
 
     Object.keys(familyMembers).forEach(key => {
         const member = familyMembers[key];
         if (member.isDead || member.ownership <= 0) return;
 
         const prefs = getMemberPreferences(member);
-        const weight = member.ownership / 100;
+        shareholders.push({ member, prefs, ownership: member.ownership });
+        totalOwnership += member.ownership;
+    });
+
+    // Basic ownership-weighted aggregation
+    shareholders.forEach(({ member, prefs, ownership }) => {
+        const weight = ownership / totalOwnership;
 
         aggregated.riskTolerance += prefs.riskTolerance * weight;
         aggregated.dividendPreference += prefs.dividendPreference * weight;
         aggregated.growthPreference += prefs.growthPreference * weight;
         aggregated.professionalizationSupport += prefs.professionalizationSupport * weight;
-
-        totalOwnership += member.ownership;
     });
 
-    // Normalize if ownership doesn't sum to 100
-    if (totalOwnership > 0 && totalOwnership !== 100) {
-        const normalizer = 100 / totalOwnership;
-        Object.keys(aggregated).forEach(key => {
-            aggregated[key] *= normalizer;
+    // ============================================
+    // MINORITY SHAREHOLDER PROTECTIONS
+    // Shareholders with 10%+ can influence decisions
+    // Shareholders with 20%+ have stronger blocking power
+    // ============================================
+    const minorityShareholdersWithInfluence = shareholders.filter(s =>
+        s.ownership >= 10 && s.ownership < 50
+    );
+
+    if (minorityShareholdersWithInfluence.length > 0) {
+        // Calculate minority coalition preferences
+        let minorityWeight = 0;
+        let minorityPrefs = {
+            riskTolerance: 0,
+            dividendPreference: 0,
+            growthPreference: 0,
+            professionalizationSupport: 0
+        };
+
+        minorityShareholdersWithInfluence.forEach(({ prefs, ownership }) => {
+            minorityWeight += ownership;
+            minorityPrefs.riskTolerance += prefs.riskTolerance * ownership;
+            minorityPrefs.dividendPreference += prefs.dividendPreference * ownership;
+            minorityPrefs.growthPreference += prefs.growthPreference * ownership;
+            minorityPrefs.professionalizationSupport += prefs.professionalizationSupport * ownership;
         });
+
+        if (minorityWeight > 0) {
+            // Normalize minority preferences
+            Object.keys(minorityPrefs).forEach(key => {
+                minorityPrefs[key] /= minorityWeight;
+            });
+
+            // Minority influence factor: 20-30% pull toward minority preferences
+            // This represents minority blocking power on major decisions
+            const minorityInfluence = Math.min(0.30, minorityWeight / 100 * 0.5);
+
+            // Blend: if minorities strongly disagree, they pull the aggregate toward moderation
+            Object.keys(aggregated).forEach(key => {
+                const majorityPref = aggregated[key];
+                const minorityPref = minorityPrefs[key];
+
+                // If there's significant disagreement (>20 points), minorities have blocking influence
+                if (Math.abs(majorityPref - minorityPref) > 20) {
+                    // Pull toward compromise (weighted average favoring minorities somewhat)
+                    aggregated[key] = majorityPref * (1 - minorityInfluence) + minorityPref * minorityInfluence;
+                }
+            });
+        }
+    }
+
+    // ============================================
+    // PASSIVE SHAREHOLDER DIVIDEND FLOOR
+    // If significant passive ownership exists, ensure minimum dividend consideration
+    // ============================================
+    const passiveOwnership = shareholders
+        .filter(s => !s.member.inBusiness)
+        .reduce((sum, s) => sum + s.ownership, 0);
+
+    if (passiveOwnership >= 20) {
+        // Passive owners with 20%+ ensure dividend preference doesn't go too low
+        const passiveFloor = 30 + (passiveOwnership - 20) * 0.5; // 30-50 floor
+        aggregated.dividendPreference = Math.max(aggregated.dividendPreference, passiveFloor);
+
+        // Also reduce risk tolerance if significant passive ownership
+        aggregated.riskTolerance = Math.min(aggregated.riskTolerance, 60);
     }
 
     return aggregated;
@@ -363,14 +429,46 @@ function getConflictDescription(dimension, highSide, lowSide) {
 
 function calculateConflictPenalty() {
     // Returns negative impact on management quality from unresolved conflicts
+    // Enhanced: Stronger penalties with lasting effects
     const conflicts = detectShareholderConflicts();
     let penalty = 0;
 
     conflicts.forEach(conflict => {
-        penalty += conflict.severity * 8;  // Each conflict can reduce managementQuality by up to 8
+        // Base penalty: 12 points per severe conflict (increased from 8)
+        let conflictPenalty = conflict.severity * 12;
+
+        // Active vs Passive conflicts are particularly damaging
+        if (conflict.type === 'activeVsPassive') {
+            conflictPenalty *= 1.3; // 30% worse
+        }
+
+        // Conflicts involving high-ownership members are worse
+        const ownershipAtStake = conflict.highSide.reduce((sum, name) => {
+            const member = Object.values(familyMembers).find(m => m.name === name);
+            return sum + (member ? member.ownership : 0);
+        }, 0) + conflict.lowSide.reduce((sum, name) => {
+            const member = Object.values(familyMembers).find(m => m.name === name);
+            return sum + (member ? member.ownership : 0);
+        }, 0);
+
+        if (ownershipAtStake > 60) {
+            conflictPenalty *= 1.2; // Major shareholders in conflict = worse
+        }
+
+        penalty += conflictPenalty;
     });
 
-    return Math.min(25, penalty);  // Cap at 25 point penalty
+    // Add lingering penalty from historical conflicts (trust takes time to rebuild)
+    if (typeof gameState !== 'undefined' && gameState.conflictHistory) {
+        gameState.conflictHistory.forEach(historical => {
+            if (!historical.resolved) {
+                penalty += historical.severity * 0.3; // Historical conflicts still hurt
+            }
+        });
+    }
+
+    // Cap at 40 points (increased from 25) - severe conflicts can cripple a company
+    return Math.min(40, penalty);
 }
 
 function updateFamilyDisplay() {
@@ -579,37 +677,61 @@ function getFamilyAverageHappiness() {
 function getBusinessPerformanceScore() {
     let score = 0;
 
-    // Revenue contribution (0-30 points)
-    if (gameState.revenue >= 20000000) score += 30;
-    else if (gameState.revenue >= 15000000) score += 25;
-    else if (gameState.revenue >= 10000000) score += 20;
-    else if (gameState.revenue >= 5000000) score += 15;
-    else if (gameState.revenue >= 2000000) score += 10;
-    else score += 5;
+    // Revenue contribution (0-25 points)
+    if (gameState.revenue >= 20000000) score += 25;
+    else if (gameState.revenue >= 15000000) score += 20;
+    else if (gameState.revenue >= 10000000) score += 15;
+    else if (gameState.revenue >= 5000000) score += 10;
+    else if (gameState.revenue >= 2000000) score += 5;
+    else score += 2;
 
     // Profitability (0-20 points)
-    if (gameState.profit >= 3000000) score += 20;
-    else if (gameState.profit >= 2000000) score += 15;
-    else if (gameState.profit >= 1000000) score += 10;
-    else if (gameState.profit >= 500000) score += 5;
+    if (gameState.profit >= 2000000) score += 20;
+    else if (gameState.profit >= 1000000) score += 15;
+    else if (gameState.profit >= 500000) score += 10;
+    else if (gameState.profit >= 200000) score += 5;
+    else if (gameState.profit < 0) score -= 10;
 
-    // Cash position (0-20 points)
-    if (gameState.cash >= 5000000) score += 20;
-    else if (gameState.cash >= 3000000) score += 15;
-    else if (gameState.cash >= 1000000) score += 10;
-    else if (gameState.cash >= 500000) score += 5;
+    // Cash position (0-15 points)
+    if (gameState.cash >= 5000000) score += 15;
+    else if (gameState.cash >= 2000000) score += 12;
+    else if (gameState.cash >= 1000000) score += 8;
+    else if (gameState.cash >= 500000) score += 4;
     else if (gameState.cash < 0) score -= 10;
 
     // Debt management (0-15 points)
+    const debtToRevenue = gameState.revenue > 0 ? gameState.debt / gameState.revenue : 0;
     if (!gameState.hasDebt || gameState.debt === 0) score += 15;
-    else if (gameState.debt < 1000000) score += 10;
-    else if (gameState.debt < 3000000) score += 5;
-    else score -= 5;
+    else if (debtToRevenue < 0.3) score += 10;
+    else if (debtToRevenue < 0.6) score += 5;
+    else if (debtToRevenue > 1.0) score -= 10;
 
-    // Growth and sustainability based on assets (0-15 points)
-    if (gameState.assets >= 25000000) score += 15;
-    else if (gameState.assets >= 15000000) score += 10;
-    else if (gameState.assets >= 8000000) score += 5;
+    // Growth and sustainability based on assets (0-10 points)
+    if (gameState.assets >= 20000000) score += 10;
+    else if (gameState.assets >= 10000000) score += 7;
+    else if (gameState.assets >= 5000000) score += 4;
+
+    // Credit rating health (0-10 points) - new mechanic
+    if (gameState.creditRating) {
+        if (gameState.creditRating >= 80) score += 10;
+        else if (gameState.creditRating >= 60) score += 6;
+        else if (gameState.creditRating >= 40) score += 3;
+        else score -= 5;
+    }
+
+    // Equipment health (0-5 points) - new mechanic
+    if (gameState.equipmentAge !== undefined) {
+        if (gameState.equipmentAge <= 5) score += 5;
+        else if (gameState.equipmentAge <= 10) score += 3;
+        else if (gameState.equipmentAge > 15) score -= 5;
+    }
+
+    // Ending in a recession is harder (-5 penalty if in recession)
+    if (gameState.economicCycle === 'recession') {
+        score -= 5;
+    } else if (gameState.economicCycle === 'boom') {
+        score += 3;
+    }
 
     return Math.max(0, Math.min(100, score));
 }
@@ -656,6 +778,19 @@ function getFamilyHarmonyScore() {
     if (gameState.robertDeceased) {
         const avgHappiness = getFamilyAverageHappiness();
         if (avgHappiness < 50) score -= 10; // Grief + poor relationships = very strained
+    }
+
+    // Penalty for unresolved historical conflicts (new mechanic)
+    if (gameState.conflictHistory && gameState.conflictHistory.length > 0) {
+        const unresolvedConflicts = gameState.conflictHistory.filter(c => !c.resolved);
+        score -= unresolvedConflicts.length * 5; // Each unresolved conflict hurts harmony
+    }
+
+    // Bonus for family cohesion maintained over time
+    if (gameState.familyCohesion >= 70) {
+        score += 5; // Bonus for maintaining high cohesion
+    } else if (gameState.familyCohesion < 40) {
+        score -= 10; // Penalty for very low cohesion
     }
 
     return Math.max(0, Math.min(100, score));
